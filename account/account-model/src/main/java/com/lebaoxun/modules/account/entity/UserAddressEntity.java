@@ -43,6 +43,10 @@ public class UserAddressEntity implements Serializable {
 	 */
 	private String areaCode;
 	/**
+	 * 地图经纬度
+	 */
+	private String pos;
+	/**
 	 * 详细地址
 	 */
 	private String address;
@@ -162,5 +166,11 @@ public class UserAddressEntity implements Serializable {
 	 */
 	public Date getCreateTime() {
 		return createTime;
+	}
+	public String getPos() {
+		return pos;
+	}
+	public void setPos(String pos) {
+		this.pos = pos;
 	}
 }

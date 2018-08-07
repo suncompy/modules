@@ -39,6 +39,10 @@ public class UserLogEntity implements Serializable {
 	 */
 	private String logType;
 	/**
+	 * 来源
+	 */
+	private String platform;
+	/**
 	 * 交易金额
 	 */
 	private Integer tradeMoney;
@@ -159,5 +163,11 @@ public class UserLogEntity implements Serializable {
 	}
 	public void setAccount(String account) {
 		this.account = account;
+	}
+	public String getPlatform() {
+		return platform;
+	}
+	public void setPlatform(String platform) {
+		this.platform = platform;
 	}
 }

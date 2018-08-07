@@ -63,6 +63,18 @@ public class UserEntity implements Serializable {
 	 */
 	private Integer balance;
 	/**
+	 * 账户积分
+	 */
+	private Integer score;
+	/**
+	 * 累计充值数
+	 */
+	private Integer payTotal;
+	/**
+	 * 当月充值数
+	 */
+	private Integer payCurrentTotal;
+	/**
 	 * 真实姓名
 	 */
 	private String realname;
@@ -142,6 +154,10 @@ public class UserEntity implements Serializable {
 	 * 最后修改时间
 	 */
 	private Date lastUpdateTime;
+	/**
+	 * 最后支付时间
+	 */
+	private Date lastPayTime;
 
 	/**
 	 * 设置：主键
@@ -496,5 +512,29 @@ public class UserEntity implements Serializable {
 	}
 	public void setIdentity(String identity) {
 		this.identity = identity;
+	}
+	public Integer getPayTotal() {
+		return payTotal;
+	}
+	public void setPayTotal(Integer payTotal) {
+		this.payTotal = payTotal;
+	}
+	public Integer getPayCurrentTotal() {
+		return payCurrentTotal;
+	}
+	public void setPayCurrentTotal(Integer payCurrentTotal) {
+		this.payCurrentTotal = payCurrentTotal;
+	}
+	public Date getLastPayTime() {
+		return lastPayTime;
+	}
+	public void setLastPayTime(Date lastPayTime) {
+		this.lastPayTime = lastPayTime;
+	}
+	public Integer getScore() {
+		return score;
+	}
+	public void setScore(Integer score) {
+		this.score = score;
 	}
 }
