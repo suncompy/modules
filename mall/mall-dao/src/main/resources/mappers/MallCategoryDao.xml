@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.mall.dao.MallCategoryDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.mall.entity.MallCategoryEntity" id="mallCategoryMap">
+        <result property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="name" column="name"/>
+        <result property="icon" column="icon"/>
+        <result property="sort" column="sort"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+    <select id="queryListParentId" resultMap="mallCategoryMap" >
+		select * from mall_category where parent_id = #{parentId} order by sort asc 
+	</select>
+	
+	<select id="queryAllList" resultMap="mallCategoryMap">
+		select * from mall_category order by sort asc 
+	</select>
+	
+	<select id="queryAllShowList" resultMap="mallCategoryMap">
+	    select * from mall_category where status = 1 order by sort;
+	</select>
+</mapper>

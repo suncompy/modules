@@ -1,0 +1,81 @@
+package ${package}.${moduleName}.controller;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import ${package}.${moduleName}.entity.${className}Entity;
+import ${package}.${moduleName}.service.${className}Service;
+import ${mainPath}.commons.utils.PageUtils;
+import ${mainPath}.commons.exception.ResponseMessage;
+import com.lebaoxun.soa.core.redis.lock.RedisLock;
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ */
+@RestController
+public class ${className}Controller {
+    @Autowired
+    private ${className}Service ${classname}Service;
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/${moduleName}/${pathName}/list")
+    ResponseMessage list(@RequestParam Map<String, Object> params){
+        PageUtils page = ${classname}Service.queryPage(params);
+        return ResponseMessage.ok(page);
+    }
+
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/${moduleName}/${pathName}/info/{${pk.attrname}}")
+    ResponseMessage info(@PathVariable("${pk.attrname}") ${pk.attrType} ${pk.attrname}){
+		${className}Entity ${classname} = ${classname}Service.selectById(${pk.attrname});
+        return ResponseMessage.ok().put("${classname}", ${classname});
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/${moduleName}/${pathName}/save")
+    @RedisLock(value="${moduleName}:${pathName}:save:lock:#arg0")
+    ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody ${className}Entity ${classname}){
+		${classname}Service.insert(${classname});
+        return ResponseMessage.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/${moduleName}/${pathName}/update")
+    @RedisLock(value="${moduleName}:${pathName}:update:lock:#arg0")
+    ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody ${className}Entity ${classname}){
+		${classname}Service.updateById(${classname});
+        return ResponseMessage.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/${moduleName}/${pathName}/delete")
+    @RedisLock(value="${moduleName}:${pathName}:delete:lock:#arg0")
+    ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody ${pk.attrType}[] ${pk.attrname}s){
+		${classname}Service.deleteBatchIds(Arrays.asList(${pk.attrname}s));
+        return ResponseMessage.ok();
+    }
+
+}
