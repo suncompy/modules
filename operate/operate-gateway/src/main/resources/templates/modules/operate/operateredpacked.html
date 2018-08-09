@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>现金红包</title>
+	<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">红包名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.name" placeholder="红包名称"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">版本号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.version" placeholder="版本号"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">金额</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.money" placeholder="金额"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">激活码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.cdkey" placeholder="激活码"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.createBy" placeholder="创建人"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.createTime" placeholder="创建时间"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">领取人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.userId" placeholder="领取人"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">状态0=未激活，1=已激活，2=已使用</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.use" placeholder="状态0=未激活，1=已激活，2=已使用"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">使用订单号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.orderNo" placeholder="使用订单号"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">使用时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operateRedPacked.useTime" placeholder="使用时间"/>
+                        </div>
+                    </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/statics/js/modules/operate/operateredpacked.js?_${.now?long}"></script>
+</body>
+</html>

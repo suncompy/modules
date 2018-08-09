@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.operate.dao.OperateRedPackedDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.operate.entity.OperateRedPackedEntity" id="operateRedPackedMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="version" column="version"/>
+        <result property="money" column="money"/>
+        <result property="cdkey" column="cdkey"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="use" column="use"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="useTime" column="use_time"/>
+    </resultMap>
+
+
+</mapper>

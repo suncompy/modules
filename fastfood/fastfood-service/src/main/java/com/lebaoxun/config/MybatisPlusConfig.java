@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.lebaoxun.modules.account.config;
+package com.lebaoxun.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
