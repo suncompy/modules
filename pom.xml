@@ -30,6 +30,8 @@
 	<module>sys-manager</module>
 	<module>upload</module>
 	<module>wechat</module>
+	<module>fastfood</module>
+	<module>operate</module>
   </modules>
 
   <dependencies>

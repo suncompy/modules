@@ -1,0 +1,14 @@
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('51', '0', '机器管理', NULL, NULL, '0', 'fa fa-etsy', '3');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('52', '0', '产品管理', NULL, NULL, '0', 'fa fa-etsy', '4');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('54', '52', '原料管理', NULL, NULL, '0', 'fa fa-file-code-o', '1');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('55', '52', '每周菜谱', 'modules/fastfood/foodweekmenu.html', NULL, '1', 'fa fa-file-code-o', '3');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('56', '52', '餐品管理', NULL, NULL, '0', 'fa fa-file-code-o', '2');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('57', '54', '原料分类', 'modules/fastfood/foodmaterialcat.html', NULL, '1', 'fa fa-file-code-o', '1');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('58', '54', '原料列表', 'modules/fastfood/foodmaterial.html', NULL, '1', 'fa fa-file-code-o', '2');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('59', '56', '餐品分类', '/modules/fastfood/foodproductcat.html', NULL, '1', 'fa fa-file-code-o', '0');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('60', '56', '餐品列表', 'modules/fastfood/foodproduct.html', NULL, '1', 'fa fa-file-code-o', '1');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('61', '51', '机器分类', '/modules/fastfood/foodmachinecat.html', NULL, '1', 'fa fa-file-code-o', '1');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('62', '51', '机器管理', NULL, NULL, '0', 'fa fa-file-code-o', '2');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('63', '62', '餐品分类', '/modules/fastfood/foodmachineproductcat.html', NULL, '1', 'fa fa-file-code-o', '0');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('64', '62', '机器列表', 'modules/fastfood/foodmachine.html', NULL, '1', 'fa fa-file-code-o', '0');
+INSERT INTO `fastfood_db`.`sys_menu` (`menu_id`, `parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('65', '51', '派单任务', '/modules/fastfood/foodmachineaddstockorder.html', NULL, '1', 'fa fa-file-code-o', '3');

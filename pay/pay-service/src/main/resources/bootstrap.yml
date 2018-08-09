@@ -8,7 +8,7 @@ spring:
     suffix: .html  #后缀名
   cloud:
     config:
-      name: yashua
+      name: fastfood
       profile: dev
       username: guess
       password: 123123

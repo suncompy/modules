@@ -5,7 +5,7 @@ spring:
     store-type: none
   cloud:
     config:
-      name: yashua
+      name: fastfood
       profile: dev
       username: guess
       password: 123123

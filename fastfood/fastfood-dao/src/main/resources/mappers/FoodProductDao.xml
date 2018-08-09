@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.fastfood.dao.FoodProductDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodProductEntity" id="foodProductMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="materials" column="materials"/>
+        <result property="showPrice" column="show_price"/>
+        <result property="period" column="period"/>
+        <result property="remind" column="remind"/>
+        <result property="picture" column="picture"/>
+        <result property="totalStock" column="total_stock"/>
+        <result property="stockAlertVal" column="stock_alert_val"/>
+        <result property="unit" column="unit"/>
+        <result property="zsWeight" column="zs_weight"/>
+        <result property="cpWeight" column="cp_weight"/>
+        <result property="warmFlag" column="warm_flag"/>
+        <result property="warmTime" column="warm_time"/>
+        <result property="hotNum" column="hot_num"/>
+        <result property="label" column="label"/>
+        <result property="status" column="status"/>
+        <result property="upTime" column="up_time"/>
+        <result property="downTime" column="down_time"/>
+        <result property="keyword" column="keyword"/>
+        <result property="descr" column="descr"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+
+</mapper>
