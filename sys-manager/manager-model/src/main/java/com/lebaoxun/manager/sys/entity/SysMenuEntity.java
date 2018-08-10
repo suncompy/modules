@@ -22,7 +22,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.List; 
 
 /**
  * 菜单管理
