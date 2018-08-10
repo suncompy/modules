@@ -83,6 +83,16 @@ public class SysMenuEntity implements Serializable {
 	private Integer orderNum;
 	
 	/**
+	 * 按钮编码，用于前端使用
+	 */
+	private String buttonCode;
+	
+	/**
+	 * 按钮样式
+	 */
+	private String buttonCss;
+	
+	/**
 	 * ztree属性
 	 */
 	@TableField(exist=false)
@@ -218,4 +228,21 @@ public class SysMenuEntity implements Serializable {
 	public void setOpen(Boolean open) {
 		this.open = open;
 	}
+
+	public String getButtonCode() {
+		return buttonCode;
+	}
+
+	public void setButtonCode(String buttonCode) {
+		this.buttonCode = buttonCode;
+	}
+
+	public String getButtonCss() {
+		return buttonCss;
+	}
+
+	public void setButtonCss(String buttonCss) {
+		this.buttonCss = buttonCss;
+	}
+	
 }
