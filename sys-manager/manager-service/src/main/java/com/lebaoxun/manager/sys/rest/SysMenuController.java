@@ -16,6 +16,7 @@
 
 package com.lebaoxun.manager.sys.rest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,10 +29,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.manager.sys.entity.SysMenuEntity;
+import com.lebaoxun.manager.sys.entity.SysRoleMenuEntity;
+import com.lebaoxun.manager.sys.entity.SysUserButton;
 import com.lebaoxun.manager.sys.service.SysMenuService;
+import com.lebaoxun.manager.sys.service.SysRoleMenuService;
+import com.lebaoxun.manager.sys.service.SysUserRoleService;
 
 /**
  * 系统菜单
@@ -44,16 +51,85 @@ import com.lebaoxun.manager.sys.service.SysMenuService;
 public class SysMenuController extends AbstractController {
 	@Autowired
 	private SysMenuService sysMenuService;
-
+	
+	@Autowired
+	private SysUserRoleService sysUserRoleService;
+	
+	@Autowired
+	private SysRoleMenuService sysRoleMenuService;
+	
 	/**
 	 * 导航菜单
 	 */
 	@RequestMapping("/sys/menu/nav")
-	public ResponseMessage nav(@RequestParam("userId")Long userId){
+	public ResponseMessage nav(@RequestParam("userId")Long userId){ 
 		List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(userId);
 		Map<String,Object> dataModel = new HashMap<String,Object>();
 		dataModel.put("menuList", menuList);
 		return ResponseMessage.ok(dataModel);
+	}
+	
+	/**
+	 * 获取用户菜单按钮权限
+	 */
+	@RequestMapping("/sys/menu/findButtonByUserId")
+	public List<SysUserButton> findButtonByUserId(@RequestParam("userId")Long userId,@RequestParam("menuUrl") String menuUrl){
+		List<SysUserButton> buttonList=new ArrayList<SysUserButton>();
+		//查询菜单下所有的按钮，包括没授权的
+		EntityWrapper<SysMenuEntity> menuWrapper=new EntityWrapper<SysMenuEntity>();
+		menuWrapper.eq("url", menuUrl);
+		SysMenuEntity menuOneObj=sysMenuService.selectOne(menuWrapper);
+		
+		menuWrapper=new EntityWrapper<SysMenuEntity>();
+		menuWrapper.eq("parent_id", menuOneObj.getMenuId());
+		menuWrapper.eq("type", 2);
+		List<SysMenuEntity> allMenuList=sysMenuService.selectList(menuWrapper);
+		//将list转换成map
+		if(allMenuList==null||allMenuList.size()==0)return buttonList;
+		//多角色去除重复按钮
+		Map <Long,SysMenuEntity> menuMap=new HashMap<Long,SysMenuEntity>();
+		if(userId==1){//超级管理员拥有所有按钮权限
+			for(SysMenuEntity menuObj:allMenuList){
+				SysUserButton button=new SysUserButton();
+				button.setButtonCode(menuObj.getButtonCode());
+				button.setButtonName(menuObj.getName());
+				button.setButtonCss(menuObj.getButtonCss());
+				buttonList.add(button);
+			}
+			return buttonList;
+		}
+		List<Long> roleList=sysUserRoleService.queryRoleIdList(userId);
+		if(roleList==null||roleList.size()==0)return buttonList;
+		Map<Long,SysMenuEntity> allMenuMap=new HashMap<>();
+		for(SysMenuEntity menuObj:allMenuList){
+			allMenuMap.put(menuObj.getMenuId(), menuObj);
+		}
+		List<Long> buttonIds=new ArrayList<Long>();
+		if(allMenuList!=null){
+			for(SysMenuEntity _menuObj : allMenuList){
+				buttonIds.add(_menuObj.getMenuId());
+			}
+		}
+		for(Long roleId : roleList){
+			//查询菜单有权限的按钮
+			EntityWrapper<SysRoleMenuEntity> roleMenuWrapper=new EntityWrapper<SysRoleMenuEntity>();
+			roleMenuWrapper.in("menu_id", buttonIds);
+			roleMenuWrapper.eq("role_id", roleId);
+			List<SysRoleMenuEntity> roleMenuList=sysRoleMenuService.selectList(roleMenuWrapper);
+			if(roleMenuList!=null){
+				for(SysRoleMenuEntity sysRoleObj:roleMenuList){
+					menuMap.put(sysRoleObj.getMenuId(), allMenuMap.get(sysRoleObj.getMenuId()));
+				}
+			}
+		}
+		for (Map.Entry<Long,SysMenuEntity> entry : menuMap.entrySet()) {
+			SysUserButton button=new SysUserButton();
+			button.setButtonCode(entry.getValue().getButtonCode());
+			button.setButtonName(entry.getValue().getName());
+			button.setButtonCss(entry.getValue().getButtonCss());
+			buttonList.add(button);
+		}
+		return buttonList;
 	}
 	
 	/**
