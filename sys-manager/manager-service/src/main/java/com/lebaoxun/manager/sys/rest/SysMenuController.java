@@ -66,7 +66,7 @@ public class SysMenuController extends AbstractController {
 		List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(userId);
 		Map<String,Object> dataModel = new HashMap<String,Object>();
 		dataModel.put("menuList", menuList);
-		return ResponseMessage.ok(dataModel);
+		return ResponseMessage.ok(dataModel); 
 	}
 	
 	/**
