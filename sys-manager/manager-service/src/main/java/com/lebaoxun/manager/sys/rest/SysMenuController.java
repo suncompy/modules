@@ -100,7 +100,7 @@ public class SysMenuController extends AbstractController {
 		}
 		List<Long> roleList=sysUserRoleService.queryRoleIdList(userId);
 		if(roleList==null||roleList.size()==0)return buttonList;
-		Map<Long,SysMenuEntity> allMenuMap=new HashMap<>();
+		Map<Long,SysMenuEntity> allMenuMap=new HashMap<Long,SysMenuEntity>();
 		for(SysMenuEntity menuObj:allMenuList){
 			allMenuMap.put(menuObj.getMenuId(), menuObj);
 		}
