@@ -56,7 +56,7 @@ public class SysMenuController extends AbstractController {
 	private SysUserRoleService sysUserRoleService;
 	
 	@Autowired
-	private SysRoleMenuService sysRoleMenuService;
+	private SysRoleMenuService sysRoleMenuService; 
 	
 	/**
 	 * 导航菜单
