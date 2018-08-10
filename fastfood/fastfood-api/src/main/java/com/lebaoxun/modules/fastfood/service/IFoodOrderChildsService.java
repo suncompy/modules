@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-09 18:47:10
+ * @date 2018-08-10 16:34:01
  */
 
 @FeignClient(value="fastfood-service",fallback=FoodOrderChildsServiceHystrix.class)

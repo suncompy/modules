@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMaterialCatEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMaterialCatService;
-import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
@@ -37,6 +39,11 @@ public class FoodMaterialCatController {
         PageUtils page = foodMaterialCatService.queryPage(params);
         return ResponseMessage.ok(page);
     }
+    
+    @RequestMapping("/fastfood/foodmaterialcat/select")
+    ResponseMessage select(){
+    	return ResponseMessage.ok(foodMaterialCatService.selectList(new EntityWrapper<FoodMaterialCatEntity>().eq("status", 1)));
+    }
 
 
     /**
@@ -54,6 +61,8 @@ public class FoodMaterialCatController {
     @RequestMapping("/fastfood/foodmaterialcat/save")
     @RedisLock(value="fastfood:foodmaterialcat:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMaterialCatEntity foodMaterialCat){
+    	foodMaterialCat.setCreateBy(adminId);
+    	foodMaterialCat.setCreateTime(new Date());
 		foodMaterialCatService.insert(foodMaterialCat);
         return ResponseMessage.ok();
     }
@@ -64,6 +73,8 @@ public class FoodMaterialCatController {
     @RequestMapping("/fastfood/foodmaterialcat/update")
     @RedisLock(value="fastfood:foodmaterialcat:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodMaterialCatEntity foodMaterialCat){
+    	foodMaterialCat.setUpdateBy(adminId);
+    	foodMaterialCat.setUpdateTime(new Date());
 		foodMaterialCatService.updateById(foodMaterialCat);
         return ResponseMessage.ok();
     }

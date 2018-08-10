@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-09 18:47:10
+ * @date 2018-08-10 16:34:01
  */
 @TableName("food_shopping_cart")
 public class FoodShoppingCartEntity implements Serializable {

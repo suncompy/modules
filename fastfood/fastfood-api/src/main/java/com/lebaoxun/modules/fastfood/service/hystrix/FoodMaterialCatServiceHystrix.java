@@ -23,6 +23,11 @@ public class FoodMaterialCatServiceHystrix implements IFoodMaterialCatService {
 	public ResponseMessage list(Map<String, Object> params) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
+	@Override
+	public ResponseMessage select() {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 
 	@Override
 	public ResponseMessage info(Integer id) {

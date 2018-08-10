@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * 
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-09 16:01:11
+ * @date 2018-08-10 16:36:32
  */
 @Mapper
 public interface OperateCouponRecordDao extends BaseMapper<OperateCouponRecordEntity> {

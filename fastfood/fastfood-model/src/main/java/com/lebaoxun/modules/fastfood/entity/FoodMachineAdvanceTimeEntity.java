@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-09 15:30:01
+ * @date 2018-08-10 16:34:01
  */
 @TableName("food_machine_advance_time")
 public class FoodMachineAdvanceTimeEntity implements Serializable {

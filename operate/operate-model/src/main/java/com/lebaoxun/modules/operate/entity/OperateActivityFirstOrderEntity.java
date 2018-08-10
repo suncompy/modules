@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-09 16:01:11
+ * @date 2018-08-10 16:36:31
  */
 @TableName("operate_activity_first_order")
 public class OperateActivityFirstOrderEntity implements Serializable {

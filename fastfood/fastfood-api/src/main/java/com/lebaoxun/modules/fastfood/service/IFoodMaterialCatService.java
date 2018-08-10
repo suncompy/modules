@@ -27,6 +27,8 @@ public interface IFoodMaterialCatService {
     @RequestMapping("/fastfood/foodmaterialcat/list")
     ResponseMessage list(@RequestParam Map<String, Object> params);
 
+    @RequestMapping("/fastfood/foodmaterialcat/select")
+    ResponseMessage select();
 
     /**
      * 信息
