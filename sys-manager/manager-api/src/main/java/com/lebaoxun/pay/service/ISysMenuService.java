@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.manager.sys.entity.SysMenuEntity;
+import com.lebaoxun.manager.sys.entity.SysUserButton;
 import com.lebaoxun.pay.service.hystrix.SysMenuServiceHystrix;
 
 @FeignClient(value="manager-service",fallback=SysMenuServiceHystrix.class)
@@ -18,7 +19,7 @@ public interface ISysMenuService {
 	 * 导航菜单
 	 */
 	@RequestMapping("/sys/menu/nav")
-	public ResponseMessage nav(@RequestParam("userId")Long userId);
+	public ResponseMessage nav(@RequestParam("userId") Long userId);
 	
 	/**
 	 * 所有菜单列表
@@ -38,6 +39,9 @@ public interface ISysMenuService {
 	@RequestMapping("/sys/menu/info/{menuId}")
 	public ResponseMessage info(@PathVariable("menuId") Long menuId);
 	
+	@RequestMapping("/sys/menu/findButtonByUserId")
+	public List<SysUserButton> findButtonByUserId(@RequestParam("userId") Long userId, @RequestParam("menuUrl") String menuUrl);
+	
 	/**
 	 * 保存
 	 */
@@ -54,5 +58,5 @@ public interface ISysMenuService {
 	 * 删除
 	 */
 	@RequestMapping("/sys/menu/delete")
-	public ResponseMessage delete(@RequestParam("menuId")long menuId);
+	public ResponseMessage delete(@RequestParam("menuId") long menuId);
 }
