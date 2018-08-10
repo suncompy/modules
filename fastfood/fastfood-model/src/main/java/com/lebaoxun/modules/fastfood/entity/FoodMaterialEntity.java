@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -20,8 +21,8 @@ public class FoodMaterialEntity implements Serializable {
 	/**
 	 * 
 	 */
-@TableId
-	private Integer id;
+	@TableId
+	private Integer id = 0;
 	/**
 	 * 原料名称
 	 */
@@ -30,6 +31,11 @@ public class FoodMaterialEntity implements Serializable {
 	 * 原料分类ID
 	 */
 	private Integer catId;
+	/**
+	 * 分类名称
+	 */
+	@TableField(exist=false)
+	private String catName;
 	/**
 	 * 状态0=未上架，1=已上架
 	 */
@@ -179,4 +185,11 @@ public class FoodMaterialEntity implements Serializable {
 	public Date getUpdateTime() {
 		return updateTime;
 	}
+	public String getCatName() {
+		return catName;
+	}
+	public void setCatName(String catName) {
+		this.catName = catName;
+	}
+	
 }

@@ -20,8 +20,8 @@ public class FoodProductEntity implements Serializable {
 	/**
 	 * 
 	 */
-@TableId
-	private Integer id;
+	@TableId
+	private Integer id = 0;
 	/**
 	 * 产品名称
 	 */
