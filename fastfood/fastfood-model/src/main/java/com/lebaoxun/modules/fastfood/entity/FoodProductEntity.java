@@ -107,6 +107,10 @@ public class FoodProductEntity implements Serializable {
 	 */
 	private String remark;
 	/**
+	 * 赠送积分
+	 */
+	private Integer giveScore;
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;
@@ -434,5 +438,11 @@ public class FoodProductEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public Integer getGiveScore() {
+		return giveScore;
+	}
+	public void setGiveScore(Integer giveScore) {
+		this.giveScore = giveScore;
 	}
 }

@@ -1,10 +1,12 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.FoodMaterialEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodProductCatEntity;
-
-import java.util.Map;
 
 /**
  * 餐品分类
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface FoodProductCatService extends IService<FoodProductCatEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    
+    List<FoodMaterialEntity> queryFoodMaterialById(Integer id);
 }
 

@@ -1,8 +1,12 @@
 package com.lebaoxun.modules.fastfood.dao;
 
-import com.lebaoxun.modules.fastfood.entity.FoodMaterialEntity;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.lebaoxun.modules.fastfood.entity.FoodMaterialEntity;
 
 /**
  * 餐品原料表
@@ -13,5 +17,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface FoodMaterialDao extends BaseMapper<FoodMaterialEntity> {
+	
+	List<FoodMaterialEntity> queryByProductCatId(@Param("productCatId")Integer productCatId);
 	
 }

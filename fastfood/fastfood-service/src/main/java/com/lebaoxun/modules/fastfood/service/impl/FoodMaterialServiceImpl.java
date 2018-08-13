@@ -1,9 +1,15 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -11,13 +17,18 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.modules.fastfood.dao.FoodMaterialDao;
+import com.lebaoxun.modules.fastfood.dao.FoodProductCatDao;
 import com.lebaoxun.modules.fastfood.entity.FoodMaterialEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodProductCatEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMaterialService;
 
 
 @Service("foodMaterialService")
 public class FoodMaterialServiceImpl extends ServiceImpl<FoodMaterialDao, FoodMaterialEntity> implements FoodMaterialService {
 
+	@Resource
+	private FoodProductCatDao foodProductCatDao;
+	
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
     	String idOrName = (String)params.get("idOrName"),
@@ -37,5 +48,4 @@ public class FoodMaterialServiceImpl extends ServiceImpl<FoodMaterialDao, FoodMa
 
         return new PageUtils(page);
     }
-
 }

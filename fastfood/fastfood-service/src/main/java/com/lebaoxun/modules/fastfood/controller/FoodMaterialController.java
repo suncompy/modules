@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,8 @@ public class FoodMaterialController {
     @RequestMapping("/fastfood/foodmaterial/save")
     @RedisLock(value="fastfood:foodmaterial:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMaterialEntity foodMaterial){
+    	foodMaterial.setCreateBy(adminId);
+    	foodMaterial.setCreateTime(new Date());
 		foodMaterialService.insert(foodMaterial);
         return ResponseMessage.ok();
     }
@@ -64,6 +67,8 @@ public class FoodMaterialController {
     @RequestMapping("/fastfood/foodmaterial/update")
     @RedisLock(value="fastfood:foodmaterial:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodMaterialEntity foodMaterial){
+    	foodMaterial.setUpdateBy(adminId);
+    	foodMaterial.setUpdateTime(new Date());
 		foodMaterialService.updateById(foodMaterial);
         return ResponseMessage.ok();
     }

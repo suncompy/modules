@@ -1,10 +1,12 @@
 package com.lebaoxun.modules.fastfood.entity;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 
 /**
  * 餐品原料分类表
@@ -70,6 +72,9 @@ public class FoodMaterialCatEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	
+	@TableField(exist=false)
+	private List<FoodMaterialEntity> list;
 
 	/**
 	 * 设置：
@@ -226,5 +231,11 @@ public class FoodMaterialCatEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public List<FoodMaterialEntity> getList() {
+		return list;
+	}
+	public void setList(List<FoodMaterialEntity> list) {
+		this.list = list;
 	}
 }
