@@ -1,10 +1,12 @@
 package com.lebaoxun.modules.fastfood.entity;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 
 /**
  * 餐品分类
@@ -20,19 +22,16 @@ public class FoodProductCatEntity implements Serializable {
 	/**
 	 * 
 	 */
-@TableId
-	private Integer id;
+	@TableId
+	private Integer id = 0;
 	/**
 	 * 分类名称
 	 */
 	private String name;
 	/**
-	 * 原料分类ID
-	 */
-	private Integer materialCatId;
-	/**
 	 * 子分类数量
 	 */
+	@TableField(exist=false)
 	private Integer productTotal;
 	/**
 	 * 状态0=不展示，1=展示
@@ -66,6 +65,12 @@ public class FoodProductCatEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	
+	/**
+	 * 分类ID
+	 */
+	@TableField(exist=false)
+	private List<Integer> materialCatIds;
 
 	/**
 	 * 设置：
@@ -90,18 +95,6 @@ public class FoodProductCatEntity implements Serializable {
 	 */
 	public String getName() {
 		return name;
-	}
-	/**
-	 * 设置：原料分类ID
-	 */
-	public void setMaterialCatId(Integer materialCatId) {
-		this.materialCatId = materialCatId;
-	}
-	/**
-	 * 获取：原料分类ID
-	 */
-	public Integer getMaterialCatId() {
-		return materialCatId;
 	}
 	/**
 	 * 设置：子分类数量
@@ -210,5 +203,11 @@ public class FoodProductCatEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public List<Integer> getMaterialCatIds() {
+		return materialCatIds;
+	}
+	public void setMaterialCatIds(List<Integer> materialCatIds) {
+		this.materialCatIds = materialCatIds;
 	}
 }

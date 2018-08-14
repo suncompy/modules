@@ -20,8 +20,8 @@ public class FoodWeekMenuEntity implements Serializable {
 	/**
 	 * 
 	 */
-@TableId
-	private Integer id;
+	@TableId
+	private Integer id = 0;
 	/**
 	 * 星期数
 	 */

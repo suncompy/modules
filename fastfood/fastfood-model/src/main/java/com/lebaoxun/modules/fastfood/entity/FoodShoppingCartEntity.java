@@ -20,8 +20,8 @@ public class FoodShoppingCartEntity implements Serializable {
 	/**
 	 * 购物车ID
 	 */
-@TableId
-	private Long cartId;
+	@TableId
+	private Long cartId = 0l;
 	/**
 	 * 餐品ID
 	 */

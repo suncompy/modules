@@ -21,8 +21,8 @@ public class FoodOrderChildsEntity implements Serializable {
 	/**
 	 * 订单商品ID
 	 */
-@TableId
-	private Long orderProductId;
+	@TableId
+	private Long orderProductId = 0l;
 	/**
 	 * 订单ID
 	 */

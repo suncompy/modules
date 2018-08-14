@@ -20,8 +20,8 @@ public class FoodMachineCatAisleEntity implements Serializable {
 	/**
 	 * 
 	 */
-@TableId
-	private Integer id;
+	@TableId
+	private Integer id = 0;
 	/**
 	 * 机器分类
 	 */

@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.modules.fastfood.entity.FoodProductCatEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodProductCatServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
@@ -51,6 +53,18 @@ public interface IFoodProductCatService {
      */
     @RequestMapping("/fastfood/foodproductcat/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
+    
+    /**
+     * 查询所有分类
+     */
+    @RequestMapping("/fastfood/foodproductcat/queryAll")
+    ResponseMessage queryAll();
+    
+    /**
+     * 查询餐品分类下所有原料
+     */
+    @RequestMapping("/fastfood/foodproductcat/queryFoodMaterialById")
+    ResponseMessage queryFoodMaterialById(@RequestParam("id")Integer id);
     
 }
 

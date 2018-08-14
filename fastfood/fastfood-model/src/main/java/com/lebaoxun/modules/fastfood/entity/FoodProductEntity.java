@@ -20,8 +20,8 @@ public class FoodProductEntity implements Serializable {
 	/**
 	 * 
 	 */
-@TableId
-	private Integer id;
+	@TableId
+	private Integer id = 0;
 	/**
 	 * 产品名称
 	 */
@@ -106,6 +106,10 @@ public class FoodProductEntity implements Serializable {
 	 * 备注
 	 */
 	private String remark;
+	/**
+	 * 赠送积分
+	 */
+	private Integer giveScore;
 	/**
 	 * 创建时间
 	 */
@@ -434,5 +438,11 @@ public class FoodProductEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public Integer getGiveScore() {
+		return giveScore;
+	}
+	public void setGiveScore(Integer giveScore) {
+		this.giveScore = giveScore;
 	}
 }
