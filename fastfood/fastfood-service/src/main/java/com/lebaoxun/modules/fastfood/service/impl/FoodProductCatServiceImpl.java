@@ -2,6 +2,7 @@ package com.lebaoxun.modules.fastfood.service.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.lebaoxun.commons.utils.PageUtils;
@@ -127,6 +129,16 @@ public class FoodProductCatServiceImpl extends ServiceImpl<FoodProductCatDao, Fo
     		foodProductCatMaterialCatRcrtDao.delete(new EntityWrapper<FoodProductCatMaterialCatRcrtEntity>().eq("material_cat_id", materialCatId).eq("product_cat_id", entity.getId()));
     	}
     	return super.updateById(entity);
+    }
+    
+    @Override
+    public boolean deleteBatchIds(Collection<? extends Serializable> idList) {
+    	// TODO Auto-generated method stub
+    	List<FoodProductCatEntity> list = this.baseMapper.selectBatchIds(idList);
+    	for(FoodProductCatEntity fpc:list){
+    		foodProductCatMaterialCatRcrtDao.delete(new EntityWrapper<FoodProductCatMaterialCatRcrtEntity>().eq("product_cat_id", fpc.getId()));
+    	}
+    	return super.deleteBatchIds(idList);
     }
     
     @Override

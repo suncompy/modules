@@ -7,7 +7,7 @@
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodProductCatMaterialCatRcrtEntity" id="foodProductCatMaterialCatRcrtMap">
         <result property="id" column="id"/>
         <result property="materialCatId" column="material_cat_id"/>
-        <result property="materialCatId" column="material_cat_id"/>
+        <result property="productCatId" column="product_cat_id"/>
     </resultMap>
 
 </mapper>

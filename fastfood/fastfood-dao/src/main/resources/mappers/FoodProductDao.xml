@@ -9,6 +9,7 @@
         <result property="name" column="name"/>
         <result property="materials" column="materials"/>
         <result property="showPrice" column="show_price"/>
+        <result property="productCatId" column="product_cat_id"/>
         <result property="period" column="period"/>
         <result property="remind" column="remind"/>
         <result property="picture" column="picture"/>
@@ -33,5 +34,20 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
-
+	<insert id="insert" parameterType="com.lebaoxun.modules.fastfood.entity.FoodProductEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO food_product (
+		name, materials,show_price,product_cat_id,
+		period, remind, picture,total_stock,stock_alert_val,
+		unit,zs_weight,cp_weight,warm_flag,warm_time,
+		hot_num,label,status,up_time,down_time,
+		keyword,descr,remark,create_time,create_by,
+		update_by,update_time ) VALUES
+		( #{name}, #{materials}, #{showPrice}, #{productCatId},
+		#{period}, #{remind}, #{picture}, #{totalStock}, #{stockAlertVal},
+		#{unit}, #{zsWeight}, #{cpWeight}, #{warmFlag}, #{warmTime},
+		#{hotNum}, #{label}, #{status}, #{upTime}, #{downTime},
+		#{keyword}, #{descr}, #{remark}, #{createTime}, #{createBy},
+		#{updateBy}, #{updateTime});
+	</insert>
 </mapper>

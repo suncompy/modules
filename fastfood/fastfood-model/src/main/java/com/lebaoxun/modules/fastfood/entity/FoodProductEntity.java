@@ -1,10 +1,12 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 餐品表
@@ -30,6 +32,10 @@ public class FoodProductEntity implements Serializable {
 	 * 产品食材，以;分割
 	 */
 	private String materials;
+	/**
+	 * 餐品分类ID
+	 */
+	private Integer productCatId;
 	/**
 	 * 参考价格
 	 */
@@ -126,6 +132,12 @@ public class FoodProductEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	
+	@TableField(exist=false)
+	private List<Integer> materialIds;
+	
+	@TableField(exist=false)
+	private List<FoodMaterialEntity> list;
 
 	/**
 	 * 设置：
@@ -444,5 +456,23 @@ public class FoodProductEntity implements Serializable {
 	}
 	public void setGiveScore(Integer giveScore) {
 		this.giveScore = giveScore;
+	}
+	public Integer getProductCatId() {
+		return productCatId;
+	}
+	public void setProductCatId(Integer productCatId) {
+		this.productCatId = productCatId;
+	}
+	public List<Integer> getMaterialIds() {
+		return materialIds;
+	}
+	public void setMaterialIds(List<Integer> materialIds) {
+		this.materialIds = materialIds;
+	}
+	public List<FoodMaterialEntity> getList() {
+		return list;
+	}
+	public void setList(List<FoodMaterialEntity> list) {
+		this.list = list;
 	}
 }
