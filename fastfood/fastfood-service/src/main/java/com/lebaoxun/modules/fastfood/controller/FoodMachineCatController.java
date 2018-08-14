@@ -1,20 +1,17 @@
 package com.lebaoxun.modules.fastfood.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.commons.utils.ValidatorUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCatEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatService;
-import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
 
 
 /**
@@ -54,6 +51,11 @@ public class FoodMachineCatController {
     @RequestMapping("/fastfood/foodmachinecat/save")
     @RedisLock(value="fastfood:foodmachinecat:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineCatEntity foodMachineCat){
+        foodMachineCat.setCreateBy(adminId);
+        foodMachineCat.setCreateTime(new Date());
+        foodMachineCat.setUpdateBy(adminId);
+        foodMachineCat.setUpdateTime(new Date());
+        ValidatorUtils.validateEntity(foodMachineCat);
 		foodMachineCatService.insert(foodMachineCat);
         return ResponseMessage.ok();
     }

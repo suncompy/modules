@@ -3,6 +3,8 @@ package com.lebaoxun.modules.fastfood.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
@@ -16,5 +18,9 @@ import java.util.Map;
 public interface FoodMachineService extends IService<FoodMachineEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    public void save(Long adminId,FoodMachineEntity foodMachine);
+
+    public void updateById(Long adminId,FoodMachineEntity foodMachine);
 }
 

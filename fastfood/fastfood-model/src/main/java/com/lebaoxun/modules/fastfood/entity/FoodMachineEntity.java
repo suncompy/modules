@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -34,6 +35,15 @@ public class FoodMachineEntity implements Serializable {
 	 * 所在地区
 	 */
 	private String areaCode;
+	/**
+	 *省市区拼接地址
+	 */
+	@TableField(exist=false)
+	private String joinAddress;
+	/**
+	 *详细地址
+	 */
+	private String address;
 	/**
 	 * 地图经纬度
 	 */
@@ -290,5 +300,21 @@ public class FoodMachineEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+
+	public String getJoinAddress() {
+		return joinAddress;
+	}
+
+	public void setJoinAddress(String joinAddress) {
+		this.joinAddress = joinAddress;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

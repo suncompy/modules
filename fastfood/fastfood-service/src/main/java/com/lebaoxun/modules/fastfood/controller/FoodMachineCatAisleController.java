@@ -3,6 +3,7 @@ package com.lebaoxun.modules.fastfood.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +55,15 @@ public class FoodMachineCatAisleController {
     @RequestMapping("/fastfood/foodmachinecataisle/save")
     @RedisLock(value="fastfood:foodmachinecataisle:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineCatAisleEntity foodMachineCatAisle){
+        //数据校验
+        if(foodMachineCatAisle.getCatId()==null||foodMachineCatAisle.getCatId()==0)
+            return ResponseMessage.error("0004","机器分类ID为空");
+        //货道位置不能重复
+        EntityWrapper<FoodMachineCatAisleEntity> macCatWrapper=new EntityWrapper<FoodMachineCatAisleEntity>();
+        macCatWrapper.eq("x",foodMachineCatAisle.getX()).eq("y",foodMachineCatAisle.getY());
+        FoodMachineCatAisleEntity macCat=foodMachineCatAisleService.selectOne(macCatWrapper);
+        if(macCat!=null)
+            return ResponseMessage.error("0005","机器货道位置重复");
 		foodMachineCatAisleService.insert(foodMachineCatAisle);
         return ResponseMessage.ok();
     }
