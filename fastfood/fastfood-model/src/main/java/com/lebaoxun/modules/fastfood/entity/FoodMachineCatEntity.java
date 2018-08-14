@@ -2,7 +2,8 @@ package com.lebaoxun.modules.fastfood.entity;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,8 +21,8 @@ public class FoodMachineCatEntity implements Serializable {
 	/**
 	 * 
 	 */
-	@TableId
-	private Integer id = 0;
+@TableId
+	private long id;
 	/**
 	 * 分类名称
 	 */
@@ -33,6 +34,7 @@ public class FoodMachineCatEntity implements Serializable {
 	/**
 	 * 创建时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;
 	/**
 	 * 创建人
@@ -45,18 +47,19 @@ public class FoodMachineCatEntity implements Serializable {
 	/**
 	 * 修改时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
 
 	/**
 	 * 设置：
 	 */
-	public void setId(Integer id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	/**
 	 * 获取：
 	 */
-	public Integer getId() {
+	public long getId() {
 		return id;
 	}
 	/**
