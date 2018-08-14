@@ -1,8 +1,14 @@
 package com.lebaoxun.modules.fastfood.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.commons.exception.I18nMessageException;
+import com.lebaoxun.commons.utils.AddressParse;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
+import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +34,8 @@ import com.lebaoxun.soa.core.redis.lock.RedisLock;
 public class FoodMachineController {
     @Autowired
     private FoodMachineService foodMachineService;
+    @Autowired
+    private FoodMachineCatAisleService foodMachineCatAisleService;
 
     /**
      * 列表
@@ -54,7 +62,7 @@ public class FoodMachineController {
     @RequestMapping("/fastfood/foodmachine/save")
     @RedisLock(value="fastfood:foodmachine:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineEntity foodMachine){
-		foodMachineService.insert(foodMachine);
+        foodMachineService.save(adminId,foodMachine);
         return ResponseMessage.ok();
     }
 
