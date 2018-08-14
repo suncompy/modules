@@ -13,5 +13,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface FoodMachineDao extends BaseMapper<FoodMachineEntity> {
-	
+   public void save(FoodMachineEntity foodMachineEntity);
 }
