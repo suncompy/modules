@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -67,6 +68,11 @@ public class FoodMachineAisleEntity implements Serializable {
 	 */
 	private Date updateTime;
 
+	/**
+	 * ids 以逗号隔开，前端传参
+	 */
+	@TableField(exist = false)
+    private String ids;
 	/**
 	 * 设置：
 	 */
@@ -210,5 +216,13 @@ public class FoodMachineAisleEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
 	}
 }
