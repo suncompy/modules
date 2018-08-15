@@ -1,8 +1,13 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import com.lebaoxun.commons.exception.I18nMessageException;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,4 +83,25 @@ public class FoodMachineAisleController {
         return ResponseMessage.ok();
     }
 
+    /**
+     * 关联产品列表查询,包括产品、名称产品价格
+     */
+    ResponseMessage findMachineAisleListByMacId(@RequestParam("macId")Integer macId){
+        List<FoodMachineRefAisleEntity> foodMachineAisleEntityList = foodMachineAisleService.findMachineAisleListByMacId(macId);
+        int totalCount=foodMachineAisleEntityList.size();
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(foodMachineAisleEntityList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
+    }
+    /**
+     * ids 机器渠道关联表主键集，以逗号拼接
+     * 关联产品、分类
+     */
+    @RequestMapping("/fastfood/foodmachineaisle/refProductAndType")
+    @RedisLock(value="fastfood:foodmachineaisle:refProductAndType:lock:#arg0")
+    ResponseMessage refProductAndType(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineAisleEntity foodMachineAisle){
+        foodMachineAisleService.refProductAndType(adminId,foodMachineAisle);
+        return ResponseMessage.ok();
+    }
 }
