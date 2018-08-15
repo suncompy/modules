@@ -3,7 +3,7 @@
 
 <mapper namespace="com.lebaoxun.modules.fastfood.dao.FoodMachineAisleDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity" id="foodMachineAisleMap">
         <result property="id" column="id"/>
         <result property="macId" column="mac_id"/>
@@ -19,5 +19,29 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity" id="foodRefMachineAisleMap">
+        <result property="id" column="id"/>
+        <result property="macId" column="mac_id"/>
+        <result property="productCatId" column="product_cat_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="price" column="price"/>
+        <result property="name" column="name"/>
+        <result property="catName" column="cat_name"/>
+    </resultMap>
 
+    <select id="findMachineAisleListByMacId" resultMap="foodRefMachineAisleMap">
+        SELECT
+            f.id,
+            f.mac_id,
+            f.product_cat_id,
+            f.product_id,
+            f.price,
+            p.`name`,
+            c.`name` AS cat_name
+        FROM
+            food_machine_aisle f
+        LEFT JOIN food_product p ON f.product_id = p.id
+        LEFT JOIN food_machine_product_cat c ON p.product_cat_id = c.id
+        where mac_id=#{macId}
+    </select>
 </mapper>
