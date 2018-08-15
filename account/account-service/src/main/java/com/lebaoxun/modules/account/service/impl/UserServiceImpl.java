@@ -280,11 +280,12 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setRemark(q.getRemark());
 		entity.setSex(q.getSex());
 		entity.setBalance(0);
+		entity.setScore(0);
 		entity.setCreateTime(new Date());
 		entity.setOpenid(q.getOpenid());
 		entity.setUnionid(q.getUnionid());
 		entity.setType(q.getType());
-		entity.setSource("WECHATOA");
+		entity.setSource("SELF_WECHAT_OA");
 		entity.setUserId(userId);
 		entity.setStatus("Y");
 		
@@ -304,6 +305,47 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 			throw new I18nMessageException("500");
 		}
 		insertLog(user, logType, 0, descr, adjunctInfo);
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void wechatAppRegister(Long userId, UserEntity q) {
+		// TODO Auto-generated method stub
+		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
+		if(user != null){
+			throw new I18nMessageException("50001");
+		}
+		user = this.selectOne( new EntityWrapper<UserEntity>().eq("account", q.getAccount()));
+		if(user != null){
+			throw new I18nMessageException("50001");
+		}
+		logger.debug("passwdSecret={},account={},password={}",passwdSecret,q.getAccount(), q.getPassword());
+		String password = PwdUtil.getMd5Password(passwdSecret,q.getAccount(), q.getPassword());
+		
+		UserEntity entity = new UserEntity();
+		/*entity.setCity(q.getCity());
+		entity.setCountry(q.getCountry());
+		entity.setHeadimgurl(q.getHeadimgurl());
+		entity.setLanguage(q.getLanguage());
+		entity.setNickname(q.getNickname());
+		entity.setProvince(q.getProvince());*/
+		entity.setAccount(q.getAccount());
+		entity.setMobile(q.getMobile());
+		entity.setPassword(password);
+		entity.setBalance(0);
+		entity.setScore(0);
+		entity.setLevel(0);
+		entity.setCreateTime(new Date());
+		entity.setWxAppOpenid(q.getWxAppOpenid());
+		entity.setType(q.getType());
+		entity.setSource("SELF_WECHAT_APP");
+		entity.setUserId(userId);
+		entity.setStatus("Y");
+		
+		UserLogAction logType = UserLogAction.U_WECHATOA_REGISTER;
+		insertLog(entity, logType, 0, null, new Gson().toJson(q));
+		
+		this.insert(entity);
 	}
 	
 	void insertLog(UserEntity user,UserLogAction logType,Integer tradeMoney,String descr,String adjunctInfo){

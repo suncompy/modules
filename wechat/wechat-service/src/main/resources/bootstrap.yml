@@ -18,6 +18,7 @@ logging:
   file: /www/logs/${spring.application.name}.log
 
 
-yashua:
-  appid: wx0e166638419ae925
-  secret: eb96b52d4606ef4cc25b9db116d91d88
+fastfood:
+  wxapp:
+    appid: wx15a343c46d0e3590
+    secret: f3e4351f82d99a3c60ab157137738a77

@@ -85,6 +85,13 @@ public interface UserService extends IService<UserEntity> {
     void wechatOARegister(Long userId, UserEntity user);
     
     /**
+     * 微信小程序注册
+     * @param userId
+     * @param user
+     * @param scope
+     */
+    void wechatAppRegister(Long userId, UserEntity user);
+    /**
      * 记录登录日志
      * @param userId
      * @param scope

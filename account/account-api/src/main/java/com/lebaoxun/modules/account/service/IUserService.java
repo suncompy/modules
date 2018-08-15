@@ -130,6 +130,16 @@ public interface IUserService {
     @RequestMapping("/account/user/wechatOARegister")
     ResponseMessage wechatOARegister(@RequestParam(value="userId") Long userId, 
     		@RequestBody UserEntity user);
+    
+    /**
+     * 微信小程序注册
+     * @param userId
+     * @param user
+     * @param scope
+     */
+    @RequestMapping("/account/user/wechatAppRegister")
+    ResponseMessage wechatAppRegister(@RequestParam(value="userId") Long userId, 
+    		@RequestBody UserEntity user);
 
     /**
      * 删除
@@ -160,6 +170,15 @@ public interface IUserService {
      */
 	@RequestMapping("/account/user/findByOpenid")
 	UserEntity findByOpenid(@RequestParam("openid") String openid,
+			@RequestParam(value="groupid",required=false) String groupid);
+	
+	/**
+	 * 根据微信小程序openid获取
+	 * @param username
+	 * @return
+	 */
+	@RequestMapping("/account/user/findByWxAppOpenid")
+	UserEntity findByWxAppOpenid(@RequestParam("openid") String openid,
 			@RequestParam(value="groupid",required=false) String groupid);
 	
 	/**

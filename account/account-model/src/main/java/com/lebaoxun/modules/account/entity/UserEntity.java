@@ -90,6 +90,8 @@ public class UserEntity implements Serializable {
 	 * 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息
 	 */
 	private String subscribe;
+	
+	private String wxAppOpenid;
 	/**
 	 * 微信openid
 	 */
@@ -536,5 +538,11 @@ public class UserEntity implements Serializable {
 	}
 	public void setScore(Integer score) {
 		this.score = score;
+	}
+	public String getWxAppOpenid() {
+		return wxAppOpenid;
+	}
+	public void setWxAppOpenid(String wxAppOpenid) {
+		this.wxAppOpenid = wxAppOpenid;
 	}
 }

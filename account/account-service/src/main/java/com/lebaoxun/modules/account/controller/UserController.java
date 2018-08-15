@@ -195,6 +195,20 @@ public class UserController {
     	userService.wechatOARegister(userId, user);
     	return ResponseMessage.ok();
     }
+    
+    /**
+     * 微信小程序注册
+     * @param userId
+     * @param user
+     * @param scope
+     */
+    @RequestMapping("/account/user/wechatAppRegister")
+    @RedisLock(value="account:user:wechatAppRegister:lock:#arg0")
+    ResponseMessage wechatAppRegister(@RequestParam(value="userId") Long userId, 
+    		@RequestBody UserEntity user){
+    	userService.wechatOARegister(userId, user);
+    	return ResponseMessage.ok();
+    }
 
     /**
      * 删除
@@ -235,6 +249,17 @@ public class UserController {
 	UserEntity findByOpenid(@RequestParam("openid") String openid,
 			@RequestParam(value="groupid",required=false) String groupid){
 		return userService.selectOne( new EntityWrapper<UserEntity>().eq("openid", openid));
+	}
+	
+	/**
+	 * 根据微信小程序openid获取
+	 * @param username
+	 * @return
+	 */
+	@RequestMapping("/account/user/findByWxAppOpenid")
+	UserEntity findByWxAppOpenid(@RequestParam("openid") String openid,
+			@RequestParam(value="groupid",required=false) String groupid){
+		return userService.selectOne( new EntityWrapper<UserEntity>().eq("wx_app_openid", openid));
 	}
 	
 	/**
