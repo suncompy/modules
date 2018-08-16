@@ -1,13 +1,14 @@
 package com.lebaoxun.modules.account.service.hystrix;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.lebaoxun.commons.exception.I18nMessageException;
+import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.account.em.UserLogAction;
 import com.lebaoxun.modules.account.entity.UserEntity;
 import com.lebaoxun.modules.account.service.IUserService;
-import com.lebaoxun.commons.exception.I18nMessageException;
-import com.lebaoxun.commons.exception.ResponseMessage;
 
 /**
  * 用户表
@@ -47,7 +48,7 @@ public class UserServiceHystrix implements IUserService {
 	}
 
 	@Override
-	public ResponseMessage modifyBalance(Long userId, Integer amount,
+	public ResponseMessage modifyBalance(Long userId, BigDecimal amount,
 			Long adminId, String descr) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}

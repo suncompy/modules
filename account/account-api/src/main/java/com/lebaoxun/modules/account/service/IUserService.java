@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.account.service;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -74,7 +75,7 @@ public interface IUserService {
      */
     @RequestMapping("/account/user/modifyBalance")
     ResponseMessage modifyBalance(@RequestParam(value="userId") Long userId,
-    		@RequestParam(value="amount") Integer amount,
+    		@RequestParam(value="amount") BigDecimal amount,
     		@RequestParam(value="adminId",required=false) Long adminId,
     		@RequestParam(value="descr",required=false) String descr);
     

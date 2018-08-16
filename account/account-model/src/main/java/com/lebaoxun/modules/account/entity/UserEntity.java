@@ -1,10 +1,11 @@
 package com.lebaoxun.modules.account.entity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 用户表
@@ -61,7 +62,7 @@ public class UserEntity implements Serializable {
 	/**
 	 * 账户金额
 	 */
-	private Integer balance;
+	private BigDecimal balance;
 	/**
 	 * 账户积分
 	 */
@@ -160,6 +161,10 @@ public class UserEntity implements Serializable {
 	 * 最后支付时间
 	 */
 	private Date lastPayTime;
+	/**
+	 * 邀请人
+	 */
+	private Long inviter;
 
 	/**
 	 * 设置：主键
@@ -284,13 +289,13 @@ public class UserEntity implements Serializable {
 	/**
 	 * 设置：账户金额
 	 */
-	public void setBalance(Integer balance) {
+	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
 	}
 	/**
 	 * 获取：账户金额
 	 */
-	public Integer getBalance() {
+	public BigDecimal getBalance() {
 		return balance;
 	}
 	/**
@@ -544,5 +549,11 @@ public class UserEntity implements Serializable {
 	}
 	public void setWxAppOpenid(String wxAppOpenid) {
 		this.wxAppOpenid = wxAppOpenid;
+	}
+	public Long getInviter() {
+		return inviter;
+	}
+	public void setInviter(Long inviter) {
+		this.inviter = inviter;
 	}
 }

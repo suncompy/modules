@@ -22,6 +22,8 @@ public interface UserLogDao extends BaseMapper<UserLogEntity> {
 	List<Map<String,Object>> queryAllLogType();
 	
 	List<UserLogEntity> queryAccountLogByUserId(@Param("user_id")Long userId,
+			@Param("flag")String flag, 
+			@Param("logType")String logType, 
 			@Param("size")Integer size,
 			@Param("offset")Integer offset);
 	

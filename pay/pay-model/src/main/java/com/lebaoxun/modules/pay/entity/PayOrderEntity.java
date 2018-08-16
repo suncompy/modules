@@ -99,6 +99,16 @@ public class PayOrderEntity implements Serializable {
 	 * 分组
 	 */
 	private String group;
+	
+	/**
+	 * 充值金额
+	 */
+	private BigDecimal rechargeFee;
+	
+	/**
+	 * 场景
+	 */
+	private String scene;
 
 	/**
 	 * 设置：
@@ -339,5 +349,17 @@ public class PayOrderEntity implements Serializable {
 	 */
 	public String getGroup() {
 		return group;
+	}
+	public BigDecimal getRechargeFee() {
+		return rechargeFee;
+	}
+	public void setRechargeFee(BigDecimal rechargeFee) {
+		this.rechargeFee = rechargeFee;
+	}
+	public String getScene() {
+		return scene;
+	}
+	public void setScene(String scene) {
+		this.scene = scene;
 	}
 }

@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.account.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -116,7 +117,7 @@ public class UserController {
     @RequestMapping("/account/user/modifyBalance")
     @RedisLock(value="account:user:modifyBalance:lock:#arg0")
     ResponseMessage modifyBalance(@RequestParam(value="userId") Long userId,
-    		@RequestParam(value="amount") Integer amount,
+    		@RequestParam(value="amount") BigDecimal amount,
     		@RequestParam(value="adminId",required=false) Long adminId,
     		@RequestParam(value="descr",required=false) String descr){
     	userService.modifyBalance(userId, amount, descr, adminId);
@@ -206,7 +207,7 @@ public class UserController {
     @RedisLock(value="account:user:wechatAppRegister:lock:#arg0")
     ResponseMessage wechatAppRegister(@RequestParam(value="userId") Long userId, 
     		@RequestBody UserEntity user){
-    	userService.wechatOARegister(userId, user);
+    	userService.wechatAppRegister(userId, user);
     	return ResponseMessage.ok();
     }
 

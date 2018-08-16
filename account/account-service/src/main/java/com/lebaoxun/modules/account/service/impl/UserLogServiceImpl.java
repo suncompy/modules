@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -50,9 +51,10 @@ public class UserLogServiceImpl extends ServiceImpl<UserLogDao, UserLogEntity> i
 
 	@Override
 	public List<UserLogEntity> queryAccountLogByUserId(Long userId,
+			String flag, String logType,
 			Integer size, Integer offset) {
 		// TODO Auto-generated method stub
-		return this.baseMapper.queryAccountLogByUserId(userId, size, offset);
+		return this.baseMapper.queryAccountLogByUserId(userId, flag, logType, size, offset);
 	}
 
 	@Override

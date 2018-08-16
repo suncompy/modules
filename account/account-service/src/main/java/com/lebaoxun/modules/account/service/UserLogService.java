@@ -25,6 +25,8 @@ public interface UserLogService extends IService<UserLogEntity> {
     List<Map<String,Object>> queryAllLogType();
     
     List<UserLogEntity> queryAccountLogByUserId(Long userId,
+    		String flag,
+    		String logType,
 			Integer size, Integer offset);
     
     void zRange(Long userId,String logType,String time);

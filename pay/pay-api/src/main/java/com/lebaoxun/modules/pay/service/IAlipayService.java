@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.pay.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,8 @@ public interface IAlipayService {
 			@RequestParam("totalAmount")String totalAmount,
 			@RequestParam(value="body",required=false)String body,
 			@RequestParam(value="spbill_create_ip",required=false)String spbill_create_ip,
-			@RequestParam(value="userId") Long userId);
+			@RequestParam(value="userId") Long userId,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee);
 
 	@RequestMapping(value = "/alipay/notify")
 	String notify(@RequestParam Map<String, String> params);

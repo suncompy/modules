@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -45,11 +46,11 @@ public class UserLogEntity implements Serializable {
 	/**
 	 * 交易金额
 	 */
-	private Integer tradeMoney;
+	private BigDecimal tradeMoney;
 	/**
 	 * 账户余额
 	 */
-	private Integer money;
+	private BigDecimal money;
 	/**
 	 * 日志说明
 	 */
@@ -110,25 +111,25 @@ public class UserLogEntity implements Serializable {
 	/**
 	 * 设置：交易金额
 	 */
-	public void setTradeMoney(Integer tradeMoney) {
+	public void setTradeMoney(BigDecimal tradeMoney) {
 		this.tradeMoney = tradeMoney;
 	}
 	/**
 	 * 获取：交易金额
 	 */
-	public Integer getTradeMoney() {
+	public BigDecimal getTradeMoney() {
 		return tradeMoney;
 	}
 	/**
 	 * 设置：账户余额
 	 */
-	public void setMoney(Integer money) {
+	public void setMoney(BigDecimal money) {
 		this.money = money;
 	}
 	/**
 	 * 获取：账户余额
 	 */
-	public Integer getMoney() {
+	public BigDecimal getMoney() {
 		return money;
 	}
 	/**

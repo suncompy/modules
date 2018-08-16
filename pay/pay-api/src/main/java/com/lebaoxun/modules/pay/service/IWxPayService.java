@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.pay.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -36,7 +37,8 @@ public interface IWxPayService {
 	ResponseMessage payment(@RequestParam("spbill_create_ip")String spbill_create_ip, @RequestParam("orderNo")String orderNo, 
 			@RequestParam("descr")String descr, @RequestParam("totalFee")Integer totalFee, 
 			@RequestParam("attach")String attach, @RequestParam("group")String group, 
-			@RequestParam("openid")String openid, @RequestParam("userId") Long userId);
+			@RequestParam("openid")String openid, @RequestParam("userId") Long userId,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee);
 	
 	/**
 	 * 微信H5付款
@@ -55,7 +57,8 @@ public interface IWxPayService {
 			@RequestParam("wapName") String wapName, @RequestParam("spbill_create_ip") String spbill_create_ip, 
 			@RequestParam("orderNo") String orderNo, @RequestParam("descr") String descr, 
 			@RequestParam("totalFee") Integer totalFee, @RequestParam("attach") String attach, 
-			@RequestParam("group") String group, @RequestParam("userId") Long userId);
+			@RequestParam("group") String group, @RequestParam("userId") Long userId,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee);
 	
 	/**
 	 * 原生扫码支付
@@ -74,7 +77,8 @@ public interface IWxPayService {
 			@RequestParam("spbill_create_ip") String spbill_create_ip, @RequestParam("orderNo") String orderNo, 
 			@RequestParam("descr") String descr, @RequestParam("totalFee") Integer totalFee, 
 			@RequestParam("attach") String attach, @RequestParam("group") String group, 
-			@RequestParam("userId") Long userId) throws Exception;
+			@RequestParam("userId") Long userId,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee) throws Exception;
 	
 	/**
 	 * 微信APP支付付款
@@ -86,7 +90,8 @@ public interface IWxPayService {
 	ResponseMessage appPayment(@RequestParam("spbill_create_ip")String spbill_create_ip, @RequestParam("orderNo")String orderNo, 
 			@RequestParam("descr")String descr, @RequestParam("totalFee")Integer totalFee, 
 			@RequestParam("attach")String attach, @RequestParam("group")String group,
-			@RequestParam("userId") Long userId);
+			@RequestParam("userId") Long userId,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee);
 	
 	@RequestMapping(value="/wxpay/query", method = RequestMethod.GET)
 	ResponseMessage query(@RequestParam("out_trade_no")String out_trade_no, @RequestParam("account")String account,

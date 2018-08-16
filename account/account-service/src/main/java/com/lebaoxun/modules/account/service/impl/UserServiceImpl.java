@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.account.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -80,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		String passwd = PwdUtil.getMd5Password(passwdSecret,user.getAccount(), user.getPassword());
 		
     	user.setCreateTime(new Date());
-    	user.setBalance(0);
+    	user.setBalance(new BigDecimal(0.00));
     	user.setLevel(0);
     	user.setPassword(passwd);
     	this.baseMapper.insert(user);
@@ -101,7 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 			status = "Y";
 		}
 		
-		insertLog(user, logType, 0, logType.getDescr(), adjunctInfo);
+		insertLog(user, logType, new BigDecimal(0.00), logType.getDescr(), adjunctInfo);
 		
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
@@ -124,7 +125,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 			adjunctInfo = adminId+"";
 			logType = UserLogAction.A_MODIFY_PASSWD;
 		}
-		insertLog(user, logType, 0, logType.getDescr(), adjunctInfo);
+		insertLog(user, logType, new BigDecimal(0.00), logType.getDescr(), adjunctInfo);
 		
 		String passwd = PwdUtil.getMd5Password(passwdSecret,user.getAccount(), newPasswd);
 		UserEntity entity = new UserEntity();
@@ -135,7 +136,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void modifyBalance(Long userId,Integer amount, String descr, Long adminId) {
+	public void modifyBalance(Long userId,BigDecimal amount, String descr, Long adminId) {
 		// TODO Auto-generated method stub
 		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
 		if(user == null){
@@ -143,7 +144,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		}
 		UserLogAction logType;
 		String adjunctInfo = null;
-		if(amount > 0){
+		if(amount.compareTo(new BigDecimal(0)) > 0){
 			logType = UserLogAction.U_BALANCE_ADD;
 			if(adminId != null){
 				adjunctInfo = adminId+"";
@@ -163,7 +164,44 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
-		entity.setBalance(user.getBalance()+amount);
+		entity.setBalance(user.getBalance().add(amount));
+		this.updateById(entity);
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void recharge(Long userId, String orderNo, Long buyTime,
+			String total_fee) {
+		// TODO Auto-generated method stub
+		BigDecimal fee = new BigDecimal(total_fee);
+		
+		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
+		if(user == null){
+			throw new I18nMessageException("500");
+		}
+		UserLogAction logType = UserLogAction.U_PAY_BALANCE_ADD;
+		String descr = logType.getDescr();
+		
+		int count = userLogDao.selectCount(new EntityWrapper<UserLogEntity>().eq("user_id", userId).eq("adjunct_info", orderNo));
+		if(count > 0){//已完成充值
+			return;
+		}
+		UserLogEntity log = new UserLogEntity();
+		log.setAdjunctInfo(orderNo);
+		descr = logType.getDescr();
+		log.setAccount(user.getAccount());
+		log.setCreateTime(new Date());
+		log.setDescr(descr);
+		log.setLogType(logType.toString());
+		log.setMoney(user.getBalance());
+		log.setTradeMoney(fee);
+		log.setUserId(user.getUserId());
+		
+		userLogDao.insert(log);
+		
+		UserEntity entity = new UserEntity();
+		entity.setId(user.getId());
+		entity.setBalance(user.getBalance().add(fee));
 		this.updateById(entity);
 	}
 	
@@ -176,7 +214,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 			throw new I18nMessageException("500");
 		}
 		UserLogAction logType = UserLogAction.U_MODIFY_INFO;
-		insertLog(user, logType, 0, logType.getDescr(), headimgurl);
+		insertLog(user, logType, new BigDecimal(0.00), logType.getDescr(), headimgurl);
 		
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
@@ -279,7 +317,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setProvince(q.getProvince());
 		entity.setRemark(q.getRemark());
 		entity.setSex(q.getSex());
-		entity.setBalance(0);
+		entity.setBalance(new BigDecimal(0.00));
 		entity.setScore(0);
 		entity.setCreateTime(new Date());
 		entity.setOpenid(q.getOpenid());
@@ -290,7 +328,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setStatus("Y");
 		
 		UserLogAction logType = UserLogAction.U_WECHATOA_REGISTER;
-		insertLog(entity, logType, 0, null, new Gson().toJson(q));
+		insertLog(entity, logType, new BigDecimal(0.00), null, new Gson().toJson(q));
 		
 		this.insert(entity);
 	}
@@ -304,7 +342,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		insertLog(user, logType, 0, descr, adjunctInfo);
+		insertLog(user, logType, new BigDecimal(0.00), descr, adjunctInfo);
 	}
 	
 	@Override
@@ -332,7 +370,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setAccount(q.getAccount());
 		entity.setMobile(q.getMobile());
 		entity.setPassword(password);
-		entity.setBalance(0);
+		entity.setInviter(q.getInviter());
+		entity.setBalance(new BigDecimal(0.00));
 		entity.setScore(0);
 		entity.setLevel(0);
 		entity.setCreateTime(new Date());
@@ -343,12 +382,12 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setStatus("Y");
 		
 		UserLogAction logType = UserLogAction.U_WECHATOA_REGISTER;
-		insertLog(entity, logType, 0, null, new Gson().toJson(q));
+		insertLog(entity, logType, new BigDecimal(0.00), null, new Gson().toJson(q));
 		
 		this.insert(entity);
 	}
 	
-	void insertLog(UserEntity user,UserLogAction logType,Integer tradeMoney,String descr,String adjunctInfo){
+	void insertLog(UserEntity user,UserLogAction logType,BigDecimal tradeMoney,String descr,String adjunctInfo){
 		UserLogEntity log = new UserLogEntity();
 		if(adjunctInfo != null){
 			log.setAdjunctInfo(adjunctInfo);
@@ -368,7 +407,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 	}
 	
 	void insertLog(UserEntity user,UserLogAction logType,String descr){
-		insertLog(user, logType, 0, descr, null);
+		insertLog(user, logType, new BigDecimal(0.00), descr, null);
 	}
 
 }

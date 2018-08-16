@@ -89,10 +89,13 @@ public class WxpayController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/wxpay/payment", method = RequestMethod.POST)
-	ResponseMessage payment(@RequestParam("spbill_create_ip")String spbill_create_ip, @RequestParam("orderNo")String orderNo, 
+	ResponseMessage payment(@RequestParam("spbill_create_ip")String spbill_create_ip, 
+			@RequestParam("orderNo")String orderNo, 
 			@RequestParam("descr")String descr, @RequestParam("totalFee")Integer totalFee, 
 			@RequestParam("attach")String attach, @RequestParam("group")String group, 
-			@RequestParam("openid")String openid, @RequestParam("userId") Long userId) {
+			@RequestParam("openid")String openid, @RequestParam("userId") Long userId,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee,
+			@RequestParam(value="scene",required=false)String scene) {
 		String tradeType = "JSAPI";
 		
 		WxpayConfig config = wxpayConfigService.getWxpayConfig(group);
@@ -194,7 +197,9 @@ public class WxpayController {
 		order.setSpbillCreateIp(spbill_create_ip);
 		order.setStatus(0);
 		order.setTotalFee(new BigDecimal(totalFee).divide(new BigDecimal(100)));
+		order.setRechargeFee(rechargeFee);
 		order.setTradeType(tradeType);
+		order.setScene(scene);
 		payOrderService.insert(order);
 		
 		String resign = WXSignUtils.createSign("UTF-8", parameters1,secret);
@@ -225,7 +230,9 @@ public class WxpayController {
 			@RequestParam("wapName") String wapName, @RequestParam("spbill_create_ip") String spbill_create_ip, 
 			@RequestParam("orderNo") String orderNo, @RequestParam("descr") String descr, 
 			@RequestParam("totalFee") Integer totalFee, @RequestParam("attach") String attach, 
-			@RequestParam("group") String group, @RequestParam("userId") Long userId){
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee,
+			@RequestParam("group") String group, @RequestParam("userId") Long userId,
+			@RequestParam(value="scene",required=false)String scene){
 		
 		String tradeType = "MWEB";
 		
@@ -325,7 +332,9 @@ public class WxpayController {
 		order.setSpbillCreateIp(spbill_create_ip);
 		order.setStatus(0);
 		order.setTotalFee(new BigDecimal(totalFee).divide(new BigDecimal(100)));
+		order.setRechargeFee(rechargeFee);
 		order.setTradeType(tradeType);
+		order.setScene(scene);
 		payOrderService.insert(order);
 		return new ResponseMessage(retMap);
 	}
@@ -335,7 +344,9 @@ public class WxpayController {
 			@RequestParam("spbill_create_ip") String spbill_create_ip, @RequestParam("orderNo") String orderNo, 
 			@RequestParam("descr") String descr, @RequestParam("totalFee") Integer totalFee, 
 			@RequestParam("attach") String attach, @RequestParam("group") String group, 
-			@RequestParam("userId") Long userId) throws Exception {
+			@RequestParam("userId") Long userId,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee,
+			@RequestParam(value="scene",required=false)String scene) throws Exception {
 		String tradeType = "NATIVE";
 		WxpayConfig config = wxpayConfigService.getWxpayConfig(group);
 		String notify_url = config.getNotifyUrl();
@@ -427,7 +438,9 @@ public class WxpayController {
 		order.setSpbillCreateIp(spbill_create_ip);
 		order.setStatus(0);
 		order.setTotalFee(new BigDecimal(totalFee).divide(new BigDecimal(100)));
+		order.setRechargeFee(rechargeFee);
 		order.setTradeType(tradeType);
+		order.setScene(scene);
 		payOrderService.insert(order);
 		
 		String prepay_id=retMap.get("prepay_id").toString();
@@ -504,7 +517,9 @@ public class WxpayController {
 	ResponseMessage appPayment(@RequestParam("spbill_create_ip")String spbill_create_ip, @RequestParam("orderNo")String orderNo, 
 			@RequestParam("descr")String descr, @RequestParam("totalFee")Integer totalFee, 
 			@RequestParam("attach")String attach, @RequestParam("group")String group,
-			@RequestParam("userId") Long userId) {
+			@RequestParam("userId") Long userId,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee,
+			@RequestParam(value="scene",required=false)String scene) {
 		String tradeType = "APP";
 		WxpayConfig config = wxpayConfigService.getWxpayConfig(group);
 		String notify_url = config.getNotifyUrl();
@@ -596,7 +611,9 @@ public class WxpayController {
 		order.setSpbillCreateIp(spbill_create_ip);
 		order.setStatus(0);
 		order.setTotalFee(new BigDecimal(totalFee).divide(new BigDecimal(100)));
+		order.setRechargeFee(rechargeFee);
 		order.setTradeType(tradeType);
+		order.setScene(scene);
 		payOrderService.insert(order);
 		
 		nonce_str = RandCharsUtils.getRandomString(16);
@@ -662,7 +679,7 @@ public class WxpayController {
 				if(StringUtils.isNotBlank(config.getQueueName())){
 					queue = config.getQueueName();
 				}
-				return payOrderService.notify(out_trade_no, total_fee, tradeNo, buyTime, queue);
+				return payOrderService.notify(out_trade_no, total_fee, tradeNo, buyTime, queue, "wxpay");
 			}
 			logger.error("[wxpay] notify.error {}","sign failure");
 			query(out_trade_no, account, "1");
@@ -755,7 +772,7 @@ public class WxpayController {
 				BigDecimal totalFee = new BigDecimal(total_fee).divide(new BigDecimal("100"));
 				Long buyTime = DateUtils.parseDate(time_end, new String[]{"yyyyMMddHHmmss"}).getTime();
 				
-				payOrderService.notify(out_trade_no, totalFee, tradeNo, buyTime, config.getQueueName());
+				payOrderService.notify(out_trade_no, totalFee, tradeNo, buyTime, config.getQueueName(),"wxpay");
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

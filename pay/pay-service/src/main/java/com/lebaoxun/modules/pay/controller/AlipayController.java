@@ -78,9 +78,11 @@ public class AlipayController {
 			@RequestParam("outTradeNo")String outTradeNo,
 			@RequestParam("subject")String subject,
 			@RequestParam("totalAmount")String totalAmount,
+			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee,
 			@RequestParam(value="body",required=false)String body,
 			@RequestParam(value="spbill_create_ip",required=false)String spbill_create_ip,
-			@RequestParam(value="userId") Long userId) {
+			@RequestParam(value="userId") Long userId,
+			@RequestParam(value="scene",required=false)String scene) {
 		
 		AlipayConfig config = alipayConfigService.getAlipayConfig(group);
 		String appid = config.getAppid();
@@ -108,7 +110,9 @@ public class AlipayController {
 		order.setSpbillCreateIp(spbill_create_ip);
 		order.setStatus(0);
 		order.setTotalFee(new BigDecimal(totalAmount));
+		order.setRechargeFee(rechargeFee);
 		order.setTradeType(tradeType);
+		order.setScene(scene);
 		payOrderService.insert(order);
 		
 		logger.debug("appid={}",appid);
@@ -228,7 +232,7 @@ public class AlipayController {
 			long buyTime = datetimeFormat.parse(
 					new String(params.get("gmt_payment").getBytes(
 							"ISO-8859-1"), "UTF-8")).getTime();
-			return payOrderService.notify(out_trade_no, totalFee, tradeNo, buyTime, config.getQueueName());
+			return payOrderService.notify(out_trade_no, totalFee, tradeNo, buyTime, config.getQueueName(), "alipay");
 		} catch (Exception e) {
 			logger.debug("notify:{}", e);
 		}

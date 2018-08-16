@@ -1,5 +1,7 @@
 package com.lebaoxun.wechat.rest;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -29,7 +31,7 @@ public class WechatAppController {
 	private RestTemplate restTemplate = new RestTemplate();
 	
 	@RequestMapping(value = "/wechat/app/jscode2session", method = RequestMethod.GET)
-	String jscode2session(@RequestParam("kindOf") String kindOf,
+	Map<String,Object> jscode2session(@RequestParam("kindOf") String kindOf,
 			@RequestParam("js_code") String js_code){
 		String app_id = env.getProperty(kindOf + ".wxapp.appid"), secret = env
 				.getProperty(kindOf + ".wxapp.secret");
@@ -40,7 +42,7 @@ public class WechatAppController {
 		if (result.containsKey("errcode")) {
 			throw new I18nMessageException("40001","error|"+result.getString("errorcode")+"="+result.getString("errmsg"));
 		}
-		return result.getString("openid");
+		return result;
 	}
 	
 }

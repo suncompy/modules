@@ -48,6 +48,8 @@ public interface IUserLogService {
      */
     @RequestMapping("/account/userlog/findAccountLogByUserId")
     ResponseMessage findAccountLogByUserId(@RequestParam(value="userId") Long userId,
+    		@RequestParam(value="flag",required=false) String flag,
+    		@RequestParam(value="logType",required=false) String logType,
     		@RequestParam(value="size",required=false) Integer size, 
     		@RequestParam(value="offset",required=false) Integer offset);
     
