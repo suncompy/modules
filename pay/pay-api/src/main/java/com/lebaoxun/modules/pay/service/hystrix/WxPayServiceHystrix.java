@@ -40,7 +40,8 @@ public class WxPayServiceHystrix implements IWxPayService {
 	@Override
 	public ResponseMessage payment(String spbill_create_ip, String orderNo,
 			String descr, Integer totalFee, String attach, String group,
-			String openid, Long userId,BigDecimal rechargeFee) {
+			String openid, Long userId,BigDecimal rechargeFee,
+			String scene) {
 		// TODO Auto-generated method stub
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
@@ -49,7 +50,7 @@ public class WxPayServiceHystrix implements IWxPayService {
 	public ResponseMessage h5Payment(String wapUrl, String wapName,
 			String spbill_create_ip, String orderNo, String descr,
 			Integer totalFee, String attach, String group, Long userId,
-			BigDecimal rechargeFee) {
+			BigDecimal rechargeFee,String scene) {
 		// TODO Auto-generated method stub
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
@@ -57,7 +58,7 @@ public class WxPayServiceHystrix implements IWxPayService {
 	@Override
 	public ResponseMessage qrcodePayment(String spbill_create_ip,
 			String orderNo, String descr, Integer totalFee, String attach,
-			String group, Long userId,BigDecimal rechargeFee) throws Exception {
+			String group, Long userId,BigDecimal rechargeFee,String scene) throws Exception {
 		// TODO Auto-generated method stub
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
@@ -65,7 +66,7 @@ public class WxPayServiceHystrix implements IWxPayService {
 	@Override
 	public ResponseMessage appPayment(String spbill_create_ip, String orderNo,
 			String descr, Integer totalFee, String attach, String group,
-			Long userId,BigDecimal rechargeFee) {
+			Long userId,BigDecimal rechargeFee,String scene) {
 		// TODO Auto-generated method stub
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
