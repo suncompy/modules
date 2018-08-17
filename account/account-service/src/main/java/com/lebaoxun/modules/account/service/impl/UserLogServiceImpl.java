@@ -7,15 +7,19 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
+import com.lebaoxun.modules.account.dao.UserDao;
 import com.lebaoxun.modules.account.dao.UserLogDao;
+import com.lebaoxun.modules.account.entity.UserEntity;
 import com.lebaoxun.modules.account.entity.UserLogEntity;
 import com.lebaoxun.modules.account.service.UserLogService;
 import com.lebaoxun.soa.core.redis.IRedisSorted;
@@ -26,6 +30,9 @@ public class UserLogServiceImpl extends ServiceImpl<UserLogDao, UserLogEntity> i
 	
 	@Resource
 	private IRedisSorted redisSorted;
+	
+	@Resource
+	private UserDao userDao;
 	
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -81,4 +88,5 @@ public class UserLogServiceImpl extends ServiceImpl<UserLogDao, UserLogEntity> i
 		result.put("size", size);
 		return result;
 	}
+	
 }

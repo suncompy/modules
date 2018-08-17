@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.account.em.UserLogAction;
 import com.lebaoxun.modules.account.entity.UserEntity;
+import com.lebaoxun.modules.account.entity.UserLogEntity;
 
 /**
  * 用户表
@@ -85,7 +86,7 @@ public interface UserService extends IService<UserEntity> {
      * @param user
      * @param scope
      */
-    void wechatOARegister(Long userId, UserEntity user);
+    UserEntity wechatOARegister(Long userId, UserEntity user);
     
     /**
      * 微信小程序注册
@@ -93,7 +94,7 @@ public interface UserService extends IService<UserEntity> {
      * @param user
      * @param scope
      */
-    void wechatAppRegister(Long userId, UserEntity user);
+    UserEntity wechatAppRegister(Long userId, UserEntity user);
     /**
      * 记录登录日志
      * @param userId
@@ -103,5 +104,7 @@ public interface UserService extends IService<UserEntity> {
      * @param descr
      */
     void loginLog(Long userId,UserLogAction logType,String adjunctInfo,String descr);
+    
+    void insertLog(UserLogEntity log);
 }
 

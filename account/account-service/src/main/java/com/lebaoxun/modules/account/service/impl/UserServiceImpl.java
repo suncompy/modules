@@ -2,6 +2,7 @@ package com.lebaoxun.modules.account.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -19,6 +20,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.I18nMessageException;
+import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.PwdUtil;
 import com.lebaoxun.commons.utils.Query;
@@ -29,12 +31,16 @@ import com.lebaoxun.modules.account.em.UserLogAction;
 import com.lebaoxun.modules.account.entity.UserEntity;
 import com.lebaoxun.modules.account.entity.UserLogEntity;
 import com.lebaoxun.modules.account.service.UserService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 
 
 @Service("userService")
 public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements UserService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Resource
+	private IRabbitmqSender rabbitmqSender;
 	
 	@Resource
 	private UserLogDao userLogDao;
@@ -240,19 +246,43 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		insertLog(user, logType, null, logType.getDescr(), adjunctInfo);
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
-		entity.setCity(q.getCity());
-		entity.setCountry(q.getCountry());
-		entity.setGroupid(q.getGroupid());
+		if(StringUtils.isNotBlank(q.getCity())){
+			entity.setCity(q.getCity());
+		}
+		if(StringUtils.isNotBlank(q.getCountry())){
+			entity.setCountry(q.getCountry());
+		}
+		if(StringUtils.isNotBlank(q.getGroupid())){
+			entity.setGroupid(q.getGroupid());
+		}
 		entity.setHeadimgurl(user.getHeadimgurl());
-		entity.setLanguage(q.getLanguage());
-		entity.setNickname(q.getNickname());
-		entity.setProvince(q.getProvince());
-		entity.setRemark(q.getRemark());
-		entity.setSex(q.getSex());
-		entity.setMobile(q.getMobile());
-		entity.setRealname(q.getRealname());
-		entity.setIdentity(q.getIdentity());
-		entity.setBirthday(q.getBirthday());
+		if(StringUtils.isNotBlank(q.getLanguage())){
+			entity.setLanguage(q.getLanguage());
+		}
+		if(StringUtils.isNotBlank(q.getNickname())){
+			entity.setNickname(q.getNickname());
+		}
+		if(StringUtils.isNotBlank(q.getProvince())){
+			entity.setProvince(q.getProvince());
+		}
+		if(StringUtils.isNotBlank(q.getRemark())){
+			entity.setRemark(q.getRemark());
+		}
+		if(q.getSex() != null){
+			entity.setSex(q.getSex());
+		}
+		if(StringUtils.isNotBlank(q.getMobile())){
+			entity.setMobile(q.getMobile());
+		}
+		if(StringUtils.isNotBlank(q.getRealname())){
+			entity.setRealname(q.getRealname());
+		}
+		if(StringUtils.isNotBlank(q.getIdentity())){
+			entity.setIdentity(q.getIdentity());
+		}
+		if(StringUtils.isNotBlank(q.getBirthday())){
+			entity.setBirthday(q.getBirthday());
+		}
 		this.updateById(entity);
 	}
 
@@ -268,8 +298,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		UserLogAction logType = UserLogAction.U_BIND_MOBILE;
-		insertLog(user, logType, logType.getDescr());
 		
 		String passwd = PwdUtil.getMd5Password(passwdSecret,mobile, password);
 		
@@ -289,10 +317,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		
-		UserLogAction logType = UserLogAction.U_BIND_OPENID;
-		insertLog(user, logType, logType.getDescr());
-		
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
 		entity.setOpenid(openid);
@@ -301,7 +325,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 	
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void wechatOARegister(Long userId, UserEntity q) {
+	public UserEntity wechatOARegister(Long userId, UserEntity q) {
 		// TODO Auto-generated method stub
 		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
 		if(user != null){
@@ -327,10 +351,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setUserId(userId);
 		entity.setStatus("Y");
 		
-		UserLogAction logType = UserLogAction.U_WECHATOA_REGISTER;
-		insertLog(entity, logType, new BigDecimal(0.00), null, new Gson().toJson(q));
-		
 		this.insert(entity);
+		
+		return entity;
 	}
 	
 	@Override
@@ -347,7 +370,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 	
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void wechatAppRegister(Long userId, UserEntity q) {
+	public UserEntity wechatAppRegister(Long userId, UserEntity q) {
 		// TODO Auto-generated method stub
 		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
 		if(user != null){
@@ -359,7 +382,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		}
 		logger.debug("passwdSecret={},account={},password={}",passwdSecret,q.getAccount(), q.getPassword());
 		String password = PwdUtil.getMd5Password(passwdSecret,q.getAccount(), q.getPassword());
-		
+		Date now = new Date();
 		UserEntity entity = new UserEntity();
 		/*entity.setCity(q.getCity());
 		entity.setCountry(q.getCountry());
@@ -374,17 +397,14 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setBalance(new BigDecimal(0.00));
 		entity.setScore(0);
 		entity.setLevel(0);
-		entity.setCreateTime(new Date());
+		entity.setCreateTime(now);
 		entity.setWxAppOpenid(q.getWxAppOpenid());
 		entity.setType(q.getType());
 		entity.setSource("SELF_WECHAT_APP");
 		entity.setUserId(userId);
 		entity.setStatus("Y");
-		
-		UserLogAction logType = UserLogAction.U_WECHATOA_REGISTER;
-		insertLog(entity, logType, new BigDecimal(0.00), null, new Gson().toJson(q));
-		
 		this.insert(entity);
+		return entity;
 	}
 	
 	void insertLog(UserEntity user,UserLogAction logType,BigDecimal tradeMoney,String descr,String adjunctInfo){
@@ -406,8 +426,20 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		userLogDao.insert(log);
 	}
 	
-	void insertLog(UserEntity user,UserLogAction logType,String descr){
-		insertLog(user, logType, new BigDecimal(0.00), descr, null);
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void insertLog(UserLogEntity log) {
+		// TODO Auto-generated method stub
+		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", log.getUserId()));
+		if(user == null){
+			return;
+		}
+		int count = userLogDao.selectCount(new EntityWrapper<UserLogEntity>().eq("user_id", log.getUserId()).eq("token", log.getToken()));
+		if(count > 0){
+			return;
+		}
+		log.setAccount(user.getAccount());
+		userLogDao.insert(log);
 	}
-
 }

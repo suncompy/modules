@@ -43,6 +43,11 @@ public class OperateCouponRecordServiceHystrix implements IOperateCouponRecordSe
 	public ResponseMessage delete(Long adminId,Integer[] ids) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
-    
+
+	@Override
+	public ResponseMessage findByUserId(Long userId, Integer use, Integer flag,
+			Integer size, Integer offset) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 

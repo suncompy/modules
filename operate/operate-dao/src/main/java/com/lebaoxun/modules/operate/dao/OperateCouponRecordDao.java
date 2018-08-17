@@ -1,8 +1,12 @@
 package com.lebaoxun.modules.operate.dao;
 
-import com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity;
 
 /**
  * 优惠券领取记录
@@ -13,5 +17,14 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface OperateCouponRecordDao extends BaseMapper<OperateCouponRecordEntity> {
+	
+	/**
+	 * 查询用户未过期，未使用的优惠券
+	 * @param userId
+	 * @return
+	 */
+	List<OperateCouponRecordEntity> findByUserId(@Param("userId")Long userId,
+			@Param("use")Integer use,@Param("flag")Integer flag,
+			@Param("size")Integer size, @Param("offset")Integer offset);
 	
 }
