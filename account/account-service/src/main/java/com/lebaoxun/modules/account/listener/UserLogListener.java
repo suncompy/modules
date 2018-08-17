@@ -76,7 +76,8 @@ public class UserLogListener {
 			
 			UserLogEntity log = new UserLogEntity();
 			log.setUserId(userId);
-			log.setCreateTime(new Date(timestamp));
+			log.setLogTime(new Date(timestamp));;
+			log.setCreateTime(new Date());
 			log.setLogType(logType);
 			log.setPlatform(platform);
 			if(StringUtils.isNotBlank(tradeMoney))
@@ -92,7 +93,10 @@ public class UserLogListener {
 			log.setToken(token);
 			
 			logger.info("add log={}",new Gson().toJson(log));
-			userService.insertLog(log);
+			boolean resule = userService.insertLog(log);
+			if(resule){
+				//通知任务系统
+			}
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);
 			e.printStackTrace();

@@ -556,4 +556,5 @@ public class UserEntity implements Serializable {
 	public void setInviter(Long inviter) {
 		this.inviter = inviter;
 	}
+	
 }

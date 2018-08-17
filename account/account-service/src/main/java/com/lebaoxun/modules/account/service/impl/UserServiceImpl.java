@@ -2,12 +2,12 @@ package com.lebaoxun.modules.account.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.I18nMessageException;
-import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.PwdUtil;
 import com.lebaoxun.commons.utils.Query;
@@ -101,14 +99,10 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		String status = "N",adjunctInfo = adminId+"";
-		UserLogAction logType = UserLogAction.A_LOCK;
+		String status = "N";
 		if("N".equals(user.getStatus())){
-			logType = UserLogAction.A_UNLOCK;
 			status = "Y";
 		}
-		
-		insertLog(user, logType, new BigDecimal(0.00), logType.getDescr(), adjunctInfo);
 		
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
@@ -125,18 +119,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		String adjunctInfo = null;
-		UserLogAction logType = UserLogAction.U_MODIFY_PASSWD;
-		if(adminId != null){
-			adjunctInfo = adminId+"";
-			logType = UserLogAction.A_MODIFY_PASSWD;
-		}
-		insertLog(user, logType, new BigDecimal(0.00), logType.getDescr(), adjunctInfo);
-		
 		String passwd = PwdUtil.getMd5Password(passwdSecret,user.getAccount(), newPasswd);
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
 		entity.setPassword(passwd);
+		entity.setLastUpdateTime(new Date());
 		this.updateById(entity);
 	}
 
@@ -148,26 +135,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		UserLogAction logType;
-		String adjunctInfo = null;
-		if(amount.compareTo(new BigDecimal(0)) > 0){
-			logType = UserLogAction.U_BALANCE_ADD;
-			if(adminId != null){
-				adjunctInfo = adminId+"";
-				logType = UserLogAction.A_BALANCE_ADD;
-			}
-		}else{
-			logType = UserLogAction.U_BALANCE_REDUCE;
-			if(adminId != null){
-				adjunctInfo = adminId+"";
-				logType = UserLogAction.A_BALANCE_REDUCE;
-			}
-		}
-		if(StringUtils.isBlank(descr)){
-			descr = logType.getDescr();
-		}
-		insertLog(user, logType, amount, descr, adjunctInfo);
-		
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
 		entity.setBalance(user.getBalance().add(amount));
@@ -176,7 +143,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 	
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void recharge(Long userId, String orderNo, Long buyTime,
+	public UserEntity recharge(Long userId, String orderNo, Long buyTime,
 			String total_fee) {
 		// TODO Auto-generated method stub
 		BigDecimal fee = new BigDecimal(total_fee);
@@ -185,30 +152,28 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		UserLogAction logType = UserLogAction.U_PAY_BALANCE_ADD;
-		String descr = logType.getDescr();
-		
 		int count = userLogDao.selectCount(new EntityWrapper<UserLogEntity>().eq("user_id", userId).eq("adjunct_info", orderNo));
 		if(count > 0){//已完成充值
-			return;
+			return null;
 		}
-		UserLogEntity log = new UserLogEntity();
-		log.setAdjunctInfo(orderNo);
-		descr = logType.getDescr();
-		log.setAccount(user.getAccount());
-		log.setCreateTime(new Date());
-		log.setDescr(descr);
-		log.setLogType(logType.toString());
-		log.setMoney(user.getBalance());
-		log.setTradeMoney(fee);
-		log.setUserId(user.getUserId());
-		
-		userLogDao.insert(log);
-		
+		Date time = new Date(buyTime),
+				now = new Date();
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
 		entity.setBalance(user.getBalance().add(fee));
+		entity.setLastBuyTime(time);
+		entity.setPayTotal(user.getPayTotal()+1);
+		boolean isMonth = DateFormatUtils.format(time, "yyyyMM").equals(DateFormatUtils.format(now, "yyyyMM"));
+		Integer payCurrentTotal = 0;
+		if(isMonth){
+			if(entity.getPayCurrentTotal() == null){
+				entity.setPayCurrentTotal(0);
+			}
+			payCurrentTotal = entity.getPayCurrentTotal() +1;
+		}
+		entity.setPayCurrentTotal(payCurrentTotal);
 		this.updateById(entity);
+		return user;
 	}
 	
 	@Override
@@ -219,12 +184,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		UserLogAction logType = UserLogAction.U_MODIFY_INFO;
-		insertLog(user, logType, new BigDecimal(0.00), logType.getDescr(), headimgurl);
 		
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
 		entity.setHeadimgurl(headimgurl);
+		entity.setLastUpdateTime(new Date());
 		this.updateById(entity);
 	}
 
@@ -237,13 +201,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		UserLogAction logType = UserLogAction.U_MODIFY_INFO;
-		String adjunctInfo = null;
-		if(adminId != null){
-			adjunctInfo = adminId+"";
-			logType = UserLogAction.A_MODIFY_INFO;
-		}
-		insertLog(user, logType, null, logType.getDescr(), adjunctInfo);
 		UserEntity entity = new UserEntity();
 		entity.setId(user.getId());
 		if(StringUtils.isNotBlank(q.getCity())){
@@ -283,6 +240,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(StringUtils.isNotBlank(q.getBirthday())){
 			entity.setBirthday(q.getBirthday());
 		}
+		entity.setLastUpdateTime(new Date());
 		this.updateById(entity);
 	}
 
@@ -358,18 +316,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 	
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void loginLog(Long userId, UserLogAction logType, String adjunctInfo,
-			String descr) {
-		// TODO Auto-generated method stub
-		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
-		if(user == null){
-			throw new I18nMessageException("500");
-		}
-		insertLog(user, logType, new BigDecimal(0.00), descr, adjunctInfo);
-	}
-	
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public UserEntity wechatAppRegister(Long userId, UserEntity q) {
 		// TODO Auto-generated method stub
 		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
@@ -407,39 +353,35 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		return entity;
 	}
 	
-	void insertLog(UserEntity user,UserLogAction logType,BigDecimal tradeMoney,String descr,String adjunctInfo){
-		UserLogEntity log = new UserLogEntity();
-		if(adjunctInfo != null){
-			log.setAdjunctInfo(adjunctInfo);
-		}
-		if(StringUtils.isBlank(descr)){
-			descr = logType.getDescr();
-		}
-		log.setAccount(user.getAccount());
-		log.setCreateTime(new Date());
-		log.setDescr(descr);
-		log.setLogType(logType.toString());
-		log.setMoney(user.getBalance());
-		log.setTradeMoney(tradeMoney);
-		log.setUserId(user.getUserId());
-		
-		userLogDao.insert(log);
-	}
-	
-	
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void insertLog(UserLogEntity log) {
+	public boolean insertLog(UserLogEntity log) {
 		// TODO Auto-generated method stub
 		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", log.getUserId()));
 		if(user == null){
-			return;
+			return false;
 		}
 		int count = userLogDao.selectCount(new EntityWrapper<UserLogEntity>().eq("user_id", log.getUserId()).eq("token", log.getToken()));
 		if(count > 0){
-			return;
+			return false;
 		}
 		log.setAccount(user.getAccount());
 		userLogDao.insert(log);
+		return true;
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void modifyLastLogin(Long userId,Long lastLoginTime) {
+		// TODO Auto-generated method stub
+		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
+		if(user == null){
+			throw new I18nMessageException("500");
+		}
+		
+		UserEntity entity = new UserEntity();
+		entity.setId(user.getId());
+		entity.setLastLoginTime(new Date(lastLoginTime));
+		this.updateById(entity);
 	}
 }

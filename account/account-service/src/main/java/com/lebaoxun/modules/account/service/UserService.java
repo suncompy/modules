@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.modules.account.em.UserLogAction;
 import com.lebaoxun.modules.account.entity.UserEntity;
 import com.lebaoxun.modules.account.entity.UserLogEntity;
 
@@ -47,7 +46,7 @@ public interface UserService extends IService<UserEntity> {
      */
     void modifyBalance(Long userId,BigDecimal amount, String descr, Long adminId);
     
-    void recharge(Long userId,String orderNo,Long buyTime,String total_fee);
+    UserEntity recharge(Long userId,String orderNo,Long buyTime,String total_fee);
     
     /**
      * 修改用户头像
@@ -95,16 +94,18 @@ public interface UserService extends IService<UserEntity> {
      * @param scope
      */
     UserEntity wechatAppRegister(Long userId, UserEntity user);
-    /**
-     * 记录登录日志
-     * @param userId
-     * @param scope
-     * @param logType
-     * @param adjunctInfo
-     * @param descr
-     */
-    void loginLog(Long userId,UserLogAction logType,String adjunctInfo,String descr);
     
-    void insertLog(UserLogEntity log);
+    /**
+     * 插入日志纪录
+     * @param log
+     * @return
+     */
+    boolean insertLog(UserLogEntity log);
+    
+    /**
+     * 修改最后登录时间
+     * @param userId
+     */
+    void modifyLastLogin(Long userId,Long lastLoginTime);
 }
 

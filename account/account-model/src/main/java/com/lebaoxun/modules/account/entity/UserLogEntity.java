@@ -36,6 +36,10 @@ public class UserLogEntity implements Serializable {
 	 */
 	private Date createTime;
 	/**
+	 * 日志时间
+	 */
+	private Date logTime;
+	/**
 	 * 日志类型
 	 */
 	private String logType;
@@ -200,5 +204,11 @@ public class UserLogEntity implements Serializable {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public Date getLogTime() {
+		return logTime;
+	}
+	public void setLogTime(Date logTime) {
+		this.logTime = logTime;
 	}
 }

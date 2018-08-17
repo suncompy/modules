@@ -1,5 +1,8 @@
 package com.lebaoxun.modules.account.listener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -16,7 +19,11 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.lebaoxun.commons.utils.MD5;
+import com.lebaoxun.modules.account.entity.UserEntity;
 import com.lebaoxun.modules.account.service.UserService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 
 /**
  * 充值回调
@@ -31,6 +38,9 @@ public class PayListener {
 	
 	@Resource
 	private UserService userService;
+	
+	@Resource
+	private IRabbitmqSender rabbitmqSender;
 	
 	@Bean
     public Queue queuePay() {
@@ -49,25 +59,42 @@ public class PayListener {
 		logger.debug("body={}",body);
 		String text = body.replace("\\\"", "\"");
 		JSONObject message = JSONObject.parseObject(text);
-		String out_trade_no = message.getString("out_trade_no"),
-				trade_no = message.getString("trade_no"),
-				mercno = message.getString("merc_no"),
-				platform = message.getString("platform"),
-				trade_type = message.getString("trade_type"),
-				total_fee = message.getString("total_fee"),
-				recharge_fee = message.getString("recharge_fee"),
-				group = message.getString("group"),
-				scene = message.getString("scene");
-		
-		Long user_id = message.getLong("user_id");
-		Long buy_time = message.getLong("buy_time");
 		try {
+			String out_trade_no = message.getString("out_trade_no"),
+					trade_no = message.getString("trade_no"),
+					mercno = message.getString("merc_no"),
+					platform = message.getString("platform"),
+					trade_type = message.getString("trade_type"),
+					total_fee = message.getString("total_fee"),
+					recharge_fee = message.getString("recharge_fee"),
+					group = message.getString("group"),
+					scene = message.getString("scene");
+			
+			Long user_id = message.getLong("user_id");
+			Long buy_time = message.getLong("buy_time");
 			logger.info(
 					"out_trade_no={},buy_time={},platform={},total_fee={},recharge_fee={},trade_no={},mercno={},group={},scene={}",
 					out_trade_no, buy_time, platform, trade_type, total_fee,
 					recharge_fee, trade_no, mercno, group,scene);
 			if("recharge".equals(scene)){
-				userService.recharge(user_id, out_trade_no, buy_time, recharge_fee);
+				UserEntity user = userService.recharge(user_id, out_trade_no, buy_time, recharge_fee);
+				if(user != null){
+					String logType = "RECHARGE_SUCCESS";
+					Map<String,String> msg = new HashMap<String,String>();
+					String timestamp = buy_time+"";
+					msg.put("userId", user_id+"");
+					msg.put("timestamp", timestamp);
+					msg.put("logType", logType.toString());
+					msg.put("platform", null);
+					msg.put("tradeMoney", recharge_fee);
+					msg.put("money", user.getBalance().toString());
+					msg.put("descr", "充值成功");
+					msg.put("adjunctInfo", out_trade_no);
+					msg.put("token", MD5.md5(logType.toString()+"_"+out_trade_no));
+					
+					rabbitmqSender.sendContractDirect("account.log.queue",
+							new Gson().toJson(message));
+				}
 			}
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);

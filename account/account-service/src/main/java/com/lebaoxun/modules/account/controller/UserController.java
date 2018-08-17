@@ -1,7 +1,6 @@
 package com.lebaoxun.modules.account.controller;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,7 +9,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -356,22 +354,17 @@ public class UserController {
 	UserEntity login(@RequestParam("username") String username,@RequestParam("password") String password){
 		return userService.selectOne(new EntityWrapper<UserEntity>().eq("account", username).eq("password", PwdUtil.getMd5Password(passwdSecret, username, password)));
 	}
-
+	
 	/**
-     * 记录登录日志
+     * 修改最后登录时间
      * @param userId
-     * @param scope
-     * @param logType
-     * @param adjunctInfo
-     * @param descr
      */
-	@RequestMapping("/account/user/loginLog")
-    @RedisLock(value="account:user:loginLog:lock:#arg0")
-	ResponseMessage loginLog(@RequestParam("userId") Long userId,
-			@RequestParam(value="logType") UserLogAction logType,
-			@RequestParam(value="adjunctInfo",required=false) String adjunctInfo,
-			@RequestParam(value="descr",required=false) String descr){
-		userService.loginLog(userId, logType, adjunctInfo, descr);
-		return ResponseMessage.ok();
+	@RequestMapping("/account/user/modifyLastLogin")
+	@RedisLock(value="account:user:modifyLastLogin:lock:#arg0")
+    ResponseMessage modifyLastLogin(@RequestParam("userId") Long userId,
+    		@RequestParam("lastLoginTime") Long lastLoginTime){
+		userService.modifyLastLogin(userId, lastLoginTime);
+        return ResponseMessage.ok();
     }
+
 }
