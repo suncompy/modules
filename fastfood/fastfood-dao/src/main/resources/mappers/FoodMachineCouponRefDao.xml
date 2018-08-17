@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.fastfood.dao.FoodMachineCouponRefDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineCouponRefEntity" id="foodMachineCouponRefMap">
+        <result property="id" column="id"/>
+        <result property="macId" column="mac_id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineCouponRefEntity" id="findfoodMachineCouponRefMap">
+        <result property="id" column="id"/>
+        <result property="macId" column="mac_id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="total" column="total"/>
+        <result property="couponName" column="coupon_name"/>
+        <result property="isRef" column="is_ref"/>
+    </resultMap>
+
+    <select id="findMacCouponListByMacId" resultMap="findfoodMachineCouponRefMap">
+        SELECT
+        r.id,
+        r.mac_id,
+        c.total,
+        c.id as coupon_id,
+        c.name as coupon_name
+        DECODE(r.mac_id, 2) is_ref
+        FROM
+        `operate_coupon` c
+        LEFT JOIN
+        (
+            SELECT
+            *
+            FROM
+            food_machine_coupon_ref
+            WHERE
+            mac_id=#{macId}
+        ) r ON c.id = r.coupon_id
+        AND (
+            c.period > 0
+            OR (
+            SYSDATE() > c.start_get_time
+            AND SYSDATE() &lt; c.end_get_time
+            )
+        )
+    </select>
+</mapper>
