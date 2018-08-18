@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.operate.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,10 @@ public class OperateCouponController {
     @RequestMapping("/operate/operatecoupon/save")
     @RedisLock(value="operate:operatecoupon:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody OperateCouponEntity operateCoupon){
+        operateCoupon.setCreateTime(new Date());
+        operateCoupon.setCreateBy(adminId);
+        operateCoupon.setUpdateBy(adminId);
+        operateCoupon.setUpdateTime(new Date());
 		operateCouponService.insert(operateCoupon);
         return ResponseMessage.ok();
     }
@@ -64,6 +69,8 @@ public class OperateCouponController {
     @RequestMapping("/operate/operatecoupon/update")
     @RedisLock(value="operate:operatecoupon:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody OperateCouponEntity operateCoupon){
+        operateCoupon.setUpdateBy(adminId);
+        operateCoupon.setUpdateTime(new Date());
 		operateCouponService.updateById(operateCoupon);
         return ResponseMessage.ok();
     }

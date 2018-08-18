@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.operate.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -18,9 +19,10 @@ public class OperateCouponServiceImpl extends ServiceImpl<OperateCouponDao, Oper
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        String name=(String) params.get("name");
         Page<OperateCouponEntity> page = this.selectPage(
                 new Query<OperateCouponEntity>(params).getPage(),
-                new EntityWrapper<OperateCouponEntity>()
+                new EntityWrapper<OperateCouponEntity>().like(StringUtils.isNotBlank(name),"name", name)
         );
 
         return new PageUtils(page);
