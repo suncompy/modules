@@ -1,8 +1,12 @@
 package com.lebaoxun.modules.operate.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.modules.operate.entity.OperateActivityFirstOrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,8 +48,13 @@ public class OperateActivityPayCashBackController {
      */
     @RequestMapping("/operate/operateactivitypaycashback/info/{id}")
     ResponseMessage info(@PathVariable("id") Integer id){
-		OperateActivityPayCashBackEntity operateActivityPayCashBack = operateActivityPayCashBackService.selectById(id);
-        return ResponseMessage.ok().put("operateActivityPayCashBack", operateActivityPayCashBack);
+        List<OperateActivityPayCashBackEntity> operateActivityPayCashBackEntities=operateActivityPayCashBackService.selectList(new EntityWrapper<OperateActivityPayCashBackEntity>());
+        OperateActivityPayCashBackEntity operateActivityPayCashBackEntity=null;
+        if (operateActivityPayCashBackEntities==null||operateActivityPayCashBackEntities.size()==0)
+            operateActivityPayCashBackEntity=new OperateActivityPayCashBackEntity();
+        else
+            operateActivityPayCashBackEntity=operateActivityPayCashBackEntities.get(0);
+        return ResponseMessage.ok().put("operateActivityPayCashBack", operateActivityPayCashBackEntity);
     }
 
     /**
@@ -54,6 +63,8 @@ public class OperateActivityPayCashBackController {
     @RequestMapping("/operate/operateactivitypaycashback/save")
     @RedisLock(value="operate:operateactivitypaycashback:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody OperateActivityPayCashBackEntity operateActivityPayCashBack){
+        operateActivityPayCashBack.setUpdateTime(new Date());
+        operateActivityPayCashBack.setUpdateBy(adminId);
 		operateActivityPayCashBackService.insert(operateActivityPayCashBack);
         return ResponseMessage.ok();
     }
@@ -64,6 +75,8 @@ public class OperateActivityPayCashBackController {
     @RequestMapping("/operate/operateactivitypaycashback/update")
     @RedisLock(value="operate:operateactivitypaycashback:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody OperateActivityPayCashBackEntity operateActivityPayCashBack){
+        operateActivityPayCashBack.setUpdateTime(new Date());
+        operateActivityPayCashBack.setUpdateBy(adminId);
 		operateActivityPayCashBackService.updateById(operateActivityPayCashBack);
         return ResponseMessage.ok();
     }

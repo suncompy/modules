@@ -1,8 +1,11 @@
 package com.lebaoxun.modules.operate.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +47,12 @@ public class OperateActivityFirstOrderController {
      */
     @RequestMapping("/operate/operateactivityfirstorder/info/{id}")
     ResponseMessage info(@PathVariable("id") Integer id){
-		OperateActivityFirstOrderEntity operateActivityFirstOrder = operateActivityFirstOrderService.selectById(id);
+        List<OperateActivityFirstOrderEntity> operateActivityFirstOrderEntities=operateActivityFirstOrderService.selectList(new EntityWrapper<OperateActivityFirstOrderEntity>());
+        OperateActivityFirstOrderEntity operateActivityFirstOrder=null;
+        if (operateActivityFirstOrderEntities==null||operateActivityFirstOrderEntities.size()==0)
+            operateActivityFirstOrder=new OperateActivityFirstOrderEntity();
+        else
+            operateActivityFirstOrder=operateActivityFirstOrderEntities.get(0);
         return ResponseMessage.ok().put("operateActivityFirstOrder", operateActivityFirstOrder);
     }
 
@@ -54,6 +62,8 @@ public class OperateActivityFirstOrderController {
     @RequestMapping("/operate/operateactivityfirstorder/save")
     @RedisLock(value="operate:operateactivityfirstorder:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody OperateActivityFirstOrderEntity operateActivityFirstOrder){
+        operateActivityFirstOrder.setUpdateTime(new Date());
+        operateActivityFirstOrder.setUpdateBy(adminId);
 		operateActivityFirstOrderService.insert(operateActivityFirstOrder);
         return ResponseMessage.ok();
     }
@@ -64,6 +74,8 @@ public class OperateActivityFirstOrderController {
     @RequestMapping("/operate/operateactivityfirstorder/update")
     @RedisLock(value="operate:operateactivityfirstorder:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody OperateActivityFirstOrderEntity operateActivityFirstOrder){
+        operateActivityFirstOrder.setUpdateTime(new Date());
+        operateActivityFirstOrder.setUpdateBy(adminId);
 		operateActivityFirstOrderService.updateById(operateActivityFirstOrder);
         return ResponseMessage.ok();
     }
