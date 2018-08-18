@@ -30,4 +30,8 @@ public interface UserLogDao extends BaseMapper<UserLogEntity> {
 	Long sumTradeMoneyByUser(@Param("userId") Long userId,
 			@Param("time") String time,
 			@Param("logType") String logType);
+	
+	List<UserLogEntity> queryUserLogByDay(@Param("user_id")long userId,
+			@Param("adjunctInfo")String adjunctInfo, 
+			@Param("dayTime")String dayTime);
 }

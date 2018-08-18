@@ -8,14 +8,18 @@
 		id="userLogMap">
 		<result property="id" column="id" />
 		<result property="userId" column="user_id" />
+		<result property="account" column="account" />
 		<result property="createTime" column="create_time" />
 		<result property="logType" column="log_type" />
+		<result property="platform" column="platform" />
 		<result property="tradeMoney" column="trade_money" />
 		<result property="money" column="money" />
-		<result property="platform" column="platform" />
-		<result property="hostIp" column="host_ip" />
 		<result property="descr" column="descr" />
 		<result property="adjunctInfo" column="adjunct_info" />
+		<result property="score" column="score" />
+		<result property="tradeScore" column="trade_score" />
+		<result property="token" column="token" />
+		<result property="logTime" column="log_time" />
 	</resultMap>
 
 	<select id="queryAllLogType" resultType="java.util.Map">
@@ -23,7 +27,7 @@
 	</select>
 
 	<select id="queryAccountLogByUserId" resultMap="userLogMap">
-		select id,user_id,create_time,log_type,trade_money,money,descr from
+		select id,user_id,account,create_time,log_type,platform,trade_money,money,descr,adjunct_info,score,trade_score,token,log_time from
 		user_log
 		where user_id=#{user_id,jdbcType=BIGINT}
 		<if test="flag != null">
@@ -56,6 +60,18 @@
 	    </if>
 	    <if test="logType != null">
 	    	and log_type = #{logType} 
+	    </if>
+	</select>
+	
+	<select id="queryUserLogByDay" resultType="userLogMap">
+	    SELECT id,user_id,account,create_time,log_type,platform,trade_money,money,descr,adjunct_info,score,trade_score,token,log_time 
+		FROM user_log 
+		WHERE user_id = #{userId}
+	    <if test="adjunctInfo != null">
+	    	AND adjunct_info = #{adjunctInfo} 
+	    </if>
+	    <if test="dayTime != null">
+		    AND DATE_FORMAT(log_time,"%Y%m%d") = #{dayTime} 
 	    </if>
 	</select>
 </mapper>

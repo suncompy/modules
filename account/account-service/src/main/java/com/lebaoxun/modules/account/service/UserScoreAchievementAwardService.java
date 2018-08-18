@@ -16,5 +16,12 @@ import java.util.Map;
 public interface UserScoreAchievementAwardService extends IService<UserScoreAchievementAwardEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    
+    /**
+     * 根据玩家ID + 操作行为，发放玩家任务积分
+     * @param userId
+     * @param logId 操作日志ID
+     */
+    void awardUserScore(long userId, long logId);
 }
 

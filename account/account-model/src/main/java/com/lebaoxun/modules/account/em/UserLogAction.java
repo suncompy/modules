@@ -8,7 +8,7 @@ public enum UserLogAction {
 	U_BIND_OPENID("绑定微信公众号"),U_UNBIND_WECHATOA("解除绑定微信公众号"),U_BIND_MOBILE("绑定手机号"),U_PAY("支付"),
 	U_BALANCE_ADD("账户交易（增加）"),U_BALANCE_REDUCE("账户交易（扣除）"),
 	U_PAY_BALANCE_ADD("充值"),
-	U_REWARD_SCORE("用户奖励积分"),
+	U_AWARD_SCORE("用户奖励积分"),
 	
 	
 	/**
