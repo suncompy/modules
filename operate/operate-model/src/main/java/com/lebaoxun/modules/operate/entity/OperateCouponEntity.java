@@ -2,6 +2,7 @@ package com.lebaoxun.modules.operate.entity;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,7 +22,7 @@ public class OperateCouponEntity implements Serializable {
 	 * 
 	 */
 @TableId
-	private Integer id;
+	private Integer id=0;
 	/**
 	 * 优惠券名称
 	 */
@@ -49,6 +50,7 @@ public class OperateCouponEntity implements Serializable {
 	/**
 	 * 启用时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date startTime;
 	/**
 	 * 有效期，单位天
@@ -57,10 +59,12 @@ public class OperateCouponEntity implements Serializable {
 	/**
 	 * 领取开始时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date startGetTime;
 	/**
 	 * 领取结束时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date endGetTime;
 	/**
 	 * 备注
