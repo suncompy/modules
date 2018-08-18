@@ -8,6 +8,7 @@ import com.lebaoxun.commons.utils.AddressParse;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,6 +85,26 @@ public class FoodMachineController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids){
 		foodMachineService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+    
+    /**
+     * 根据省市区搜索机器列表
+     * @param areaCode
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachine/findByAreaCode")
+    ResponseMessage findByAreaCode(@RequestParam("areaCode")String areaCode){
+    	return ResponseMessage.ok(foodMachineService.findByAreaCode(areaCode));
+    }
+    
+    /**
+     * 查询机器详情
+     * @param macId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachine/findByMacId")
+    ResponseMessage findByMacId(@RequestParam("macId") Integer macId){
+    	return ResponseMessage.ok(foodMachineService.findByMacId(macId));
     }
 
 }

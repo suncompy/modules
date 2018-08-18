@@ -25,7 +25,6 @@ import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.commons.utils.ValidatorUtils;
 import com.lebaoxun.modules.account.dao.UserDao;
 import com.lebaoxun.modules.account.dao.UserLogDao;
-import com.lebaoxun.modules.account.em.UserLogAction;
 import com.lebaoxun.modules.account.entity.UserEntity;
 import com.lebaoxun.modules.account.entity.UserLogEntity;
 import com.lebaoxun.modules.account.service.UserService;

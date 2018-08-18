@@ -8,16 +8,43 @@
 		id="userLogMap">
 		<result property="id" column="id" />
 		<result property="userId" column="user_id" />
+		<result property="account" column="account" />
 		<result property="createTime" column="create_time" />
 		<result property="logType" column="log_type" />
+		<result property="logTime" column="log_time" />
 		<result property="tradeMoney" column="trade_money" />
 		<result property="money" column="money" />
+		<result property="score" column="score" />
+		<result property="tradeScore" column="trade_score" />
 		<result property="platform" column="platform" />
 		<result property="hostIp" column="host_ip" />
 		<result property="descr" column="descr" />
 		<result property="adjunctInfo" column="adjunct_info" />
+		<result property="token" column="token" />
 	</resultMap>
 
+	<insert id="insert"
+		parameterType="com.lebaoxun.modules.account.entity.UserLogEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user_log (
+		id,
+		user_id, account, create_time,
+		log_type, log_time, trade_money,
+		money, score, trade_score,
+		platform, host_ip, descr,adjunct_info,
+		token)
+		VALUES
+		( #{id}, #{userId}, #{account},
+		#{createTime}, #{logType}, #{logTime},
+		#{tradeMoney}, #{money}, #{score},
+		#{tradeScore},#{platform},#{hostIp},
+		#{descr}, #{adjunctInfo}, #{token});
+	</insert>
+	
+	<insert id="insert">
+	    
+	</insert>
+	
 	<select id="queryAllLogType" resultType="java.util.Map">
 		select log_type,descr from user_log group by log_type;
 	</select>

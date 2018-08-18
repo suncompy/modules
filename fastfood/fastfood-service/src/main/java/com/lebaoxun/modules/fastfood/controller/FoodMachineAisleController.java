@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -103,5 +104,18 @@ public class FoodMachineAisleController {
     ResponseMessage refProductAndType(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineAisleEntity foodMachineAisle){
         foodMachineAisleService.refProductAndType(adminId,foodMachineAisle);
         return ResponseMessage.ok();
+    }
+    
+    /**
+     * 根据机器查询产品
+     * @param macId
+     * @param productCatId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaisle/findProductByMacIdAndProductCatId")
+    ResponseMessage findProductByMacIdAndProductCatId(
+    		@RequestParam("macId")Integer macId, 
+    		@RequestParam(value="productCatId",required=false)Integer productCatId){
+    	return ResponseMessage.ok(foodMachineAisleService.findProductByMacIdAndProductCatId(macId, productCatId));
     }
 }

@@ -46,6 +46,10 @@ public class FoodMachineProductCatEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	/**
+	 * 机器ID
+	 */
+	private Integer macId;
 
 	/**
 	 * 设置：
@@ -130,5 +134,11 @@ public class FoodMachineProductCatEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public Integer getMacId() {
+		return macId;
+	}
+	public void setMacId(Integer macId) {
+		this.macId = macId;
 	}
 }

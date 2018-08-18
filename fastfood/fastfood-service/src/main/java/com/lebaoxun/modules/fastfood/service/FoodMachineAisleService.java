@@ -1,15 +1,12 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.service.IService;
-import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * 取餐机通道
@@ -25,5 +22,14 @@ public interface FoodMachineAisleService extends IService<FoodMachineAisleEntity
     void refProductAndType(Long adminId,FoodMachineAisleEntity foodMachineAisle);
 
     List<FoodMachineRefAisleEntity> findMachineAisleListByMacId(Integer macId);
+    
+    /**
+     * 根据机器查询产品
+     * @param macId
+     * @param productCatId
+     * @return
+     */
+    List<Map<String, Object>> findProductByMacIdAndProductCatId(Integer macId, Integer productCatId);
+    
 }
 

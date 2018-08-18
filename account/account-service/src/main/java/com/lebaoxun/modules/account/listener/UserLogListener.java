@@ -2,10 +2,12 @@ package com.lebaoxun.modules.account.listener;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Binding;
@@ -23,6 +25,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.lebaoxun.modules.account.entity.UserLogEntity;
 import com.lebaoxun.modules.account.service.UserService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 
 /**
  * 用户日志 收集
@@ -38,14 +41,17 @@ public class UserLogListener {
 	@Resource
 	private UserService userService;
 	
+	@Resource
+	private IRabbitmqSender rabbitmqSender;
+	
 	@Bean
-    public Queue queuePay() {
+    public Queue queueAccountLog() {
         return new Queue("account.log.queue",true);
     }
 
     @Bean
-    Binding bindingDirectExchangePay(Queue queueBuyCard, DirectExchange directExchange) {
-        return BindingBuilder.bind(queueBuyCard).to(directExchange).with("account.log.queue");
+    Binding bindingDirectExchangeAccountLog(Queue queueAccountLog, DirectExchange directExchange) {
+        return BindingBuilder.bind(queueAccountLog).to(directExchange).with("account.log.queue");
     }
 	
 	@RabbitHandler
@@ -57,7 +63,6 @@ public class UserLogListener {
 		JSONObject message = JSONObject.parseObject(text);
 		
 		logger.info("rabbit|sendContractDirect|message={}",message);
-		
 		
 		try {
 			Long userId = message.getLong("userId"),
@@ -96,6 +101,14 @@ public class UserLogListener {
 			boolean resule = userService.insertLog(log);
 			if(resule){
 				//通知任务系统
+				
+				Map<String,String> tackMsg = new HashMap<String,String>();
+				tackMsg.put("userId", userId+"");
+				tackMsg.put("logId", log.getId()+"");
+				tackMsg.put("action", logType.toString());
+				
+				rabbitmqSender.sendContractDirect("account.score.award.queue",
+						new Gson().toJson(message));
 			}
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);

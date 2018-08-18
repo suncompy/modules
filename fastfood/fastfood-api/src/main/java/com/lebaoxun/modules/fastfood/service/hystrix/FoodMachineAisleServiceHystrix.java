@@ -44,5 +44,10 @@ public class FoodMachineAisleServiceHystrix implements IFoodMachineAisleService 
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
     
+	@Override
+	public ResponseMessage findProductByMacIdAndProductCatId(Integer macId,
+			Integer productCatId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 

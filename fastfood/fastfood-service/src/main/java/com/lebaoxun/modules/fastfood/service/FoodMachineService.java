@@ -1,12 +1,13 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Map;
 
 /**
  * 取餐机
@@ -22,5 +23,19 @@ public interface FoodMachineService extends IService<FoodMachineEntity> {
     public void save(Long adminId,FoodMachineEntity foodMachine);
 
     public void updateById(Long adminId,FoodMachineEntity foodMachine);
+    
+    /**
+     * 根据省市区搜索机器列表
+     * @param areaCode
+     * @return
+     */
+    List<FoodMachineEntity> findByAreaCode(String areaCode);
+    
+    /**
+     * 查询机器详情
+     * @param macId
+     * @return
+     */
+    FoodMachineEntity findByMacId(Integer macId);
 }
 

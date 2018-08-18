@@ -1,11 +1,12 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 取餐机
@@ -96,6 +97,11 @@ public class FoodMachineEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	
+	@TableField(exist=false)
+	private List<String> activitys;
+	@TableField(exist=false)
+	private List<FoodMachineProductCatEntity> productCats;
 
 	/**
 	 * 设置：
@@ -316,5 +322,17 @@ public class FoodMachineEntity implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	public List<String> getActivitys() {
+		return activitys;
+	}
+	public void setActivitys(List<String> activitys) {
+		this.activitys = activitys;
+	}
+	public List<FoodMachineProductCatEntity> getProductCats() {
+		return productCats;
+	}
+	public void setProductCats(List<FoodMachineProductCatEntity> productCats) {
+		this.productCats = productCats;
 	}
 }

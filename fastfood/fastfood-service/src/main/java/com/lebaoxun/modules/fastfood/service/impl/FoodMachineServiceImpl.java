@@ -6,6 +6,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineAisleService;
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +14,16 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
-
 import com.lebaoxun.modules.fastfood.dao.FoodMachineDao;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineService;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,5 +103,17 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
             foodMachineAisleEntity.setUpdateBy(adminId);
             foodMachineAisleService.insert(foodMachineAisleEntity);
         }
+    }
+    
+    @Override
+    public List<FoodMachineEntity> findByAreaCode(String areaCode) {
+    	// TODO Auto-generated method stub
+    	return this.baseMapper.findByAreaCode(areaCode);
+    }
+    
+    @Override
+    public FoodMachineEntity findByMacId(Integer macId) {
+    	// TODO Auto-generated method stub
+    	return this.baseMapper.findByMacId(macId);
     }
 }

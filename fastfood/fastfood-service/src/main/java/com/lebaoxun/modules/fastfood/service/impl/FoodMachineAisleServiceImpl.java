@@ -1,25 +1,24 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
-import com.lebaoxun.commons.exception.I18nMessageException;
-import com.lebaoxun.commons.exception.ResponseMessage;
-import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
-
 import com.lebaoxun.modules.fastfood.dao.FoodMachineAisleDao;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineAisleService;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("foodMachineAisleService")
@@ -56,5 +55,12 @@ public class FoodMachineAisleServiceImpl extends ServiceImpl<FoodMachineAisleDao
     @Override
     public List<FoodMachineRefAisleEntity> findMachineAisleListByMacId(Integer macId) {
         return this.baseMapper.findMachineAisleListByMacId(macId);
+    }
+    
+    @Override
+    public List<Map<String, Object>> findProductByMacIdAndProductCatId(
+    		Integer macId, Integer productCatId) {
+    	// TODO Auto-generated method stub
+    	return this.baseMapper.findProductByMacIdAndProductCatId(macId, productCatId);
     }
 }

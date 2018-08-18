@@ -44,4 +44,30 @@
         LEFT JOIN food_machine_product_cat c ON p.product_cat_id = c.id
         where mac_id=#{macId}
     </select>
+    
+    <select id="findProductByMacIdAndProductCatId" resultType="java.util.Map">
+		select 
+			aisle.id as aisleId, aisle.stock as stock, aisle.price,
+			product.name as name,product.materials as materials,
+			product.show_price as showPrice, product.picture as picture,
+			product.unit as unit, product.zs_weight as zsWeight,
+			product.cp_weight as cpWeight, product.warmFlag,
+			product.warm_time as warmTime, product.hot_num as hotNum,
+			product.label as label, product.`status` as status,
+			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
+			product.keyword as keyword, product.descr as descr,
+			product.create_time as createTime,
+			pro_activity.activity_type as activity
+		from food_machine_aisle as aisle
+		left join food_product as product on product.id = aisle.product_id
+		left join food_machine_pro_activity_ref as pro_activity on
+		pro_activity.mac_id = aisle.mac_id and pro_activity.product_id =
+		aisle.product_id
+		where aisle.mac_id = #{macId}
+		<if test="productCatId != null">
+			and aisle.product_cat_id =#{productCatId} 
+		</if> 
+		and product.`status` = 1
+		and date_add(product.up_time, interval period day) > now();
+    </select>
 </mapper>

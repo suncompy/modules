@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodMachineServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
@@ -52,5 +53,20 @@ public interface IFoodMachineService {
     @RequestMapping("/fastfood/foodmachine/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
+    /**
+     * 根据省市区搜索机器列表
+     * @param areaCode
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachine/findByAreaCode")
+    ResponseMessage findByAreaCode(@RequestParam("areaCode")String areaCode);
+    
+    /**
+     * 查询机器详情
+     * @param macId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachine/findByMacId")
+    ResponseMessage findByMacId(@RequestParam("macId") Integer macId);
 }
 

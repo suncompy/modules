@@ -3,43 +3,101 @@
 
 <mapper namespace="com.lebaoxun.modules.fastfood.dao.FoodMachineDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineEntity" id="foodMachineMap">
-        <result property="id" column="id"/>
-        <result property="imei" column="IMEI"/>
-        <result property="host" column="host"/>
-        <result property="areaCode" column="area_code"/>
-        <result property="pos" column="pos"/>
-        <result property="notice" column="notice"/>
-        <result property="catId" column="cat_id"/>
-        <result property="partnerId" column="partner_id"/>
-        <result property="status" column="status"/>
-        <result property="replenishMan" column="replenish_man"/>
-        <result property="pickingMan" column="picking_man"/>
-        <result property="maintenanceMan" column="maintenance_man"/>
-        <result property="remark" column="remark"/>
-        <result property="createTime" column="create_time"/>
-        <result property="createBy" column="create_by"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="updateTime" column="update_time"/>
-    </resultMap>
+	<resultMap
+		type="com.lebaoxun.modules.fastfood.entity.FoodMachineProductCatEntity"
+		id="foodMachineProductCatMap">
+		<result property="id" column="cat_id" />
+		<result property="name" column="cat_name" />
+		<result property="icon" column="icon" />
+	</resultMap>
 
-    <insert id="save"
-            parameterType="com.lebaoxun.modules.fastfood.entity.FoodMachineEntity"
-            useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO food_machine (
-        id, imei, host,
-        area_code, pos, notice,
-        cat_id, partner_id, status,
-        replenish_man, picking_man, maintenance_man,remark,
-        create_by,create_by,
-        update_time, update_by)
-        VALUES
-        (
-        #{id}, #{imei}, #{host},
-        #{area_code}, #{pos}, #{notice},
-        #{catId}, #{partnerId}, #{status},
-        #{replenishMan},#{pickingMan},#{maintenanceMan},#{remark}, #{createTime}, #{createBy},
-        #{updateTime}, #{updateBy});
-    </insert>
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineEntity"
+		id="foodMachineMap">
+		<result property="id" column="id" />
+		<result property="imei" column="IMEI" />
+		<result property="host" column="host" />
+		<result property="areaCode" column="area_code" />
+		<result property="address" column="address" />
+		<result property="pos" column="pos" />
+		<result property="notice" column="notice" />
+		<result property="catId" column="cat_id" />
+		<result property="partnerId" column="partner_id" />
+		<result property="status" column="status" />
+		<result property="replenishMan" column="replenish_man" />
+		<result property="pickingMan" column="picking_man" />
+		<result property="maintenanceMan" column="maintenance_man" />
+		<result property="remark" column="remark" />
+		<result property="createTime" column="create_time" />
+		<result property="createBy" column="create_by" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+		<collection property="activitys" ofType="java.lang.String">
+			<result property="activityType" column="activity_type" />
+		</collection>
+
+		<collection property="productCats" resultMap="foodMachineProductCatMap"
+			ofType="com.lebaoxun.modules.fastfood.entity.FoodMachineProductCatEntity">
+		</collection>
+	</resultMap>
+
+	<insert id="save"
+		parameterType="com.lebaoxun.modules.fastfood.entity.FoodMachineEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO food_machine (
+		id,
+		imei, host,
+		area_code, pos, notice,
+		cat_id, partner_id, status,
+		replenish_man, picking_man, maintenance_man,remark,
+		create_by,create_by,
+		update_time, update_by)
+		VALUES
+		(
+		#{id}, #{imei},
+		#{host},
+		#{area_code}, #{pos}, #{notice},
+		#{catId}, #{partnerId},
+		#{status},
+		#{replenishMan},#{pickingMan},#{maintenanceMan},#{remark},
+		#{createTime}, #{createBy},
+		#{updateTime}, #{updateBy});
+	</insert>
+
+	<select id="findByAreaCode" resultMap="foodMachineMap">
+		select
+		mac.area_code,mac.IMEI,mac.pos,
+		mac.`status`,mac.id,
+		mac.address,
+		mac_activity.activity_type
+		from food_machine as mac
+		left join food_machine_activity_ref as
+		mac_activity on
+		mac_activity.mac_id
+		= mac.id
+		where mac.area_code =
+		#{areaCode}
+	</select>
+
+	<select id="findByMacId" resultMap="foodMachineMap">
+		SELECT
+		mac.area_code,
+		mac.IMEI,
+		mac.pos,
+		mac.`status`,
+		mac.id,
+		mac.address,
+		mac_activity.activity_type,
+		product_cat.icon,
+		product_cat.id as cat_id,
+		product_cat.`name` as cat_name
+		FROM
+		food_machine AS mac
+		LEFT JOIN food_machine_activity_ref AS mac_activity ON
+		mac_activity.mac_id = mac.id
+		LEFT JOIN food_machine_product_cat as
+		product_cat on product_cat.mac_id = mac.id
+		WHERE
+		mac.id = #{macId}
+	</select>
 </mapper>
