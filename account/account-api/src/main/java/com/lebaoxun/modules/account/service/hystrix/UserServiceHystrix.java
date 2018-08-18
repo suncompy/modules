@@ -106,21 +106,18 @@ public class UserServiceHystrix implements IUserService {
 	}
 
 	@Override
-	public ResponseMessage loginLog(Long userId, UserLogAction logType, 
-			String adjunctInfo, String descr) {
+	public ResponseMessage wechatAppRegister(Long userId, UserEntity user) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage wechatAppRegister(Long userId, UserEntity user) {
-		// TODO Auto-generated method stub
-		return null;
+	public UserEntity findByWxAppOpenid(String openid, String groupid) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public UserEntity findByWxAppOpenid(String openid, String groupid) {
-		return null;
+	public ResponseMessage modifyLastLogin(Long userId, Long lastLoginTime) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
-
 }
 

@@ -27,6 +27,14 @@ public class OperateCouponRecordEntity implements Serializable {
 	 */
 	private Integer couponId;
 	/**
+	 * 机器ID
+	 */
+	private Integer macId;
+	/**
+	 * 产品ID
+	 */
+	private Integer proudctId;
+	/**
 	 * 优惠券名称
 	 */
 	private String name;
@@ -226,5 +234,17 @@ public class OperateCouponRecordEntity implements Serializable {
 	 */
 	public Date getUseTime() {
 		return useTime;
+	}
+	public Integer getMacId() {
+		return macId;
+	}
+	public void setMacId(Integer macId) {
+		this.macId = macId;
+	}
+	public Integer getProudctId() {
+		return proudctId;
+	}
+	public void setProudctId(Integer proudctId) {
+		this.proudctId = proudctId;
 	}
 }

@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.modules.account.em.UserLogAction;
 import com.lebaoxun.modules.account.entity.UserEntity;
+import com.lebaoxun.modules.account.entity.UserLogEntity;
 
 /**
  * 用户表
@@ -46,7 +46,7 @@ public interface UserService extends IService<UserEntity> {
      */
     void modifyBalance(Long userId,BigDecimal amount, String descr, Long adminId);
     
-    void recharge(Long userId,String orderNo,Long buyTime,String total_fee);
+    UserEntity recharge(Long userId,String orderNo,Long buyTime,String total_fee);
     
     /**
      * 修改用户头像
@@ -85,7 +85,7 @@ public interface UserService extends IService<UserEntity> {
      * @param user
      * @param scope
      */
-    void wechatOARegister(Long userId, UserEntity user);
+    UserEntity wechatOARegister(Long userId, UserEntity user);
     
     /**
      * 微信小程序注册
@@ -93,15 +93,19 @@ public interface UserService extends IService<UserEntity> {
      * @param user
      * @param scope
      */
-    void wechatAppRegister(Long userId, UserEntity user);
+    UserEntity wechatAppRegister(Long userId, UserEntity user);
+    
     /**
-     * 记录登录日志
-     * @param userId
-     * @param scope
-     * @param logType
-     * @param adjunctInfo
-     * @param descr
+     * 插入日志纪录
+     * @param log
+     * @return
      */
-    void loginLog(Long userId,UserLogAction logType,String adjunctInfo,String descr);
+    boolean insertLog(UserLogEntity log);
+    
+    /**
+     * 修改最后登录时间
+     * @param userId
+     */
+    void modifyLastLogin(Long userId,Long lastLoginTime);
 }
 

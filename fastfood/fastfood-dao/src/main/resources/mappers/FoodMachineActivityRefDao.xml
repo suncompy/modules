@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.fastfood.dao.FoodMachineActivityRefDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity" id="foodMachineActivityRefMap">
+        <result property="id" column="id"/>
+        <result property="macId" column="mac_id"/>
+        <result property="activityType" column="activity_type"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity" id="findMachineActivityRefMap">
+        <result property="id" column="id"/>
+        <result property="macId" column="mac_id"/>
+        <result property="activityType" column="activity_type"/>
+        <result property="isRef" column="is_ref"/>
+        <result property="activityName" column="activity_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <select id="findMacActivityListByMacId" resultMap="findMachineActivityRefMap">
+       SELECT
+	r.id,
+	r.mac_id,
+	t.`NAME` as activity_name ,
+	DECODE(r.mac_id, 2) is_ref
+FROM
+	(
+		SELECT
+			1 activity_type,
+			NAME,
+			`use`
+		FROM
+			operate_activity_first_order
+		UNION ALL
+		SELECT
+			2 activity_type,
+			NAME,
+			`use`
+		FROM
+			operate_activity_keep_discount
+		UNION ALL
+		SELECT
+			3 activity_type,
+			NAME,
+			`use`
+		FROM
+			operate_activity_pay_cash_back
+	) t
+	LEFT JOIN (
+                SELECT
+                    *
+                FROM
+                    food_machine_activity_ref
+                WHERE
+                    mac_id = #{macId}
+            ) r ON t.activity_type = r.activity_type
+             AND t.`use` = 1
+    </select>
+</mapper>

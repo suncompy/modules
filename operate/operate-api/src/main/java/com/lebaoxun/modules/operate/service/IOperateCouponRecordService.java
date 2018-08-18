@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity;
 import com.lebaoxun.modules.operate.service.hystrix.OperateCouponRecordServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
@@ -51,6 +52,17 @@ public interface IOperateCouponRecordService {
      */
     @RequestMapping("/operate/operatecouponrecord/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
-    
+
+    /**
+	 * 查询用户未过期，未使用的优惠券
+	 * @param userId
+	 * @return
+	 */
+    @RequestMapping("/operate/operatecouponrecord/findByUserId")
+    ResponseMessage findByUserId(@RequestParam("userId")Long userId,
+    		@RequestParam(value="use",required=false)Integer use,
+    		@RequestParam(value="flag",required=false)Integer flag,
+    		@RequestParam(value="size",required=false)Integer size,
+    		@RequestParam(value="offset",required=false)Integer offset);
 }
 

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lebaoxun.commons.exception.ResponseMessage;
-import com.lebaoxun.modules.account.em.UserLogAction;
 import com.lebaoxun.modules.account.entity.UserEntity;
 import com.lebaoxun.modules.account.service.hystrix.UserServiceHystrix;
 
@@ -191,17 +190,11 @@ public interface IUserService {
 	UserEntity login(@RequestParam("username") String username,@RequestParam("password") String password);
 
 	/**
-     * 记录登录日志
+     * 修改最后登录时间
      * @param userId
-     * @param scope
-     * @param logType
-     * @param adjunctInfo
-     * @param descr
      */
-	@RequestMapping("/account/user/loginLog")
-	ResponseMessage loginLog(@RequestParam("userId") Long userId,
-			@RequestParam(value="logType") UserLogAction logType,
-			@RequestParam(value="adjunctInfo",required=false) String adjunctInfo,
-			@RequestParam(value="descr",required=false) String descr);
+	@RequestMapping("/account/user/modifyLastLogin")
+    ResponseMessage modifyLastLogin(@RequestParam("userId") Long userId,
+    		@RequestParam("lastLoginTime") Long lastLoginTime);
 }
 
