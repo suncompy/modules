@@ -36,6 +36,10 @@ public class UserLogEntity implements Serializable {
 	 */
 	private Date createTime;
 	/**
+	 * 日志时间
+	 */
+	private Date logTime;
+	/**
 	 * 日志类型
 	 */
 	private String logType;
@@ -52,6 +56,14 @@ public class UserLogEntity implements Serializable {
 	 */
 	private BigDecimal money;
 	/**
+	 * 交易前积分
+	 */
+	private Integer score;
+	/**
+	 * 交易积分
+	 */
+	private Integer tradeScore;
+	/**
 	 * 日志说明
 	 */
 	private String descr;
@@ -59,6 +71,10 @@ public class UserLogEntity implements Serializable {
 	 * 日志参数
 	 */
 	private String adjunctInfo;
+	/**
+	 * 唯一码
+	 */
+	private String token;
 
 	/**
 	 * 设置：
@@ -170,5 +186,29 @@ public class UserLogEntity implements Serializable {
 	}
 	public void setPlatform(String platform) {
 		this.platform = platform;
+	}
+	public Integer getScore() {
+		return score;
+	}
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+	public Integer getTradeScore() {
+		return tradeScore;
+	}
+	public void setTradeScore(Integer tradeScore) {
+		this.tradeScore = tradeScore;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
+	public Date getLogTime() {
+		return logTime;
+	}
+	public void setLogTime(Date logTime) {
+		this.logTime = logTime;
 	}
 }

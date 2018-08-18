@@ -2,8 +2,11 @@ package com.lebaoxun.modules.account.controller;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -17,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.PwdUtil;
 import com.lebaoxun.modules.account.em.UserLogAction;
 import com.lebaoxun.modules.account.entity.UserEntity;
 import com.lebaoxun.modules.account.service.UserService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
@@ -41,6 +47,9 @@ public class UserController {
 	
 	@Autowired
 	public HttpServletRequest request;
+	
+	@Resource
+	private IRabbitmqSender rabbitmqSender;
 	
     @Autowired
     private UserService userService;
@@ -166,7 +175,27 @@ public class UserController {
     ResponseMessage bindMobile(@RequestParam(value="userId") Long userId,
     		@RequestParam(value="mobile") String mobile, 
     		@RequestParam(value="password") String password){
+    	
+    	Date now = new Date();
+    	
     	userService.bindMobile(userId, mobile, password);
+    	
+    	UserLogAction logType = UserLogAction.U_BIND_MOBILE;
+		
+		Map<String,String> message = new HashMap<String,String>();
+		String timestamp = now.getTime()+"";
+		message.put("userId", userId+"");
+		message.put("timestamp", timestamp);
+		message.put("logType", logType.toString());
+		message.put("platform", null);
+		message.put("tradeMoney", null);
+		message.put("money", null);
+		message.put("descr", logType.getDescr());
+		message.put("adjunctInfo", mobile);
+		message.put("token", MD5.md5(logType.toString()+"_"+mobile+"_"+timestamp));
+		
+		rabbitmqSender.sendContractDirect("account.log.queue",
+				new Gson().toJson(message));
     	return ResponseMessage.ok();
     }
     
@@ -179,7 +208,25 @@ public class UserController {
     @RedisLock(value="account:user:bindOpenid:lock:#arg0")
     ResponseMessage bindOpenid(@RequestParam(value="userId") Long userId,
     		@RequestParam(value="openid") String openid){
+    	Date now = new Date();
     	userService.bindOpenid(userId, openid);
+    	
+    	UserLogAction logType = UserLogAction.U_BIND_OPENID;
+		
+		Map<String,String> message = new HashMap<String,String>();
+		String timestamp = now.getTime()+"";
+		message.put("userId", userId+"");
+		message.put("timestamp", timestamp);
+		message.put("logType", logType.toString());
+		message.put("platform", null);
+		message.put("tradeMoney", null);
+		message.put("money", null);
+		message.put("descr", logType.getDescr());
+		message.put("adjunctInfo", openid);
+		message.put("token", MD5.md5(logType.toString()+"_"+openid+"_"+timestamp));
+		
+		rabbitmqSender.sendContractDirect("account.log.queue",
+				new Gson().toJson(message));
     	return ResponseMessage.ok();
     }
     
@@ -193,7 +240,24 @@ public class UserController {
     @RedisLock(value="account:user:wechatOARegister:lock:#arg0")
     ResponseMessage wechatOARegister(@RequestParam(value="userId") Long userId, 
     		@RequestBody UserEntity user){
-    	userService.wechatOARegister(userId, user);
+    	UserEntity entity = userService.wechatOARegister(userId, user);
+    	
+    	UserLogAction logType = UserLogAction.U_REGISTER;
+		
+		Map<String,String> message = new HashMap<String,String>();
+		String timestamp = entity.getCreateTime().getTime()+"";
+		message.put("userId", userId+"");
+		message.put("timestamp", timestamp);
+		message.put("logType", logType.toString());
+		message.put("platform", null);
+		message.put("tradeMoney", new BigDecimal(0.00).toString());
+		message.put("money", entity.getBalance().toString());
+		message.put("descr", logType.getDescr());
+		message.put("adjunctInfo", "WECHAT_OA_REGISTER");
+		message.put("token", MD5.md5(logType.toString()+"_WECHAT_OA_REGISTER_"+timestamp));
+		
+		rabbitmqSender.sendContractDirect("account.log.queue",
+				new Gson().toJson(message));
     	return ResponseMessage.ok();
     }
     
@@ -207,7 +271,25 @@ public class UserController {
     @RedisLock(value="account:user:wechatAppRegister:lock:#arg0")
     ResponseMessage wechatAppRegister(@RequestParam(value="userId") Long userId, 
     		@RequestBody UserEntity user){
-    	userService.wechatAppRegister(userId, user);
+    	UserEntity entity = userService.wechatAppRegister(userId, user);
+    	
+    	UserLogAction logType = UserLogAction.U_REGISTER;
+		
+		Map<String,String> message = new HashMap<String,String>();
+		String timestamp = entity.getCreateTime().getTime()+"";
+		message.put("userId", userId+"");
+		message.put("timestamp", timestamp);
+		message.put("logType", logType.toString());
+		message.put("platform", null);
+		message.put("tradeMoney", new BigDecimal(0.00).toString());
+		message.put("money", entity.getBalance().toString());
+		message.put("descr", logType.getDescr());
+		message.put("adjunctInfo", "WECHAT_APP_REGISTER");
+		message.put("token", MD5.md5(logType.toString()+"_WECHAT_OA_REGISTER_"+timestamp));
+		
+		logger.info("rabbit|sendContractDirect|message={}",message);
+		rabbitmqSender.sendContractDirect("account.log.queue",
+				new Gson().toJson(message));
     	return ResponseMessage.ok();
     }
 
@@ -272,22 +354,17 @@ public class UserController {
 	UserEntity login(@RequestParam("username") String username,@RequestParam("password") String password){
 		return userService.selectOne(new EntityWrapper<UserEntity>().eq("account", username).eq("password", PwdUtil.getMd5Password(passwdSecret, username, password)));
 	}
-
+	
 	/**
-     * 记录登录日志
+     * 修改最后登录时间
      * @param userId
-     * @param scope
-     * @param logType
-     * @param adjunctInfo
-     * @param descr
      */
-	@RequestMapping("/account/user/loginLog")
-    @RedisLock(value="account:user:loginLog:lock:#arg0")
-	ResponseMessage loginLog(@RequestParam("userId") Long userId,
-			@RequestParam(value="logType") UserLogAction logType,
-			@RequestParam(value="adjunctInfo",required=false) String adjunctInfo,
-			@RequestParam(value="descr",required=false) String descr){
-		userService.loginLog(userId, logType, adjunctInfo, descr);
-		return ResponseMessage.ok();
+	@RequestMapping("/account/user/modifyLastLogin")
+	@RedisLock(value="account:user:modifyLastLogin:lock:#arg0")
+    ResponseMessage modifyLastLogin(@RequestParam("userId") Long userId,
+    		@RequestParam("lastLoginTime") Long lastLoginTime){
+		userService.modifyLastLogin(userId, lastLoginTime);
+        return ResponseMessage.ok();
     }
+
 }

@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.operate.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,4 +79,17 @@ public class OperateCouponRecordController {
         return ResponseMessage.ok();
     }
 
+    /**
+	 * 查询用户未过期，未使用的优惠券
+	 * @param userId
+	 * @return
+	 */
+    @RequestMapping("/operate/operatecouponrecord/findByUserId")
+    ResponseMessage findByUserId(@RequestParam("userId")Long userId,
+    		@RequestParam(value="use",required=false)Integer use,
+    		@RequestParam(value="flag",required=false)Integer flag,
+    		@RequestParam(value="size",required=false)Integer size,
+    		@RequestParam(value="offset",required=false)Integer offset){
+    	return ResponseMessage.ok(operateCouponRecordService.findByUserId(userId, use, flag,size, offset));
+	}
 }

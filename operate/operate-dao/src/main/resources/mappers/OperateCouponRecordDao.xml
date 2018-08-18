@@ -4,21 +4,45 @@
 <mapper namespace="com.lebaoxun.modules.operate.dao.OperateCouponRecordDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity" id="operateCouponRecordMap">
-        <result property="id" column="id"/>
-        <result property="couponId" column="coupon_id"/>
-        <result property="name" column="name"/>
-        <result property="type" column="type"/>
-        <result property="amount" column="amount"/>
-        <result property="useRestrict" column="use_restrict"/>
-        <result property="startTime" column="start_time"/>
-        <result property="period" column="period"/>
-        <result property="createTime" column="create_time"/>
-        <result property="userId" column="user_id"/>
-        <result property="use" column="use"/>
-        <result property="orderNo" column="order_no"/>
-        <result property="useTime" column="use_time"/>
-    </resultMap>
+	<resultMap
+		type="com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity"
+		id="operateCouponRecordMap">
+		<result property="id" column="id" />
+		<result property="couponId" column="coupon_id" />
+		<result property="name" column="name" />
+		<result property="type" column="type" />
+		<result property="amount" column="amount" />
+		<result property="useRestrict" column="use_restrict" />
+		<result property="startTime" column="start_time" />
+		<result property="period" column="period" />
+		<result property="createTime" column="create_time" />
+		<result property="userId" column="user_id" />
+		<result property="use" column="use" />
+		<result property="orderNo" column="order_no" />
+		<result property="useTime" column="use_time" />
+	</resultMap>
 
+	<!-- 优惠券记录 -->
+	<select id="findByUserId" resultMap="operateCouponRecordMap">
+		select * from operate_coupon_record where 
+		user_id = #{userId}
+		<if test="flag == 1">
+			and date_add(start_time, interval period day) <![CDATA[>]]> now()
+		</if>
+		<if test="flag == 0">
+			and date_add(start_time, interval period day) <![CDATA[<=]]> now()
+		</if>
+		<if test="use != null">
+		    and `use` = #{use}
+		</if>
+		order by create_time desc
+		<if test="size != null">
+			limit
+			<if test="offset != null">
+				#{offset,jdbcType=INTEGER},
+			</if>
+			#{size,jdbcType=INTEGER}
+		</if>
+	</select>
 
 </mapper>
