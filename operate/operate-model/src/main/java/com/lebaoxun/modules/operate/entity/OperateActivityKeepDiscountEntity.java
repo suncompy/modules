@@ -2,6 +2,7 @@ package com.lebaoxun.modules.operate.entity;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,7 +22,7 @@ public class OperateActivityKeepDiscountEntity implements Serializable {
 	 * 
 	 */
 @TableId
-	private Integer id;
+	private Integer id=0;
 	/**
 	 * 活动名称
 	 */
@@ -29,6 +30,7 @@ public class OperateActivityKeepDiscountEntity implements Serializable {
 	/**
 	 * 启用时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date startTime;
 	/**
 	 * 有效期，单位天
