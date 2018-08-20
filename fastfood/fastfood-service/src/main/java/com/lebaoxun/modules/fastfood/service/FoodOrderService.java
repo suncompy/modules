@@ -30,5 +30,5 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
      * @param orders
      * @return
      */
-    List<FoodOrderEntity> createOrder(Long userId,List<FoodOrderEntity> orders);
+    List<FoodOrderEntity> createOrder(Long userId,FoodOrderEntity order);
 }

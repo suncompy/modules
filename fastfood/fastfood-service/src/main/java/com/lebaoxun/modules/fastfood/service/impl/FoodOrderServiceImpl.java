@@ -1,16 +1,17 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.modules.fastfood.dao.FoodOrderDao;
@@ -29,7 +29,11 @@ import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 
 @Service("foodOrderService")
 public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEntity> implements FoodOrderService {
+	
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Resource
+	private RedisTemplate<String, Object> redisTemplate;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         Page<FoodOrderEntity> page = this.selectPage(
@@ -47,11 +51,37 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public static String format1(Integer value, int minLength) {
+		StringBuffer st = new StringBuffer(value.toString());
+		if (st.length() < minLength) {
+			int len = minLength - st.length();
+			for (int i = 0; i < len; i++) {
+				st.insert(0, "0");
+			}
+		}
+		return st.toString();
+	}
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public List<FoodOrderEntity> createOrder(Long userId,
-			List<FoodOrderEntity> orders) {
+			FoodOrderEntity order) {
+		
+		Date now = new Date();
+		
+		String date = DateFormatUtils.format(now, "yyyyMMdd");
+		String key = "mall:orderNo:" + date;
+		Integer inr = (Integer) redisTemplate.opsForValue().get(key);
+		if (inr == null) {
+			inr = RandomUtils.nextInt(10000);
+			redisTemplate.opsForValue().set(key, inr, 25l,
+					TimeUnit.valueOf("HOURS"));
+		} else {
+			inr = redisTemplate.opsForValue().increment(key, 1).intValue();
+		}
+		String orderNo = "FD" + date + format1(inr, 5);
+		
 		// TODO Auto-generated method stub
 		
 		/*List<Long> productSpecIds = new ArrayList<Long>();
