@@ -1,11 +1,10 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-
-import java.math.BigDecimal;
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 订单明细表
@@ -22,7 +21,7 @@ public class FoodOrderChildsEntity implements Serializable {
 	 * 订单商品ID
 	 */
 	@TableId
-	private Long orderProductId = 0l;
+	private Long id = 0l;
 	/**
 	 * 订单ID
 	 */
@@ -59,18 +58,38 @@ public class FoodOrderChildsEntity implements Serializable {
 	 * 订单状态 -2=已删除，-1=已取消，0=待支付，1=已支付，2=已取单，3=已评价
 	 */
 	private Integer status;
-
+	
+	/**
+	 * 通道ID
+	 */
+	private Integer aisleId;
+	/**
+	 * 机器ID
+	 */
+	private Integer macId;
+	/**
+	 * 活动
+	 */
+	private String activity;
+	/**
+	 * 原价
+	 */
+	private BigDecimal costPrice;
+	/**
+	 * 产品名称
+	 */
+	private String name;
 	/**
 	 * 设置：订单商品ID
 	 */
-	public void setOrderProductId(Long orderProductId) {
-		this.orderProductId = orderProductId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	/**
 	 * 获取：订单商品ID
 	 */
-	public Long getOrderProductId() {
-		return orderProductId;
+	public Long getId() {
+		return id;
 	}
 	/**
 	 * 设置：订单ID
@@ -179,5 +198,35 @@ public class FoodOrderChildsEntity implements Serializable {
 	 */
 	public Integer getStatus() {
 		return status;
+	}
+	public Integer getAisleId() {
+		return aisleId;
+	}
+	public void setAisleId(Integer aisleId) {
+		this.aisleId = aisleId;
+	}
+	public Integer getMacId() {
+		return macId;
+	}
+	public void setMacId(Integer macId) {
+		this.macId = macId;
+	}
+	public String getActivity() {
+		return activity;
+	}
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
+	public BigDecimal getCostPrice() {
+		return costPrice;
+	}
+	public void setCostPrice(BigDecimal costPrice) {
+		this.costPrice = costPrice;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 }
