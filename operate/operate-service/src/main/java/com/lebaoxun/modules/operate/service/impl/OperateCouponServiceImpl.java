@@ -2,13 +2,15 @@ package com.lebaoxun.modules.operate.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
-
 import com.lebaoxun.modules.operate.dao.OperateCouponDao;
 import com.lebaoxun.modules.operate.entity.OperateCouponEntity;
 import com.lebaoxun.modules.operate.service.OperateCouponService;
@@ -28,4 +30,9 @@ public class OperateCouponServiceImpl extends ServiceImpl<OperateCouponDao, Oper
         return new PageUtils(page);
     }
 
+    @Override
+    public List<OperateCouponEntity> findByMacId(Integer macId,Long userId) {
+    	// TODO Auto-generated method stub
+    	return this.baseMapper.findByMacId(macId,userId);
+    }
 }

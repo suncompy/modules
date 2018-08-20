@@ -43,6 +43,28 @@ public class FoodShoppingCartServiceHystrix implements IFoodShoppingCartService 
 	public ResponseMessage delete(Long adminId,Long[] cartIds) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+
+	@Override
+	public ResponseMessage add(Long userId, Integer aisleId, Integer macId,
+			Integer productId, Integer checkStatus, Integer buyNumber) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage set(Long userId, Long cartId, Integer checkStatus,
+			Integer buyNumber) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage remove(Long userId, Long cartId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage findByUser(Long userId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
     
 }
 

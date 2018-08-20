@@ -43,6 +43,11 @@ public class OperateActivityKeepDiscountServiceHystrix implements IOperateActivi
 	public ResponseMessage delete(Long adminId,Integer[] ids) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+
+	@Override
+	public OperateActivityKeepDiscountEntity findUnderwayActivity() {
+		return null;
+	}
     
 }
 

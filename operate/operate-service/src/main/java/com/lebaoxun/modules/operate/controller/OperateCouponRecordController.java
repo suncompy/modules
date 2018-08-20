@@ -92,4 +92,12 @@ public class OperateCouponRecordController {
     		@RequestParam(value="offset",required=false)Integer offset){
     	return ResponseMessage.ok(operateCouponRecordService.findByUserId(userId, use, flag,size, offset));
 	}
+    
+    @RequestMapping("/operate/operatecouponrecord/getCouponByCouponId")
+    @RedisLock(value="operate:operatecouponrecord:getCouponByCouponId:lock:#arg2")
+    ResponseMessage getCouponByCouponId(@RequestParam("userId")Long userId,
+    		@RequestParam("macId")Integer macId,
+    		@RequestParam("couponId")Integer couponId){
+    	return ResponseMessage.ok(operateCouponRecordService.getCouponByCouponId(userId, macId, couponId));
+    }
 }

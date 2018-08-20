@@ -26,4 +26,9 @@ public class OperateActivityKeepDiscountServiceImpl extends ServiceImpl<OperateA
         return new PageUtils(page);
     }
 
+	@Override
+	public OperateActivityKeepDiscountEntity findUnderwayActivity() {
+		return this.baseMapper.findUnderwayActivity();
+	}
+
 }

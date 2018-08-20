@@ -2,6 +2,7 @@ package com.lebaoxun.modules.operate.controller;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +84,18 @@ public class OperateCouponController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids){
 		operateCouponService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+    
+    /**
+     * 获取可领取优惠券列表
+     * @param macId
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/operate/operatecoupon/findByMacId")
+    ResponseMessage findByMacId(@RequestParam("macId")Integer macId,
+    		@RequestParam("userId")Long userId){
+    	return ResponseMessage.ok(operateCouponService.findByMacId(macId, userId));
     }
 
 }

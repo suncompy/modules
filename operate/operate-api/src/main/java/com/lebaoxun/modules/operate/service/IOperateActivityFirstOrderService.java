@@ -52,5 +52,7 @@ public interface IOperateActivityFirstOrderService {
     @RequestMapping("/operate/operateactivityfirstorder/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
+    @RequestMapping("/operate/operateactivityfirstorder/findUnderwayActivity")
+    OperateActivityFirstOrderEntity findUnderwayActivity();
 }
 

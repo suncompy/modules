@@ -4,24 +4,51 @@
 <mapper namespace="com.lebaoxun.modules.operate.dao.OperateCouponDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lebaoxun.modules.operate.entity.OperateCouponEntity" id="operateCouponMap">
-        <result property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="total" column="total"/>
-        <result property="peoNumRestrict" column="peo_num_restrict"/>
-        <result property="type" column="type"/>
-        <result property="amount" column="amount"/>
-        <result property="useRestrict" column="use_restrict"/>
-        <result property="startTime" column="start_time"/>
-        <result property="period" column="period"/>
-        <result property="startGetTime" column="start_get_time"/>
-        <result property="endGetTime" column="end_get_time"/>
-        <result property="remark" column="remark"/>
-        <result property="createTime" column="create_time"/>
-        <result property="createBy" column="create_by"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="updateTime" column="update_time"/>
-    </resultMap>
+	<resultMap type="com.lebaoxun.modules.operate.entity.OperateCouponEntity"
+		id="operateCouponMap">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="total" column="total" />
+		<result property="peoNumRestrict" column="peo_num_restrict" />
+		<result property="type" column="type" />
+		<result property="amount" column="amount" />
+		<result property="useRestrict" column="use_restrict" />
+		<result property="startTime" column="start_time" />
+		<result property="period" column="period" />
+		<result property="startGetTime" column="start_get_time" />
+		<result property="endGetTime" column="end_get_time" />
+		<result property="remark" column="remark" />
+		<result property="createTime" column="create_time" />
+		<result property="createBy" column="create_by" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
 
-
+	<select id="findByMacId" resultMap="operateCouponMap">
+		select 
+			t2.id, t2.name, t2.total, t2.peo_num_restrict,
+			t2.type, t2.amount, t2.amount, t2.use_restrict
+		from operate_coupon_mac_rcrt as t1
+		left join operate_coupon t2 on t2.id = t1.coupon_id
+		where 
+		t1.mac_id = #{macId} 
+		and t2.total <![CDATA[>]]> 0
+		<!-- and date_add(t2.start_time, interval t2.period day) > now()  -->
+		and now() BETWEEN start_get_time and end_get_time
+		<if test="userId != null">
+			AND EXISTS(select count(id) <![CDATA[<]]> t2.peo_num_restrict from operate_coupon_record as t3 where t3.coupon_id = t1.coupon_id and t3.mac_id = t1.mac_id and t3.user_id = #{userId})
+		</if>
+	</select>
+	
+	<select id="findById" resultMap="operateCouponMap">
+	    select 
+			t2.id, t2.name, t2.total, t2.peo_num_restrict,
+			t2.type, t2.amount, t2.amount, t2.use_restrict
+		from operate_coupon_mac_rcrt as t1
+		left join operate_coupon t2 on t2.id = t1.coupon_id
+		where t1.mac_id = #{macId}
+		and t1.coupon_id = #{couponId} 
+		<!-- and date_add(t2.start_time, interval t2.period day) > now()  -->
+		and now() BETWEEN start_get_time and end_get_time
+	</select>
 </mapper>

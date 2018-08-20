@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.lebaoxun.modules.operate.entity.OperateCouponEntity;
 import com.lebaoxun.modules.operate.service.hystrix.OperateCouponServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
@@ -52,5 +53,14 @@ public interface IOperateCouponService {
     @RequestMapping("/operate/operatecoupon/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
+    /**
+     * 获取可领取优惠券列表
+     * @param macId
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/operate/operatecoupon/findByMacId")
+    ResponseMessage findByMacId(@RequestParam("macId")Integer macId,
+    		@RequestParam("userId")Long userId);
 }
 

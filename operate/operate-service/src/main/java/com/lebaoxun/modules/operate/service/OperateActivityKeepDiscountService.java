@@ -16,5 +16,7 @@ import java.util.Map;
 public interface OperateActivityKeepDiscountService extends IService<OperateActivityKeepDiscountEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    
+    OperateActivityKeepDiscountEntity findUnderwayActivity();
 }
 

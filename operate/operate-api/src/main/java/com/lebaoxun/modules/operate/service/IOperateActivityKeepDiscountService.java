@@ -52,5 +52,7 @@ public interface IOperateActivityKeepDiscountService {
     @RequestMapping("/operate/operateactivitykeepdiscount/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
+    @RequestMapping("/operate/operateactivityfirstorder/findUnderwayActivity")
+    OperateActivityKeepDiscountEntity findUnderwayActivity();
 }
 

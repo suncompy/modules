@@ -25,5 +25,10 @@ public class OperateActivityFirstOrderServiceImpl extends ServiceImpl<OperateAct
 
         return new PageUtils(page);
     }
+    
+    @Override
+    public OperateActivityFirstOrderEntity findUnderwayActivity() {
+    	return this.baseMapper.findUnderwayActivity();
+    }
 
 }

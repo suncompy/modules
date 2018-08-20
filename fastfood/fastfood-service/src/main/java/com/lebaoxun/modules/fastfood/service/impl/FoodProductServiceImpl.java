@@ -94,10 +94,9 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
     @Override
     public boolean deleteBatchIds(Collection<? extends Serializable> idList) {
     	// TODO Auto-generated method stub
-    	// TODO Auto-generated method stub
     	List<FoodProductEntity> list = this.baseMapper.selectBatchIds(idList);
     	for(FoodProductEntity fp:list){
-    		foodProductMaterialRcrtDao.delete(new EntityWrapper<FoodProductMaterialRcrtEntity	>().eq("product_id", fp.getId()));
+    		foodProductMaterialRcrtDao.delete(new EntityWrapper<FoodProductMaterialRcrtEntity>().eq("product_id", fp.getId()));
     	}
     	return super.deleteBatchIds(idList);
     }

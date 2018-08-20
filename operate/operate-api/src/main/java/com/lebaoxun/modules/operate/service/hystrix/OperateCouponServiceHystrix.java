@@ -44,5 +44,9 @@ public class OperateCouponServiceHystrix implements IOperateCouponService {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
     
+	@Override
+	public ResponseMessage findByMacId(Integer macId, Long userId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 

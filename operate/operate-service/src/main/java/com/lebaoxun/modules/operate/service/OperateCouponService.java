@@ -1,10 +1,11 @@
 package com.lebaoxun.modules.operate.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.operate.entity.OperateCouponEntity;
-
-import java.util.Map;
 
 /**
  * 优惠券
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface OperateCouponService extends IService<OperateCouponEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    
+    List<OperateCouponEntity> findByMacId(Integer macId,Long userId);
 }
 

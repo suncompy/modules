@@ -13,5 +13,6 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface OperateActivityFirstOrderDao extends BaseMapper<OperateActivityFirstOrderEntity> {
+	OperateActivityFirstOrderEntity findUnderwayActivity();
 	
 }

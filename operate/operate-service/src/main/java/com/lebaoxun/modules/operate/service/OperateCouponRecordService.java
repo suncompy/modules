@@ -26,5 +26,7 @@ public interface OperateCouponRecordService extends IService<OperateCouponRecord
 	List<OperateCouponRecordEntity> findByUserId(Long userId,
 			Integer use,Integer flag,
 			Integer size,Integer offset);
+	
+	OperateCouponRecordEntity getCouponByCouponId(Long userId,Integer macId,Integer couponId);
 }
 

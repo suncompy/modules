@@ -16,5 +16,7 @@ import java.util.Map;
 public interface OperateActivityFirstOrderService extends IService<OperateActivityFirstOrderEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    
+    OperateActivityFirstOrderEntity findUnderwayActivity();
 }
 

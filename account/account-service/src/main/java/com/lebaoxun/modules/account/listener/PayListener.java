@@ -48,8 +48,8 @@ public class PayListener {
     }
 
     @Bean
-    Binding bindingDirectExchangePay(Queue queueBuyCard, DirectExchange directExchange) {
-        return BindingBuilder.bind(queueBuyCard).to(directExchange).with("pay.notify.queue");
+    Binding bindingDirectExchangePay(Queue queuePay, DirectExchange directExchange) {
+        return BindingBuilder.bind(queuePay).to(directExchange).with("pay.notify.queue");
     }
 	
 	@RabbitHandler

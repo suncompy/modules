@@ -23,6 +23,10 @@ public class FoodShoppingCartEntity implements Serializable {
 	@TableId
 	private Long cartId = 0l;
 	/**
+	 * 通道ID
+	 */
+	private Integer aisleId;
+	/**
 	 * 餐品ID
 	 */
 	private Integer productId;
@@ -146,5 +150,11 @@ public class FoodShoppingCartEntity implements Serializable {
 	 */
 	public Integer getCheckStatus() {
 		return checkStatus;
+	}
+	public Integer getAisleId() {
+		return aisleId;
+	}
+	public void setAisleId(Integer aisleId) {
+		this.aisleId = aisleId;
 	}
 }

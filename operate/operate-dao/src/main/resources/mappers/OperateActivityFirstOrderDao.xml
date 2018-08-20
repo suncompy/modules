@@ -16,5 +16,7 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
-
+	<select id="findUnderwayActivity" resultMap="operateActivityFirstOrderMap" >
+	    select * from operate_activity_first_order where `use` = 1 and now() BETWEEN start_time and end_time
+	</select>
 </mapper>

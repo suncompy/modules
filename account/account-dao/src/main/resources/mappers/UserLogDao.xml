@@ -41,10 +41,6 @@
 		#{descr}, #{adjunctInfo}, #{token});
 	</insert>
 	
-	<insert id="insert">
-	    
-	</insert>
-	
 	<select id="queryAllLogType" resultType="java.util.Map">
 		select log_type,descr from user_log group by log_type;
 	</select>
@@ -86,7 +82,7 @@
 	    </if>
 	</select>
 	
-	<select id="queryUserLogByDay" resultType="userLogMap">
+	<select id="queryUserLogByDay" resultMap="userLogMap">
 	    SELECT id,user_id,account,create_time,log_type,platform,trade_money,money,descr,adjunct_info,score,trade_score,token,log_time 
 		FROM user_log 
 		WHERE user_id = #{userId}

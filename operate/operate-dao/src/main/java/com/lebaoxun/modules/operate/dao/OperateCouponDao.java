@@ -1,8 +1,12 @@
 package com.lebaoxun.modules.operate.dao;
 
-import com.lebaoxun.modules.operate.entity.OperateCouponEntity;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.lebaoxun.modules.operate.entity.OperateCouponEntity;
 
 /**
  * 优惠券
@@ -14,4 +18,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 @Mapper
 public interface OperateCouponDao extends BaseMapper<OperateCouponEntity> {
 	
+	List<OperateCouponEntity> findByMacId(@Param("macId")Integer macId,@Param("userId") Long userId);
+	
+	OperateCouponEntity findById(@Param("macId")Integer macId,@Param("couponId")Integer couponId);
 }

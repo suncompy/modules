@@ -15,6 +15,9 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
-
+	
+    <select id="findUnderwayActivity" resultMap="operateActivityKeepDiscountMap" >
+        select * from operate_activity_keep_discount where `use` = 1  and date_add(start_time, interval period day) > now()
+    </select>
 
 </mapper>

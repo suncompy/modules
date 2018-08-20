@@ -80,4 +80,8 @@ public class OperateActivityKeepDiscountController {
         return ResponseMessage.ok();
     }
 
+    @RequestMapping("/operate/operateactivityfirstorder/findUnderwayActivity")
+    OperateActivityKeepDiscountEntity findUnderwayActivity(){
+    	return operateActivityKeepDiscountService.findUnderwayActivity();
+    }
 }

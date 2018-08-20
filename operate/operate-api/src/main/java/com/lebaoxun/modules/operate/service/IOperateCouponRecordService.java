@@ -1,16 +1,16 @@
 package com.lebaoxun.modules.operate.service;
 
+import java.util.Map;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity;
 import com.lebaoxun.modules.operate.service.hystrix.OperateCouponRecordServiceHystrix;
-import com.lebaoxun.commons.exception.ResponseMessage;
-
-import java.util.Map;
 
 /**
  * 优惠券领取记录
@@ -64,5 +64,17 @@ public interface IOperateCouponRecordService {
     		@RequestParam(value="flag",required=false)Integer flag,
     		@RequestParam(value="size",required=false)Integer size,
     		@RequestParam(value="offset",required=false)Integer offset);
+    
+    /**
+     * 领取优惠券
+     * @param userId
+     * @param macId
+     * @param couponId
+     * @return
+     */
+    @RequestMapping("/operate/operatecouponrecord/getCouponByCouponId")
+    ResponseMessage getCouponByCouponId(@RequestParam("userId")Long userId,
+    		@RequestParam("macId")Integer macId,
+    		@RequestParam("couponId")Integer couponId);
 }
 

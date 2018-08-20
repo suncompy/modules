@@ -49,5 +49,12 @@ public class OperateCouponRecordServiceHystrix implements IOperateCouponRecordSe
 			Integer size, Integer offset) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
+	@Override
+	public ResponseMessage getCouponByCouponId(Long userId, Integer macId,
+			Integer couponId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+	
 }
 

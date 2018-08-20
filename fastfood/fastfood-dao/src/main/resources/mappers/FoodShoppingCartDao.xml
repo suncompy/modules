@@ -15,5 +15,29 @@
         <result property="checkStatus" column="check_status"/>
     </resultMap>
 
+    <select id="findByUser" resultType="java.util.Map">
+        SELECT
+			cart.check_status as checkStatus,cart.buy_number as buyNumber,cart.mac_id as macId,
+			aisle.id as aisleId, aisle.stock as stock, aisle.price,
+			product.id as productId,product.name as name,product.materials as materials,
+			product.show_price as showPrice, product.picture as picture,
+			product.unit as unit, product.zs_weight as zsWeight,
+			product.cp_weight as cpWeight, product.warm_flag as warmFlag,
+			product.warm_time as warmTime, product.hot_num as hotNum,
+			product.label as label, product.`status` as status,
+			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
+			product.keyword as keyword, product.descr as descr,
+			product.create_time as createTime,
+		  (product.`status` = 1 AND date_add(product.up_time, interval period day) > now()) as flag
+		FROM
+			food_shopping_cart AS cart,
+			food_machine_aisle AS aisle
+		left join food_product as product on product.id = aisle.product_id
+		WHERE
+			cart.aisle_id = aisle.id
+		AND cart.mac_id = aisle.mac_id
+		AND cart.product_id = aisle.product_cat_id
+		AND cart.user_id = #{userId}
+    </select>
 
 </mapper>

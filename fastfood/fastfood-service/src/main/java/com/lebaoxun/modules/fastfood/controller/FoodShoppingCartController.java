@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.FoodShoppingCartService;
-import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
@@ -77,5 +78,70 @@ public class FoodShoppingCartController {
 		foodShoppingCartService.deleteBatchIds(Arrays.asList(cartIds));
         return ResponseMessage.ok();
     }
+    
+    /**
+     * 添加购物车
+     * @param userId
+     * @param macId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodshoppingcart/add")
+    @RedisLock(value="fastfood:foodshoppingcart:lock:#arg0")
+    ResponseMessage add(
+    		@RequestParam("userId")Long userId,
+    		@RequestParam("aisleId")Integer aisleId,
+    		@RequestParam("macId")Integer macId,
+    		@RequestParam("productId")Integer productId,
+    		@RequestParam("checkStatus")Integer checkStatus,
+    		@RequestParam("buyNumber")Integer buyNumber){
+    	return ResponseMessage.ok(foodShoppingCartService.add(userId, aisleId, macId, productId, checkStatus, buyNumber));
+    }
+    
+    /**
+     * 设置数量
+     * @param userId
+     * @param macId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodshoppingcart/set")
+    @RedisLock(value="fastfood:foodshoppingcart:lock:#arg0")
+    ResponseMessage set(
+    		@RequestParam("userId")Long userId,
+    		@RequestParam("cartId")Long cartId,
+    		@RequestParam("checkStatus")Integer checkStatus,
+    		@RequestParam("buyNumber")Integer buyNumber){
+    	return ResponseMessage.ok(foodShoppingCartService.set(userId, cartId, checkStatus, buyNumber));
+    }
+    
+    /**
+     * 删除
+     * @param userId
+     * @param macId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodshoppingcart/remove")
+    @RedisLock(value="fastfood:foodshoppingcart:lock:#arg0")
+    ResponseMessage remove(
+    		@RequestParam("userId")Long userId,
+    		@RequestParam("cartId")Long cartId){
+    	foodShoppingCartService.remove(userId, cartId);
+    	return ResponseMessage.ok();
+    }
+    
+    /**
+     * 购物车列表
+     * @param userId
+     * @param macId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodshoppingcart/list")
+    ResponseMessage findByUser(@RequestParam("userId")Long userId){
+    	return ResponseMessage.ok(foodShoppingCartService.findByUser(userId));
+    }
+    
 
 }

@@ -48,10 +48,10 @@
     <select id="findProductByMacIdAndProductCatId" resultType="java.util.Map">
 		select 
 			aisle.id as aisleId, aisle.stock as stock, aisle.price,
-			product.name as name,product.materials as materials,
+			product.id as productId,product.name as name,product.materials as materials,
 			product.show_price as showPrice, product.picture as picture,
 			product.unit as unit, product.zs_weight as zsWeight,
-			product.cp_weight as cpWeight, product.warmFlag,
+			product.cp_weight as cpWeight, product.warm_flag as warmFlag,
 			product.warm_time as warmTime, product.hot_num as hotNum,
 			product.label as label, product.`status` as status,
 			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,

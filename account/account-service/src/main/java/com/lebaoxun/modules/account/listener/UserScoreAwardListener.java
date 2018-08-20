@@ -31,13 +31,13 @@ public class UserScoreAwardListener {
 	private UserScoreAchievementAwardService userScoreAchievementAwardService;
 	
 	@Bean
-    public Queue queuePay() {
+    public Queue queueAward() {
         return new Queue("account.score.award.queue",true);
     }
 
     @Bean
-    Binding bindingDirectExchangePay(Queue queueBuyCard, DirectExchange directExchange) {
-        return BindingBuilder.bind(queueBuyCard).to(directExchange).with("account.score.award.queue");
+    Binding bindingDirectExchangeAward(Queue queueAward, DirectExchange directExchange) {
+        return BindingBuilder.bind(queueAward).to(directExchange).with("account.score.award.queue");
     }
 	
 	@RabbitHandler
