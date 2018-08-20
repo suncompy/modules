@@ -50,13 +50,13 @@
 		area_code, pos, notice,
 		cat_id, partner_id, status,
 		replenish_man, picking_man, maintenance_man,remark,
-		create_by,create_by,
+		create_time,create_by,
 		update_time, update_by)
 		VALUES
 		(
 		#{id}, #{imei},
 		#{host},
-		#{area_code}, #{pos}, #{notice},
+		#{areaCode}, #{pos}, #{notice},
 		#{catId}, #{partnerId},
 		#{status},
 		#{replenishMan},#{pickingMan},#{maintenanceMan},#{remark},
