@@ -1,14 +1,18 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.utils.AddressParse;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineCatEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
 
+import com.lebaoxun.modules.fastfood.service.FoodMachineCatService;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +40,8 @@ public class FoodMachineController {
     @Autowired
     private FoodMachineService foodMachineService;
     @Autowired
+    private FoodMachineCatService foodMachineCatService;
+    @Autowired
     private FoodMachineCatAisleService foodMachineCatAisleService;
 
     /**
@@ -43,7 +49,16 @@ public class FoodMachineController {
      */
     @RequestMapping("/fastfood/foodmachine/list")
     ResponseMessage list(@RequestParam Map<String, Object> params){
+        Map<Integer,String> catMap=new HashedMap();
+        List<FoodMachineCatEntity> foodMachineCatEntities=foodMachineCatService.selectList(new EntityWrapper<FoodMachineCatEntity>());
+        if (foodMachineCatEntities!=null){
+            foodMachineCatEntities.forEach(e->catMap.put((int)e.getId(),e.getName()));
+        }
         PageUtils page = foodMachineService.queryPage(params);
+        List<FoodMachineEntity> foodMachineEntities=(List<FoodMachineEntity>)page.getList();
+        foodMachineEntities.forEach(e->{
+            e.setCatName(catMap.get(e.getCatId()));
+        });
         return ResponseMessage.ok(page);
     }
 

@@ -36,9 +36,13 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
     private FoodMachineCatAisleService foodMachineCatAisleService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+        EntityWrapper<FoodMachineEntity> entityEntityWrapper=new EntityWrapper<FoodMachineEntity>();
+        if (params!=null&&params.containsKey("condition")){
+            entityEntityWrapper.like("imei",params.get("condition").toString());
+        }
         Page<FoodMachineEntity> page = this.selectPage(
                 new Query<FoodMachineEntity>(params).getPage(),
-                new EntityWrapper<FoodMachineEntity>()
+                entityEntityWrapper
         );
 
         return new PageUtils(page);
