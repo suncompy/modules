@@ -56,6 +56,12 @@ public class SysUserEntity implements Serializable {
 	private String password;
 
 	/**
+	 * 用户类型
+	 * 1.管理员、2.维修员、3.配货员、4.补货员
+	 */
+	private Integer userType=1;
+
+	/**
 	 * 盐
 	 */
 	private String salt;
@@ -240,5 +246,13 @@ public class SysUserEntity implements Serializable {
 
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
+	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
 	}
 }
