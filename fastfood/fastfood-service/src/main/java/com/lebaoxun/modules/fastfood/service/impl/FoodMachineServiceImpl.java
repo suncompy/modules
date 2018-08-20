@@ -96,6 +96,7 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
             foodMachineAisleEntity.setMacId(foodMachine.getId());
             foodMachineAisleEntity.setX(machineCatAisleEntity.getX());
             foodMachineAisleEntity.setY(machineCatAisleEntity.getY());
+            foodMachineAisleEntity.setZ(machineCatAisleEntity.getZ()==null?0:machineCatAisleEntity.getZ());
             foodMachineAisleEntity.setSize(machineCatAisleEntity.getSize());
             Date date=new Date();
             foodMachineAisleEntity.setCreateTime(date);
