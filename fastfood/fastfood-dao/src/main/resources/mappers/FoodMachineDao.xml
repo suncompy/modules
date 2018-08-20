@@ -49,6 +49,7 @@
 		imei, host,
 		area_code, pos, notice,
 		cat_id, partner_id, status,
+		manager_id,
 		replenish_man, picking_man, maintenance_man,remark,
 		create_time,create_by,
 		update_time, update_by)
@@ -59,6 +60,7 @@
 		#{areaCode}, #{pos}, #{notice},
 		#{catId}, #{partnerId},
 		#{status},
+		#{managerId},
 		#{replenishMan},#{pickingMan},#{maintenanceMan},#{remark},
 		#{createTime}, #{createBy},
 		#{updateTime}, #{updateBy});
