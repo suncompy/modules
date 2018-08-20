@@ -53,10 +53,19 @@ public class FoodMachineEntity implements Serializable {
 	 * 机器公告
 	 */
 	private String notice;
+
+	/**
+	 * 机器名称
+	 */
+	@TableField(exist=false)
+	private String catName;
 	/**
 	 * 机器分类
 	 */
 	private Integer catId;
+	private Integer managerId;
+	@TableField(exist=false)
+	private String managerName;
 	/**
 	 * 合作公司ID
 	 */
@@ -162,6 +171,13 @@ public class FoodMachineEntity implements Serializable {
 	 */
 	public String getPos() {
 		return pos;
+	}
+	public String getCatName() {
+		return catName;
+	}
+
+	public void setCatName(String catName) {
+		this.catName = catName;
 	}
 	/**
 	 * 设置：机器公告
@@ -318,6 +334,22 @@ public class FoodMachineEntity implements Serializable {
 
 	public String getAddress() {
 		return address;
+	}
+
+	public Integer getManagerId() {
+		return managerId;
+	}
+
+	public void setManagerId(Integer managerId) {
+		this.managerId = managerId;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
 	}
 
 	public void setAddress(String address) {
