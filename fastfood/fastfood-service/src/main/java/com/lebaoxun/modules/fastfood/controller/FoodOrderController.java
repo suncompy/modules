@@ -1,8 +1,10 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.lebaoxun.modules.fastfood.service.FoodOrderChildsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,9 @@ import com.lebaoxun.soa.core.redis.lock.RedisLock;
 public class FoodOrderController {
     @Autowired
     private FoodOrderService foodOrderService;
+
+    @Autowired
+    private FoodOrderChildsService foodOrderChildsService;
 
     /**
      * 列表
@@ -76,6 +81,21 @@ public class FoodOrderController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Long[] ids){
 		foodOrderService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+
+    /**
+     * 扫码查询订单信息
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/fastfood/getSweeptCodeOrderInfo")
+    ResponseMessage getSweeptCodeOrderInfo(@RequestParam("orderId") String orderId) {
+        Map<String,Object> orderMap=foodOrderService.getSweeptCodeOrderInfo(orderId);
+        if (orderMap==null||orderMap.size()==0)
+            return ResponseMessage.error("00002","订单不存！");
+        List<Map<String,Object>> orderChildList=foodOrderChildsService.getSweeptCodeOrderChildsInfo(orderId);
+        orderMap.put("orderLines",orderChildList);
+        return ResponseMessage.ok(orderMap);
     }
 
 }

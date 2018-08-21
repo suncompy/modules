@@ -122,4 +122,18 @@ public class FoodMachineController {
     	return ResponseMessage.ok(foodMachineService.findByMacId(macId));
     }
 
+    /**
+     * 查询机器关联产品
+     * @param macId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachine/findByMacRefProductById")
+    ResponseMessage findByMacRefProductById(@RequestParam("macId") Integer macId){
+        Map<String,Object> foodMachineMap= foodMachineService.findByMacOpenApiById(macId);
+        if (foodMachineMap==null||foodMachineMap.size()==0)
+            return ResponseMessage.error("00002","机器不存在！");
+        foodMachineMap.put("itemList",foodMachineService.findByMacRefProductById(macId));
+        return ResponseMessage.ok(foodMachineMap);
+    }
+
 }
