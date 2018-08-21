@@ -1,6 +1,8 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -24,6 +26,11 @@ public class FoodOrderChildsServiceImpl extends ServiceImpl<FoodOrderChildsDao, 
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<Map<String, Object>> getSweeptCodeOrderChildsInfo(String orderId) {
+        return this.baseMapper.getSweeptCodeOrderChildsInfo(orderId);
     }
 
 }

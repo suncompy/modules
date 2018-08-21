@@ -121,4 +121,14 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
     	// TODO Auto-generated method stub
     	return this.baseMapper.findByMacId(macId);
     }
+
+    @Override
+    public Map<String, Object> findByMacOpenApiById(Integer macId) {
+        return this.baseMapper.findByMacOpenApiById(macId);
+    }
+
+    @Override
+    public List<Map<String, Object>> findByMacRefProductById(Integer macId) {
+        return this.baseMapper.findByMacRefProductById(macId);
+    }
 }

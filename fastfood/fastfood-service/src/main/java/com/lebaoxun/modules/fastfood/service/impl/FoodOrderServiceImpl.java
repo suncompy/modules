@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -31,6 +33,20 @@ import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 @Service("foodOrderService")
@@ -191,5 +207,11 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		order.setQrCode(qrCode);
 		this.baseMapper.updateById(order);
 	}
+
+	@Override
+	public Map<String, Object> getSweeptCodeOrderInfo(String orderId) {
+		return this.baseMapper.getSweeptCodeOrderInfo(orderId);
+	}
+
 
 }
