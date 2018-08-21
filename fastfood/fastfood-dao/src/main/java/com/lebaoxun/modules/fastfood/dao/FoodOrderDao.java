@@ -3,6 +3,9 @@ package com.lebaoxun.modules.fastfood.dao;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import org.apache.ibatis.annotations.Mapper;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Map;
 
 /**
  * 订单表
@@ -13,5 +16,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface FoodOrderDao extends BaseMapper<FoodOrderEntity> {
-	
+    public Map<String, Object> getSweeptCodeOrderInfo(@Param("orderId") String orderId);
 }

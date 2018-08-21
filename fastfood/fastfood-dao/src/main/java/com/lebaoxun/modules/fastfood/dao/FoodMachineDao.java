@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 
@@ -34,4 +35,8 @@ public interface FoodMachineDao extends BaseMapper<FoodMachineEntity> {
     * @return
     */
    FoodMachineEntity findByMacId(@Param("macId")Integer macId);
+
+   Map<String, Object> findByMacOpenApiById(@Param("macId")Integer macId);
+
+   List<Map<String, Object>> findByMacRefProductById(@Param("macId")Integer macId);
 }
