@@ -18,7 +18,7 @@
     <select id="findByUser" resultType="java.util.Map">
         SELECT
 			cart.check_status as checkStatus,cart.buy_number as buyNumber,cart.mac_id as macId,
-			aisle.id as aisleId, aisle.stock as stock, aisle.price,
+			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
 			product.id as productId,product.name as name,product.materials as materials,
 			product.show_price as showPrice, product.picture as picture,
 			product.unit as unit, product.zs_weight as zsWeight,
