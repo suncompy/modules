@@ -78,7 +78,7 @@ public class FoodOrderChildsEntity implements Serializable {
 	/**
 	 * 产品名称
 	 */
-	private String name;
+	private String productName;
 	/**
 	 * 设置：订单商品ID
 	 */
@@ -223,10 +223,10 @@ public class FoodOrderChildsEntity implements Serializable {
 	public void setCostPrice(BigDecimal costPrice) {
 		this.costPrice = costPrice;
 	}
-	public String getName() {
-		return name;
+	public String getProductName() {
+		return productName;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 }

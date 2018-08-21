@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
+import com.lebaoxun.modules.fastfood.dao.FoodMachineAisleDao;
+import com.lebaoxun.modules.fastfood.dao.FoodOrderChildsDao;
 import com.lebaoxun.modules.fastfood.dao.FoodOrderDao;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
@@ -31,6 +37,12 @@ import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEntity> implements FoodOrderService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Resource
+	private FoodMachineAisleDao foodMachineAisleDao;
+	
+	@Resource
+	private FoodOrderChildsDao foodOrderChildsDao;
 	
 	@Resource
 	private RedisTemplate<String, Object> redisTemplate;
@@ -62,14 +74,8 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		}
 		return st.toString();
 	}
-
-	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public List<FoodOrderEntity> createOrder(Long userId,
-			FoodOrderEntity order) {
-		
-		Date now = new Date();
-		
+	
+	private synchronized String getOrder(Date now){
 		String date = DateFormatUtils.format(now, "yyyyMMdd");
 		String key = "mall:orderNo:" + date;
 		Integer inr = (Integer) redisTemplate.opsForValue().get(key);
@@ -81,108 +87,109 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 			inr = redisTemplate.opsForValue().increment(key, 1).intValue();
 		}
 		String orderNo = "FD" + date + format1(inr, 5);
-		
+		return orderNo;
+	}
+	
+	@Override
+	public FoodOrderEntity calCheckTotalFee(FoodOrderEntity order) {
 		// TODO Auto-generated method stub
-		
-		/*List<Long> productSpecIds = new ArrayList<Long>();
-		for (MallCartEntity mope : products) {
-			if (mope.getProductSpecId() != null) {
-				productSpecIds.add(mope.getProductSpecId());
+		if(order == null || order.getChilds() == null || order.getChilds().isEmpty()){
+			return order;
+		}
+		BigDecimal totalFee = new BigDecimal("0.00");
+		Integer buyNumber = 0;
+		for(FoodOrderChildsEntity orderChild : order.getChilds()){
+			Map<String,Object> aisle = foodMachineAisleDao.findProductByAisle(orderChild.getMacId(),
+					orderChild.getProductId(), null, orderChild.getAisleId());
+			if(aisle == null){
+				throw new I18nMessageException("60001","对不起，产品不存在或已过期");
 			}
+			if(order.getBuyNumber() == null || order.getBuyNumber() <= 0){
+				throw new I18nMessageException("60004","商品数量有误");
+			}
+			Integer macId = (Integer)aisle.get("macId"),
+					productId = (Integer)aisle.get("productId"),
+							productCatId = (Integer)aisle.get("productCatId");
+			
+			buyNumber += buyNumber;
+			String productName = (String)aisle.get("productName");
+			Integer stock = (Integer)aisle.get("stock");
+			if(stock == null || stock < order.getBuyNumber()){
+				throw new I18nMessageException("60005","‘"+productName+"’产品库存不足");
+			}
+			BigDecimal price = (BigDecimal)aisle.get("price");
+			BigDecimal fee = price.multiply(new BigDecimal(orderChild.getBuyNumber()));
+			orderChild.setCostPrice(fee);
+			orderChild.setMacId(macId);
+			orderChild.setProductId(productId);
+			orderChild.setProductAmount(price);
+			orderChild.setProductCatId(productCatId);
+			orderChild.setProductId(productId);
+			orderChild.setProductName(productName);
+			
+			order.setMacId(macId);
+			totalFee.add(fee);
+			logger.debug("price={},buyNumber={},fee={}",price,order.getBuyNumber(),fee);
 		}
-		Date now = new Date();
-		List<MallProductCartVo> mpcvs = mallCartDao
-				.queryByProductSpecId(productSpecIds.toArray(new Long[] {}));
-		if (mpcvs.size() != products.size()) {
-			throw new I18nMessageException("-1", "商品不存在或已下架");
-		}
-		int count = this.baseMapper
-				.selectCount(new EntityWrapper<MallOrderEntity>().eq("user_id",
-						userId).eq("order_status", 0));
-		if (count >= maxOrderNum) {
-			throw new I18nMessageException("20110", "订单创建失败，您还有" + count
-					+ "个未支付订单，立即去处理!");
-		}
-		String date = DateFormatUtils.format(now, "yyyyMMdd");
-		String key = "mall:orderNo:" + date;
-		Integer inr = (Integer) redisTemplate.opsForValue().get(key);
-		if (inr == null) {
-			inr = RandomUtils.nextInt(10000);
-			redisTemplate.opsForValue().set(key, inr, 25l,
-					TimeUnit.valueOf("HOURS"));
-		} else {
-			inr = redisTemplate.opsForValue().increment(key, 1).intValue();
-		}
-		String orderNo = "lv" + date + format1(inr, 5);
-		logger.debug("orderNo={}", orderNo);
+		order.setBuyNumber(buyNumber);
+		order.setOrderAmount(totalFee);
+		return order;
+	}
 
-		MallOrderEntity order = new MallOrderEntity();
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public String createOrder(Long userId,
+			FoodOrderEntity order) {
+		
+		Date now = new Date();
+		
+		this.calCheckTotalFee(order);
+		
+		int count = this.baseMapper
+				.selectCount(new EntityWrapper<FoodOrderEntity>().eq("user_id",
+						userId).eq("order_status", 0));
+		
+		redisTemplate.opsForValue().get("order:config:timeout");
+		Integer nopayMaxCount = (Integer)redisTemplate.opsForValue().get("order:config:nopay_max_count");
+		if(nopayMaxCount != null && count > nopayMaxCount){
+			throw new I18nMessageException("60006","订单创建失败，您有" + count
+					+ "个尚未支付订单，请立即处理!");
+		}
+		
+		String orderNo = getOrder(now);
+		// TODO Auto-generated method stub
+
 		order.setCreateTime(now);
 		order.setUserId(userId);
 		order.setOrderStatus(0);
-		order.setPayType(0);// 在线支付
-		order.setShipmentAmount(new BigDecimal(0));// 快递费
 		order.setOrderNo(orderNo);
-		Integer totalBuyNumber = 0, orderScore = 0;
-		BigDecimal totalMoney = new BigDecimal(0);
-		List<MallOrderProductEntity> mopes = new ArrayList<MallOrderProductEntity>();
-		for (MallProductCartVo mpcv : mpcvs) {
-			MallProductSpecificationEntity mpse = mpcv.getSpec();
-			MallProductEntity mpe = mpcv.getProduct();
-			if (mpse == null || mpse.getStatus() != 1) {
-				throw new I18nMessageException("-1", "“" + mpe.getName()
-						+ "”商品不存在或已下架");
-			}
-			MallCartEntity cart = products.get(productSpecIds.indexOf(mpcv
-					.getSpec().getProductSpecId()));
-			if (cart.getBuyNumber() == null) {
-				throw new I18nMessageException("-1", "请输入正确的商品数量");
-			}
-			if (mpse.getStock() <= 0 || mpse.getStock() < cart.getBuyNumber()) {
-				throw new I18nMessageException("-1", "“" + mpe.getName()
-						+ "”商品 规格”" + mpse.getSpecName() + " "
-						+ mpse.getSpecAttrName() + "”库存不足");
-			}
-			totalBuyNumber += cart.getBuyNumber();
-			BigDecimal money = mpse.getPrice().multiply(
-					new BigDecimal(cart.getBuyNumber()));
-			logger.debug("mpse.getPrice={},money={}", mpse.getPrice(), money);
-			totalMoney = totalMoney.add(money);
-			orderScore += mpse.getScore() * cart.getBuyNumber();
 
-			MallOrderProductEntity mope = new MallOrderProductEntity();
-			mope.setProductId(mpe.getId());
-			mope.setBuyNumber(cart.getBuyNumber());
-			mope.setName(mpe.getName());
-			mope.setPicImg(mpe.getShowPic());
-			mope.setPrice(mpse.getPrice());
-			mope.setProductAmount(money);
-			mope.setProductScore(0);
-			mope.setProductSpecId(mpcv.getSpec().getProductSpecId());
-			mope.setProductSpecName(mpcv.getSpecName() + " "
-					+ mpcv.getSepcAttrName());
-			mope.setScore(mpse.getScore());
-			mope.setStatus(0);// 待发货
-			mopes.add(mope);
+		this.baseMapper.insert(order);
+		
+		List<FoodOrderChildsEntity> childs = order.getChilds();
+		for(FoodOrderChildsEntity child : childs){
+			child.setOrderId(order.getId());
+			FoodMachineAisleEntity aisle = new FoodMachineAisleEntity();
+			aisle.setId(child.getAisleId());
+			aisle = foodMachineAisleDao.selectOne(aisle);
+			aisle.setStock(aisle.getStock() - child.getBuyNumber());
+			foodMachineAisleDao.updateById(aisle);
+			foodOrderChildsDao.insert(child);
 		}
-
-		logger.debug("totalMoney={}", totalMoney);
-		logger.debug("totalBuyNumber={}", totalBuyNumber);
-		order.setPayAmount(totalMoney);
-		order.setOrderAmount(totalMoney);
-		order.setBuyNumber(totalBuyNumber);
-		order.setOrderScore(orderScore);
-		this.baseMapper.save(order);
-
-		for (MallOrderProductEntity mope : mopes) {
-			mope.setOrderId(order.getId());
-			mallOrderProductDao.insert(mope);
+		
+		return orderNo;
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void modifyQrCodeByOrderNo(String orderNo, String qrCode) {
+		// TODO Auto-generated method stub
+		FoodOrderEntity order = this.selectOne(new EntityWrapper<FoodOrderEntity>().eq("order_no",orderNo));
+		if(order == null){
+			throw new I18nMessageException("60007","订单不存在");
 		}
-
-		mallCartDao.delete(new EntityWrapper<MallCartEntity>().eq("user_id",
-				userId).in("product_spec_id", productSpecIds));
-		return orderNo;*/
-		return null;
+		order.setQrCode(qrCode);
+		this.baseMapper.updateById(order);
 	}
 
 }

@@ -1,11 +1,13 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-
-import java.math.BigDecimal;
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 订单表
@@ -44,7 +46,7 @@ public class FoodOrderEntity implements Serializable {
 	 */
 	private BigDecimal orderAmount;
 	/**
-	 * 订单金额
+	 * 红包抵扣金额
 	 */
 	private BigDecimal redPackedAmount;
 	/**
@@ -70,11 +72,27 @@ public class FoodOrderEntity implements Serializable {
 	/**
 	 * 活动类型
 	 */
-	private Integer activityType;
+	private String activityType;
+	/**
+	 * 活动优惠
+	 */
+	private BigDecimal activityFee;
 	/**
 	 * 优惠券抵扣
 	 */
 	private Integer couponId;
+	/**
+	 * 0=现金，1=折扣
+	 */
+	private Integer couponType;
+	/**
+	 * 折扣额度或现金数
+	 */
+	private BigDecimal couponFee;
+	/**
+	 * 优惠券使用条件
+	 */
+	private Integer couponUseRestrict;
 	/**
 	 * 红包抵扣
 	 */
@@ -91,6 +109,13 @@ public class FoodOrderEntity implements Serializable {
 	 * 更新时间
 	 */
 	private Date updateTime;
+	/**
+	 * 取餐二维码
+	 */
+	private String qrCode;
+	
+	@TableField(exist=false)
+	private List<FoodOrderChildsEntity> childs;
 
 	/**
 	 * 设置：订单ID
@@ -239,13 +264,13 @@ public class FoodOrderEntity implements Serializable {
 	/**
 	 * 设置：活动类型
 	 */
-	public void setActivityType(Integer activityType) {
+	public void setActivityType(String activityType) {
 		this.activityType = activityType;
 	}
 	/**
 	 * 获取：活动类型
 	 */
-	public Integer getActivityType() {
+	public String getActivityType() {
 		return activityType;
 	}
 	/**
@@ -307,5 +332,41 @@ public class FoodOrderEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public Integer getCouponType() {
+		return couponType;
+	}
+	public void setCouponType(Integer couponType) {
+		this.couponType = couponType;
+	}
+	public BigDecimal getCouponFee() {
+		return couponFee;
+	}
+	public void setCouponFee(BigDecimal couponFee) {
+		this.couponFee = couponFee;
+	}
+	public Integer getCouponUseRestrict() {
+		return couponUseRestrict;
+	}
+	public void setCouponUseRestrict(Integer couponUseRestrict) {
+		this.couponUseRestrict = couponUseRestrict;
+	}
+	public BigDecimal getActivityFee() {
+		return activityFee;
+	}
+	public void setActivityFee(BigDecimal activityFee) {
+		this.activityFee = activityFee;
+	}
+	public List<FoodOrderChildsEntity> getChilds() {
+		return childs;
+	}
+	public void setChilds(List<FoodOrderChildsEntity> childs) {
+		this.childs = childs;
+	}
+	public String getQrCode() {
+		return qrCode;
+	}
+	public void setQrCode(String qrCode) {
+		this.qrCode = qrCode;
 	}
 }

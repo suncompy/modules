@@ -30,5 +30,10 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
      * @param orders
      * @return
      */
-    List<FoodOrderEntity> createOrder(Long userId,FoodOrderEntity order);
+    String createOrder(Long userId,FoodOrderEntity order);
+    
+    FoodOrderEntity calCheckTotalFee(FoodOrderEntity order);
+    
+    void modifyQrCodeByOrderNo(String orderNo,String qrCode);
+    
 }
