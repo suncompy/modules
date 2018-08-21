@@ -3,7 +3,9 @@ package com.lebaoxun.modules.fastfood.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,12 @@ import java.util.Map;
 public interface FoodOrderChildsService extends IService<FoodOrderChildsEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 扫码查询订单信息
+     * @param orderId
+     * @return
+     */
+    public List<Map<String, Object>> getSweeptCodeOrderChildsInfo(String orderId);
 }
 
