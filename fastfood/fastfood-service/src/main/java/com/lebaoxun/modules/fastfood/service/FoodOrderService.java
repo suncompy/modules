@@ -35,5 +35,7 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
     FoodOrderEntity calCheckTotalFee(FoodOrderEntity order);
     
     void modifyQrCodeByOrderNo(String orderNo,String qrCode);
+
+    Map<String, Object> getSweeptCodeOrderInfo(String orderId);
     
 }
