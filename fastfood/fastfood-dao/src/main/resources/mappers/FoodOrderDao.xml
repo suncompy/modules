@@ -3,7 +3,6 @@
 
 <mapper namespace="com.lebaoxun.modules.fastfood.dao.FoodOrderDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodOrderEntity" id="foodOrderMap">
         <result property="id" column="id"/>
         <result property="orderNo" column="order_no"/>
@@ -23,7 +22,22 @@
         <result property="source" column="source"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
+        <result property="couponType" column="coupon_type"/>
+        <result property="couponFee" column="coupon_fee"/>
     </resultMap>
+
+    <insert id="insert" parameterType="com.lebaoxun.modules.fastfood.entity.FoodOrderEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO food_order (
+        order_no, user_id,pay_type,order_status,
+        order_amount, red_packed_amount, order_score, pay_amount, buy_number,
+        mac_id, activity_id, activity_type, coupon_id, red_packed_id,
+        source, create_time, update_time, coupon_type, coupon_fee) VALUES
+        ( #{orderNo}, #{userId}, #{payType}, #{orderStatus},
+        #{orderAmount}, #{redPackedAmount}, #{orderScore}, #{payAmount}, #{buyNumber},
+        #{macId}, #{activityId}, #{activityType}, #{couponId}, #{redPackedId},
+        #{source}, #{createTime}, #{updateTime}, #{couponType}, #{couponFee});
+    </insert>
 
 
     <!--扫码查询订单信息-->
