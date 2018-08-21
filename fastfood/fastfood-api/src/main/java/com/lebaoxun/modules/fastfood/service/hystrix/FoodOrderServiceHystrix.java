@@ -7,6 +7,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodOrderService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 订单表
@@ -43,6 +44,11 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 	public ResponseMessage delete(Long adminId,Long[] ids) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
-    
+
+	@Override
+	public ResponseMessage getSweeptCodeOrderInfo(@RequestParam("orderId") String orderId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
 }
 

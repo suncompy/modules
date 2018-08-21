@@ -51,6 +51,14 @@ public interface IFoodOrderService {
      */
     @RequestMapping("/fastfood/foodorder/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Long[] ids);
+
+    /**
+     * 扫码查询订单信息
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/fastfood/getSweeptCodeOrderInfo")
+    ResponseMessage getSweeptCodeOrderInfo(@RequestParam("orderId") String orderId);
     
 }
 
