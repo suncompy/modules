@@ -8,11 +8,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import sun.misc.BASE64Decoder;
 
@@ -118,5 +120,11 @@ public class LocalUploadServiceImpl implements IUploadService{
 			return f.delete();
 		}
 		return false;
+	}
+	
+	@Override
+	public List<String> upload(String namespace, MultipartFile[] files) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
