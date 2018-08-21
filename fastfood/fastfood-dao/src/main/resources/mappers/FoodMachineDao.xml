@@ -102,4 +102,52 @@
 		WHERE
 		mac.id = #{macId}
 	</select>
+
+	<select id="findByMacOpenApiById" resultType="java.util.HashMap">
+		SELECT
+			mac.id AS macId,
+			mac.IMEI AS macCode,
+			mac. HOST,
+			mac.notice,
+			mac.cat_id AS catId,
+			cat.`name` AS cat_name,
+			mac.address
+		FROM
+			food_machine AS mac
+		LEFT JOIN food_machine_product_cat AS cat ON mac.id = cat.mac_id
+		WHERE
+		mac.id = #{macId}
+	</select>
+
+	<select id="findByMacRefProductById" resultType="java.util.HashMap">
+		SELECT
+			product.id AS productId,
+			product. NAME AS productName,
+			product.show_price AS showPrice,
+			product.give_score AS giveScore,
+			product.period AS period,
+			product.remind AS remind,
+			product.picture AS picture,
+			product.total_stock AS totalStock,
+			product.unit AS unit,
+			product.zs_weight AS zsWeight,
+			product.cp_weight AS cpWeight,
+			product.warm_flag AS isWarm,
+			product.warm_time AS warmTime,
+			product.hot_num AS hotNum,
+			product.label AS label,
+			product. STATUS,
+			product.up_time AS upTime,
+			product.down_time AS downTime,
+			product.descr,
+			mac.cat_id AS catId,
+			cat. NAME AS catName
+		FROM
+			food_machine AS mac
+		LEFT JOIN food_machine_aisle AS ais ON mac.id = ais.mac_id
+		LEFT JOIN food_product AS product ON product.id = ais.product_id
+		LEFT JOIN food_machine_product_cat AS cat ON mac.id = cat.mac_id
+		WHERE
+		mac.id = #{macId}
+	</select>
 </mapper>

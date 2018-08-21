@@ -17,5 +17,26 @@
         <result property="status" column="status"/>
     </resultMap>
 
-
+    <!--扫码查询订单信息-->
+    <select  id="getSweeptCodeOrderChildsInfo" resultType="java.util.HashMap">
+         SELECT
+            cat.name as catName,
+            childs.product_name as productName,
+            childs.price,
+            childs.cost_price AS costPrice,
+            childs.buy_number AS buyNumber,
+            childs.score,
+            childs.product_score AS productScore,
+            childs.product_amount AS totalAmount,
+            childs.activity AS activityId,
+            childs.aisle_id AS aisleId,
+            aisle.x as aisleX,
+            aisle.y as aisleY
+        FROM
+            food_order_childs childs
+        LEFT JOIN food_product_cat cat ON childs.product_cat_id = cat.id
+        LEFT JOIN food_machine_aisle aisle ON childs.mac_id = aisle.mac_id
+        AND childs.product_id = aisle.product_id
+        where childs.order_id=#{orderId}
+    </select>
 </mapper>
