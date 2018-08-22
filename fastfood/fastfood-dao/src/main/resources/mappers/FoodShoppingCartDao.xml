@@ -15,7 +15,7 @@
         <result property="checkStatus" column="check_status"/>
     </resultMap>
 
-    <select id="findByUser" resultType="java.util.Map">
+    <select id="findByUser" resultType="java.util.HashMap">
         SELECT
 			cart.check_status as checkStatus,cart.buy_number as buyNumber,cart.mac_id as macId,
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,

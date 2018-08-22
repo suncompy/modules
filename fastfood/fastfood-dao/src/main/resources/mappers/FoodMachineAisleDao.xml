@@ -71,7 +71,7 @@
 		and date_add(product.up_time, interval period day) > now();
     </select>
     
-    <select id="findProductByAisle" resultMap="java.util.Map">
+    <select id="findProductByAisle" resultType="java.util.Map">
         select 
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
 			product.id as productId,product.name as name,product.materials as materials,
