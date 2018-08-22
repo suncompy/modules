@@ -91,7 +91,7 @@ public class FoodMachineController {
 		if (foodMachineService.updateById(foodMachine)){
             return ResponseMessage.ok();
         }else{
-            return ResponseMessage.error("6002","状态修改失败");
+            return ResponseMessage.error("0002","数据更新失败！");
         }
     }
 

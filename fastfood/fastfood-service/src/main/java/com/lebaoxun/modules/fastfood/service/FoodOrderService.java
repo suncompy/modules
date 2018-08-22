@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 订单表
@@ -37,5 +39,9 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
     void modifyQrCodeByOrderNo(String orderNo,String qrCode);
 
     Map<String, Object> getSweeptCodeOrderInfo(String orderId);
+
+    ResponseMessage takeFoodCallback(String orderId);
+
+    ResponseMessage pushOrder(Long orderId);
     
 }

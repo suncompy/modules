@@ -4,8 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.google.common.collect.Maps;
+import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.modules.fastfood.service.FoodOrderChildsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +22,8 @@ import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -69,10 +76,8 @@ public class FoodOrderController {
     @RequestMapping("/fastfood/foodorder/update")
     @RedisLock(value="fastfood:foodorder:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodOrderEntity foodOrder){
-		if(foodOrderService.updateById(foodOrder)){
-            return ResponseMessage.ok();
-        }
-        return ResponseMessage.error("6002","取餐失败！");
+        foodOrderService.updateById(foodOrder);
+        return ResponseMessage.ok();
     }
 
     /**
@@ -100,4 +105,24 @@ public class FoodOrderController {
         return ResponseMessage.ok(orderMap);
     }
 
+    /**
+     * 取餐订单入队
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/take_food/push_order")
+    ResponseMessage pushOrder(@RequestParam("orderId") Long orderId){
+        return foodOrderService.pushOrder(orderId);
+    }
+
+    /**
+     * 取餐回调接口
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/take_food/callback")
+    ResponseMessage takeFoodCallback(
+            @RequestParam("orderId") String orderId){
+        return foodOrderService.takeFoodCallback(orderId);
+    }
 }

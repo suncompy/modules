@@ -1,30 +1,13 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.math.RandomUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.I18nMessageException;
-import com.lebaoxun.commons.utils.MD5;
+import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.modules.fastfood.dao.FoodMachineAisleDao;
@@ -36,11 +19,28 @@ import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 @Service("foodOrderService")
 public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEntity> implements FoodOrderService {
-	
+	private final static String ORDER_QUEUE_KEY="take_food:order_queue";
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Resource
@@ -208,6 +208,67 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 	public Map<String, Object> getSweeptCodeOrderInfo(String orderId) {
 		return this.baseMapper.getSweeptCodeOrderInfo(orderId);
 	}
-
+	@Override
+	public ResponseMessage pushOrder(Long orderId){
+		HashOperations<String,String, FoodOrderEntity> operations = redisTemplate.opsForHash();
+		//查询订单是否已经加入队列
+		try {
+			FoodOrderEntity foodOrderCache= operations.get(ORDER_QUEUE_KEY,orderId);
+			if (foodOrderCache!=null||foodOrderCache.getId()>0){
+				return ResponseMessage.ok(foodOrderCache);
+			}
+			//查询订单，验证信息
+			FoodOrderEntity foodOrderEntity=selectById(orderId);
+			if (foodOrderEntity==null||foodOrderEntity.getId()==0){
+				return ResponseMessage.error("00002","数据异常");
+			}
+			//订单状校验，只有已支付的订单才能有些操作
+			if (foodOrderEntity.getOrderStatus()!=1){
+				return ResponseMessage.error("00003","该订单未支付，请先完成支付！");
+			}
+			redisTemplate.setEnableTransactionSupport(true);
+			redisTemplate.multi();
+			//当前排队数
+			Long num=operations.size(ORDER_QUEUE_KEY);
+			operations.put(ORDER_QUEUE_KEY,orderId+"",foodOrderEntity);
+			List<Object> list=redisTemplate.exec();
+			list.forEach(e->System.out.print(e));
+			Map<String,Object>result= Maps.newHashMap();
+			result.put("orderId",orderId);
+			result.put("orderNo",foodOrderEntity.getOrderNo());
+			result.put("currentNum",num);
+			return ResponseMessage.ok(result);
+		}catch (Error e){
+			e.printStackTrace();
+			return ResponseMessage.error("00005",e.getMessage());
+		}
+	}
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public ResponseMessage takeFoodCallback(String orderId){
+		//更新订单状
+		FoodOrderEntity foodOrder=new FoodOrderEntity();
+		foodOrder.setId(Long.parseLong(orderId));
+		//已取餐
+		foodOrder.setOrderStatus(2);
+		EntityWrapper<FoodOrderEntity> foodOrderWrapper=new EntityWrapper<FoodOrderEntity>();
+		foodOrderWrapper.eq("order_id",orderId);
+		//必需要已支付订单才能操作
+		foodOrderWrapper.eq("order_status",1);
+		update(foodOrder,foodOrderWrapper);
+		if (updateById(foodOrder)){
+			//从队列中踢除
+			HashOperations<String,String, FoodOrderEntity> operations = redisTemplate.opsForHash();
+			long ret=operations.delete(ORDER_QUEUE_KEY,orderId);
+			if (ret==1){
+				foodOrder=selectById(orderId);
+				Map<String,Object>resultData= Maps.newHashMap();
+				resultData.put("orderId",orderId);
+				resultData.put("orderNo",foodOrder.getOrderNo());
+				return ResponseMessage.ok(resultData);
+			}
+		}
+		return ResponseMessage.error("0004","取餐失败!");
+	}
 
 }
