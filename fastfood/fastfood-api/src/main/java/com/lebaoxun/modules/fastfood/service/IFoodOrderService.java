@@ -59,6 +59,23 @@ public interface IFoodOrderService {
      */
     @RequestMapping("/fastfood/getSweeptCodeOrderInfo")
     ResponseMessage getSweeptCodeOrderInfo(@RequestParam("orderId") String orderId);
+
+    /**
+     * 取餐订单入队
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/take_food/push_order")
+    ResponseMessage pushOrder(@RequestParam("orderId") Long orderId);
+
+    /**
+     * 取餐回调接口
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/take_food/takeFoodCallback")
+    ResponseMessage takeFoodCallback(
+            @RequestParam("orderId") String orderId);
     
 }
 
