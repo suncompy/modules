@@ -254,7 +254,7 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		//已取餐
 		foodOrder.setOrderStatus(2);
 		EntityWrapper<FoodOrderEntity> foodOrderWrapper=new EntityWrapper<FoodOrderEntity>();
-		foodOrderWrapper.eq("order_id",orderId);
+		foodOrderWrapper.eq("id",orderId);
 		//必需要已支付订单才能操作
 		foodOrderWrapper.eq("order_status",1);
 		if (update(foodOrder,foodOrderWrapper)){
