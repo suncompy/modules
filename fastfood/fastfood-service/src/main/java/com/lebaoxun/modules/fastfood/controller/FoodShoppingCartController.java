@@ -138,7 +138,7 @@ public class FoodShoppingCartController {
      * @param productId
      * @return
      */
-    @RequestMapping("/fastfood/foodshoppingcart/list")
+    @RequestMapping("/fastfood/foodshoppingcart/findByUser")
     ResponseMessage findByUser(@RequestParam("userId")Long userId){
     	return ResponseMessage.ok(foodShoppingCartService.findByUser(userId));
     }
