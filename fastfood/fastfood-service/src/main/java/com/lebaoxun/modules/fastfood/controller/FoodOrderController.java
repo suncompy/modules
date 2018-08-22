@@ -69,8 +69,10 @@ public class FoodOrderController {
     @RequestMapping("/fastfood/foodorder/update")
     @RedisLock(value="fastfood:foodorder:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodOrderEntity foodOrder){
-		foodOrderService.updateById(foodOrder);
-        return ResponseMessage.ok();
+		if(foodOrderService.updateById(foodOrder)){
+            return ResponseMessage.ok();
+        }
+        return ResponseMessage.error("6002","取餐失败！");
     }
 
     /**
