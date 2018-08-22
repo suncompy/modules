@@ -53,9 +53,12 @@ public class FoodMachineEntity implements Serializable {
 	 * 机器公告
 	 */
 	private String notice;
-
 	/**
 	 * 机器名称
+	 */
+	private String name;
+	/**
+	 * 机器分类名称
 	 */
 	@TableField(exist=false)
 	private String catName;
@@ -366,5 +369,11 @@ public class FoodMachineEntity implements Serializable {
 	}
 	public void setProductCats(List<FoodMachineProductCatEntity> productCats) {
 		this.productCats = productCats;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 }

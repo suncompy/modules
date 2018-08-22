@@ -1,5 +1,7 @@
 package com.lebaoxun.modules.fastfood.listener;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -16,7 +18,8 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
+import com.lebaoxun.modules.fastfood.service.FoodOrderService;
+import com.lebaoxun.upload.service.IQrcodeUploadService;
 
 /**
  * 用户日志 收集
@@ -30,7 +33,10 @@ public class OrderQrCodeCreateListener {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Resource
-	private IRabbitmqSender rabbitmqSender;
+	private IQrcodeUploadService qrcodeUploadService;
+	
+	@Resource
+	private FoodOrderService foodOrderService;
 	
 	@Bean
     public Queue queueQrcodeCreate() {
@@ -51,10 +57,11 @@ public class OrderQrCodeCreateListener {
 		JSONObject message = JSONObject.parseObject(text);
 		
 		logger.info("rabbit|sendContractDirect|message={}",message);
-		
 		try {
-			Long orderNo = message.getLong("orderNo");
-			
+			String orderNo = message.getString("orderNo");
+			Map<String,String> map = qrcodeUploadService.createAndUpload("aliyunCloud", "", orderNo);
+			String qrCode = map.get("uri");
+			foodOrderService.modifyQrCodeByOrderNo(orderNo, qrCode);
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);
 			e.printStackTrace();

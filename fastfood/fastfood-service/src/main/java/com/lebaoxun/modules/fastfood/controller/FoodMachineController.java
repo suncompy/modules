@@ -10,8 +10,8 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCatEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
-
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatService;
+
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +134,15 @@ public class FoodMachineController {
             return ResponseMessage.error("00002","机器不存在！");
         foodMachineMap.put("itemList",foodMachineService.findByMacRefProductById(macId));
         return ResponseMessage.ok(foodMachineMap);
+    }
+    /**
+     * 搜索
+     * @param keyword
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachine/search")
+    ResponseMessage search(@RequestParam("keyword") String keyword){
+    	return ResponseMessage.ok(foodMachineService.search(keyword));
     }
 
 }

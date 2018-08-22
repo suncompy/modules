@@ -71,5 +71,13 @@ public interface IFoodMachineService {
 
     @RequestMapping("/fastfood/foodmachine/findByMacRefProductById")
     ResponseMessage findByMacRefProductById(@RequestParam("macId") Integer macId);
+    
+    /**
+     * 搜索
+     * @param keyword
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachine/search")
+    ResponseMessage search(@RequestParam("keyword") String keyword);
 }
 

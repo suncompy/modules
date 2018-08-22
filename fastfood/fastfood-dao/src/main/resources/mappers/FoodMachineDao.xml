@@ -15,6 +15,7 @@
 	<resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineEntity"
 		id="foodMachineMap">
 		<result property="id" column="id" />
+		<result property="name" column="name" />
 		<result property="imei" column="IMEI" />
 		<result property="host" column="host" />
 		<result property="areaCode" column="area_code" />
@@ -68,6 +69,7 @@
 
 	<select id="findByAreaCode" resultMap="foodMachineMap">
 		select
+		mac.name,
 		mac.area_code,mac.IMEI,mac.pos,
 		mac.`status`,mac.id,
 		mac.address,
@@ -83,6 +85,7 @@
 
 	<select id="findByMacId" resultMap="foodMachineMap">
 		SELECT
+		mac.`name`,
 		mac.area_code,
 		mac.IMEI,
 		mac.pos,
@@ -103,14 +106,14 @@
 		mac.id = #{macId}
 	</select>
 
-	<select id="findByMacOpenApiById" resultType="java.util.Map">
+	<select id="findByMacOpenApiById" resultType="java.util.HashMap">
 		SELECT
 			mac.id AS macId,
+			mac.`name`,
 			mac.IMEI AS macCode,
-			mac. HOST,
 			mac.notice,
 			mac.cat_id AS catId,
-			cat.`name` AS cat_name,
+			cat.`name` AS catName,
 			mac.address
 		FROM
 			food_machine AS mac
@@ -119,10 +122,10 @@
 		mac.id = #{macId}
 	</select>
 
-	<select id="findByMacRefProductById" resultType="java.util.Map">
+	<select id="findByMacRefProductById" resultType="java.util.HashMap">
 		SELECT
 			product.id AS productId,
-			product. NAME AS productName,
+			product.NAME AS productName,
 			product.show_price AS showPrice,
 			product.give_score AS giveScore,
 			product.period AS period,
@@ -141,7 +144,7 @@
 			product.down_time AS downTime,
 			product.descr,
 			mac.cat_id AS catId,
-			cat. NAME AS catName
+			cat.NAME AS catName
 		FROM
 			food_machine AS mac
 		LEFT JOIN food_machine_aisle AS ais ON mac.id = ais.mac_id
@@ -150,4 +153,81 @@
 		WHERE
 		mac.id = #{macId}
 	</select>
+	
+	<select id="searchMacByKeyword" resultMap="searchMap">
+		select 
+			mac.id AS macId,
+			mac.`name`,
+			mac.IMEI AS macCode,
+			mac.area_code as areaCode,
+			mac.notice,
+			mac.cat_id AS catId,
+			cat.`name` AS catName,
+			mac.address 
+		from food_machine_aisle as aisle
+		left join food_product_cat as cat on cat.id = aisle.product_cat_id
+		left join food_machine as mac on mac.id = aisle.mac_id
+		where cat.keyword like CONCAT(CONCAT('%',#{keyword},'%')) or mac.`name` like CONCAT(CONCAT('%',#{keyword},'%'));
+	</select>
+	
+	<select id="searchMacProductByKeyword" resultMap="searchMap">
+		select
+		mac.id AS macId,
+		mac.`name`,
+		mac.IMEI AS macCode,
+		mac.area_code as areaCode,
+		mac.notice,
+		mac.cat_id AS catId,
+	
+		aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
+		
+		product.id as productId,product.name as productName,product.materials as materials,
+		product.show_price as showPrice, product.picture as picture,
+		product.unit as unit, product.zs_weight as zsWeight,
+		product.cp_weight as cpWeight, product.warm_flag as warmFlag,
+		product.warm_time as warmTime, product.hot_num as hotNum,
+		product.label as label, product.`status` as status,
+		product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
+		product.keyword as keyword, product.descr as descr,
+		product.create_time as createTime
+		from food_machine_aisle as aisle
+		left join food_product as product on product.id = aisle.product_id
+		left join food_machine as mac on mac.id = aisle.mac_id
+		where product.keyword like CONCAT(CONCAT('%',#{keyword},'%'));
+	</select>
+	
+	<resultMap
+		type="java.util.HashMap" id="searchMap">
+		<result property="macId" column="id" />
+		<result property="name" column="name" />
+		<result property="macCode" column="macCode" />
+		<result property="areaCode" column="areaCode" />
+		<result property="address" column="address" />
+		<result property="catId" column="catId" />
+		<result property="catName" column="catName" />
+		<collection property="products" ofType="java.util.Map">
+			<result property="aisleId" column="aisleId"/>
+			<result property="stock" column="stock"/>
+			<result property="productCatId" column="productCatId"/>
+			
+			<result property="productId" column="productId"/>
+			<result property="productName" column="productName"/>
+			<result property="materials" column="materials"/>
+			<result property="showPrice" column="showPrice"/>
+			<result property="picture" column="picture"/>
+			<result property="unit" column="unit"/>
+			<result property="zsWeight" column="zsWeight"/>
+			<result property="cpWeight" column="cpWeight"/>
+			<result property="warmFlag" column="warmFlag"/>
+			<result property="warmTime" column="warmTime"/>
+			<result property="hotNum" column="hotNum"/>
+			<result property="label" column="label"/>
+			<result property="status" column="status"/>
+			<result property="upTime" column="upTime"/>
+			<result property="downTime" column="downTime"/>
+			<result property="keyword" column="keyword"/>
+			<result property="descr" column="descr"/>
+			<result property="createTime" column="createTime"/>
+		</collection>
+	</resultMap>
 </mapper>

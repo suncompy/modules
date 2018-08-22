@@ -1,31 +1,30 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
-import com.lebaoxun.commons.exception.I18nMessageException;
-import com.lebaoxun.commons.utils.AddressParse;
-import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
-import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
-import com.lebaoxun.modules.fastfood.service.FoodMachineAisleService;
-import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.lebaoxun.commons.exception.I18nMessageException;
+import com.lebaoxun.commons.utils.AddressParse;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.modules.fastfood.dao.FoodMachineDao;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
+import com.lebaoxun.modules.fastfood.service.FoodMachineAisleService;
+import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
 import com.lebaoxun.modules.fastfood.service.FoodMachineService;
-
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("foodMachineService")
@@ -108,6 +107,15 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
             foodMachineAisleEntity.setUpdateBy(adminId);
             foodMachineAisleService.insert(foodMachineAisleEntity);
         }
+    }
+    
+    @Override
+    public List<Map<String, Object>> search(String keyword) {
+    	// TODO Auto-generated method stub
+    	List<Map<String, Object>> search = new ArrayList<Map<String, Object>>();
+    	search.addAll(this.baseMapper.searchMacByKeyword(keyword));
+    	search.addAll(this.baseMapper.searchMacProductByKeyword(keyword));
+    	return search;
     }
     
     @Override

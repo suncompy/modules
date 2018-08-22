@@ -50,7 +50,7 @@ public class SMSGatewayClient extends AbstractSMSGatewayClient implements Applic
 		
 		logger.debug("sms send content={}",content);
 		
-		String smsGateWayUrl = config.getUrl();
+		/*String smsGateWayUrl = config.getUrl();
 		String result = null;
 		try {
 			
@@ -92,15 +92,71 @@ public class SMSGatewayClient extends AbstractSMSGatewayClient implements Applic
 				logger.debug("RequestMethod.POST - result={}",result);
 			}
 			if(result.contains(config.getSuccessText()))
-				/*redisHash.hSet(String.format(RedisKeyConstant.HASH_SMS_SEND_RECORDS,  
+				redisHash.hSet(String.format(RedisKeyConstant.HASH_SMS_SEND_RECORDS,  
 						DateUtil.formatDatetime(new Date(),"yyyyMMdd")) , 
-						mobile , count, 24 * 60 * 60);*/
+						mobile , count, 24 * 60 * 60);
 				logger.info("sms send success - mobile={},template_id={},gateway={},",mobile,template_id,JSONObject.toJSON(config));
 				return true;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		logger.error("sms send fail - mobile={},message={},gateway={},result={}",mobile,content,JSONObject.toJSON(config),result);
+		return false;*/
+		
+		return send(config, mobile, content);
+	}
+	
+	public boolean send(SMSGateway config,String mobile,String content){
+		String smsGateWayUrl = config.getUrl();
+		String result = null;
+		try {
+			
+			String message = java.net.URLEncoder.encode(content,config.getCharset());
+			// 短信网关请求为GET
+			if(RequestMethod.GET.compareTo(config.getMethod()) == 0){
+				smsGateWayUrl = String.format(smsGateWayUrl, mobile,message);
+				logger.debug("RequestMethod.GET - smsGateWayUrl={}",smsGateWayUrl);
+				result = get(smsGateWayUrl);
+				logger.debug("RequestMethod.GET - result={}",result);
+			}else{
+				logger.debug("RequestMethod.POST - requestBody={}",config.getRequestBody());
+				if(config.getRequestBody() != null){
+					logger.debug("RequestMethod.POST - smsGateWayUrl={}",smsGateWayUrl);
+					logger.debug("RequestMethod.POST - isJson={}",config.isJson());
+					if(config.isJson()){
+						JSONObject josn = JSONObject.parseObject(config.getRequestBody());
+						Map<String,String> map = new HashMap<String,String>();
+						map.put("Content-Type", "application/json");
+				        map.put("Connection", "Keep-Alive");
+				        
+				        josn.put("msg", java.net.URLEncoder.encode(content,"utf-8"));
+				        josn.put("phone", mobile);
+				        josn.put("sendtime", DateFormatUtils.format(new Date(), "yyyyMMddHHmm"));
+				        
+				        String json = josn.toJSONString();
+				        logger.debug("RequestMethod.POST - data={}",json);
+						result = post(smsGateWayUrl,json,map);
+					}else{
+						String data = String.format(config.getRequestBody(), mobile,message);
+						logger.debug("RequestMethod.POST - data={}",data);
+						result = post(smsGateWayUrl,data);
+					}
+				}else{
+					smsGateWayUrl = String.format(smsGateWayUrl, mobile,message);
+					logger.debug("RequestMethod.POST - smsGateWayUrl={}",smsGateWayUrl);
+					result = post(smsGateWayUrl,null);
+				}
+				logger.debug("RequestMethod.POST - result={}",result);
+			}
+			if(result.contains(config.getSuccessText()))
+				/*redisHash.hSet(String.format(RedisKeyConstant.HASH_SMS_SEND_RECORDS,  
+						DateUtil.formatDatetime(new Date(),"yyyyMMdd")) , 
+						mobile , count, 24 * 60 * 60);*/
+				logger.info("sms send success - mobile={},gateway={},",mobile,JSONObject.toJSON(config));
+				return true;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 	
