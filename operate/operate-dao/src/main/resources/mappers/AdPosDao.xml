@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.operate.dao.AdPosDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.operate.entity.AdPosEntity" id="adPosMap">
+        <result property="id" column="id"/>
+        <result property="posCode" column="pos_code"/>
+        <result property="posName" column="pos_name"/>
+        <result property="url" column="url"/>
+        <result property="fileType" column="file_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+
+</mapper>
