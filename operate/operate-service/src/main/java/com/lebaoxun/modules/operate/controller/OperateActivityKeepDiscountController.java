@@ -80,7 +80,7 @@ public class OperateActivityKeepDiscountController {
         return ResponseMessage.ok();
     }
 
-    @RequestMapping("/operate/operateactivityfirstorder/findUnderwayActivity")
+    @RequestMapping("/operate/operateactivitykeepdiscount/findUnderwayActivity")
     OperateActivityKeepDiscountEntity findUnderwayActivity(){
     	return operateActivityKeepDiscountService.findUnderwayActivity();
     }
