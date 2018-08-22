@@ -120,7 +120,7 @@ public class FoodOrderController {
      * @param orderId
      * @return
      */
-    @RequestMapping("/take_food/callback")
+    @RequestMapping("/take_food/takeFoodCallback")
     ResponseMessage takeFoodCallback(
             @RequestParam("orderId") String orderId){
         return foodOrderService.takeFoodCallback(orderId);
