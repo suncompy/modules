@@ -41,7 +41,7 @@
 
 
     <!--扫码查询订单信息-->
-    <select  id="getSweeptCodeOrderInfo" resultType="java.util.HashMap">
+    <select  id="getSweeptCodeOrderInfo" resultType="java.util.Map">
         SELECT
             order_t.id AS orderId,
             order_t.order_no AS orderNo,

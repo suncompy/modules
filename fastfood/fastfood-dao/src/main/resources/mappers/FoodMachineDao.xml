@@ -103,7 +103,7 @@
 		mac.id = #{macId}
 	</select>
 
-	<select id="findByMacOpenApiById" resultType="java.util.HashMap">
+	<select id="findByMacOpenApiById" resultType="java.util.Map">
 		SELECT
 			mac.id AS macId,
 			mac.IMEI AS macCode,
@@ -119,7 +119,7 @@
 		mac.id = #{macId}
 	</select>
 
-	<select id="findByMacRefProductById" resultType="java.util.HashMap">
+	<select id="findByMacRefProductById" resultType="java.util.Map">
 		SELECT
 			product.id AS productId,
 			product. NAME AS productName,

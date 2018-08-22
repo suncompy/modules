@@ -18,7 +18,7 @@
     </resultMap>
 
     <!--扫码查询订单信息-->
-    <select  id="getSweeptCodeOrderChildsInfo" resultType="java.util.HashMap">
+    <select  id="getSweeptCodeOrderChildsInfo" resultType="java.util.Map">
          SELECT
             cat.name as catName,
             childs.product_name as productName,
