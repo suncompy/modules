@@ -210,7 +210,7 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 	}
 	@Override
 	public ResponseMessage pushOrder(Long orderId){
-		HashOperations<String,String, FoodOrderEntity> operations = redisTemplate.opsForHash();
+		HashOperations<String,Long, FoodOrderEntity> operations = redisTemplate.opsForHash();
 		//查询订单是否已经加入队列
 		try {
 			FoodOrderEntity foodOrderCache= operations.get(ORDER_QUEUE_KEY,orderId);
@@ -230,9 +230,11 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 			redisTemplate.multi();
 			//当前排队数
 			Long num=operations.size(ORDER_QUEUE_KEY);
-			operations.put(ORDER_QUEUE_KEY,orderId+"",foodOrderEntity);
+			operations.put(ORDER_QUEUE_KEY,orderId,foodOrderEntity);
 			List<Object> list=redisTemplate.exec();
+			redisTemplate.setEnableTransactionSupport(false);
 			list.forEach(e->System.out.print(e));
+
 			Map<String,Object>result= Maps.newHashMap();
 			result.put("orderId",orderId);
 			result.put("orderNo",foodOrderEntity.getOrderNo());
@@ -255,10 +257,9 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		foodOrderWrapper.eq("order_id",orderId);
 		//必需要已支付订单才能操作
 		foodOrderWrapper.eq("order_status",1);
-		update(foodOrder,foodOrderWrapper);
-		if (updateById(foodOrder)){
+		if (update(foodOrder,foodOrderWrapper)){
 			//从队列中踢除
-			HashOperations<String,String, FoodOrderEntity> operations = redisTemplate.opsForHash();
+			HashOperations<String,Long, FoodOrderEntity> operations = redisTemplate.opsForHash();
 			long ret=operations.delete(ORDER_QUEUE_KEY,orderId);
 			if (ret==1){
 				foodOrder=selectById(orderId);
