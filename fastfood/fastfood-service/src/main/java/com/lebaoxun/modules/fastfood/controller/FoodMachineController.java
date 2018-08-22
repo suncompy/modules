@@ -88,8 +88,11 @@ public class FoodMachineController {
     @RequestMapping("/fastfood/foodmachine/update")
     @RedisLock(value="fastfood:foodmachine:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineEntity foodMachine){
-		foodMachineService.updateById(foodMachine);
-        return ResponseMessage.ok();
+		if (foodMachineService.updateById(foodMachine)){
+            return ResponseMessage.ok();
+        }else{
+            return ResponseMessage.error("6002","状态修改失败");
+        }
     }
 
     /**
