@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.lebaoxun.commons.exception.ResponseMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,10 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
 
         return new PageUtils(page);
     }
+	@Override
+	public List<FoodProductEntity> findProductInfoByParams(Map<String, Object> params){
+		return this.selectByMap(params);
+	}
 
     
     @Override
