@@ -1,12 +1,12 @@
 package com.lebaoxun.modules.fastfood.service.hystrix;
-import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
-import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
-import com.lebaoxun.modules.fastfood.service.IFoodMachineAisleService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
+import com.lebaoxun.modules.fastfood.service.IFoodMachineAisleService;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * 取餐机通道
@@ -47,6 +47,10 @@ public class FoodMachineAisleServiceHystrix implements IFoodMachineAisleService 
 	@Override
 	public ResponseMessage findProductByMacIdAndProductCatId(Integer macId,
 			Integer productCatId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+	@Override
+	public ResponseMessage findMachineAisleListByMacId(Integer macId){
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 }

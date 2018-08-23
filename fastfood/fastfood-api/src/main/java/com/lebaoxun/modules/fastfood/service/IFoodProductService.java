@@ -27,6 +27,8 @@ public interface IFoodProductService {
     @RequestMapping("/fastfood/foodproduct/list")
     ResponseMessage list(@RequestParam Map<String, Object> params);
 
+    @RequestMapping("/fastfood/foodproduct/findProductInfoByParams")
+    ResponseMessage findProductInfoByParams(@RequestParam Map<String, Object> params);
 
     /**
      * 信息

@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import com.lebaoxun.commons.exception.I18nMessageException;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,5 +65,8 @@ public interface IFoodMachineAisleService {
     ResponseMessage findProductByMacIdAndProductCatId(
     		@RequestParam("macId")Integer macId, 
     		@RequestParam(value="productCatId",required=false)Integer productCatId);
+
+    @RequestMapping("/fastfood/foodmachineaisle/findMachineAisleListByMacId")
+    ResponseMessage findMachineAisleListByMacId(@RequestParam("macId")Integer macId);
 }
 
