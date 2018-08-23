@@ -87,6 +87,7 @@ public class FoodMachineAisleController {
     /**
      * 关联产品列表查询,包括产品、名称产品价格
      */
+    @RequestMapping("/fastfood/foodmachineaisle/findMachineAisleListByMacId")
     ResponseMessage findMachineAisleListByMacId(@RequestParam("macId")Integer macId){
         List<FoodMachineRefAisleEntity> foodMachineAisleEntityList = foodMachineAisleService.findMachineAisleListByMacId(macId);
         int totalCount=foodMachineAisleEntityList.size();

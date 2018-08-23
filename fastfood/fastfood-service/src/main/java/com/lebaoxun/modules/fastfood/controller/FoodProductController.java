@@ -38,6 +38,18 @@ public class FoodProductController {
         return ResponseMessage.ok(page);
     }
 
+    /**
+     * 产品列表通用查询
+     * @param params
+     * @return
+     */
+    @RequestMapping("/fastfood/foodproduct/findProductInfoByParams")
+    ResponseMessage findProductInfoByParams(@RequestParam Map<String, Object> params){
+        if (params!=null){
+            params.remove("_");
+        }
+        return ResponseMessage.ok(foodProductService.findProductInfoByParams(params));
+    }
 
     /**
      * 信息
