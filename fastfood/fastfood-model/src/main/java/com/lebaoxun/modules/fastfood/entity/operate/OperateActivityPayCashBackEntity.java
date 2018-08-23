@@ -1,4 +1,4 @@
-package com.lebaoxun.modules.operate.entity;
+package com.lebaoxun.modules.fastfood.entity.operate;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
@@ -8,14 +8,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 首单活动表
+ * 充值返现表
  * 
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-10 16:36:31
+ * @date 2018-08-10 16:36:30
  */
-@TableName("operate_activity_first_order")
-public class OperateActivityFirstOrderEntity implements Serializable {
+@TableName("operate_activity_pay_cash_back")
+public class OperateActivityPayCashBackEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -31,6 +31,14 @@ public class OperateActivityFirstOrderEntity implements Serializable {
 	 * 金额
 	 */
 	private Float amount;
+	/**
+	 * 人次
+	 */
+	private Integer personTime;
+	/**
+	 * 递减金额
+	 */
+	private Integer wane;
 	/**
 	 * 开始时间
 	 */
@@ -93,6 +101,30 @@ public class OperateActivityFirstOrderEntity implements Serializable {
 	 */
 	public Float getAmount() {
 		return amount;
+	}
+	/**
+	 * 设置：人次
+	 */
+	public void setPersonTime(Integer personTime) {
+		this.personTime = personTime;
+	}
+	/**
+	 * 获取：人次
+	 */
+	public Integer getPersonTime() {
+		return personTime;
+	}
+	/**
+	 * 设置：递减金额
+	 */
+	public void setWane(Integer wane) {
+		this.wane = wane;
+	}
+	/**
+	 * 获取：递减金额
+	 */
+	public Integer getWane() {
+		return wane;
 	}
 	/**
 	 * 设置：开始时间

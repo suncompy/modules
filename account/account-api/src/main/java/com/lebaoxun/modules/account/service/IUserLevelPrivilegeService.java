@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.lebaoxun.modules.account.entity.UserLevelPrivilegeEntity;
 import com.lebaoxun.modules.account.service.hystrix.UserLevelPrivilegeServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
@@ -51,6 +52,11 @@ public interface IUserLevelPrivilegeService {
      */
     @RequestMapping("/account/userlevelprivilege/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
+    
+    @RequestMapping("/account/userlevelprivilege/findDisByUserId")
+    ResponseMessage findDisByUserId(@RequestParam("userId")Long userId,
+    		@RequestParam("level")Integer level,
+    		@RequestParam("payLogType")String payLogType);
     
 }
 

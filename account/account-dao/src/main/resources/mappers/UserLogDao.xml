@@ -71,7 +71,7 @@
 		group by user_id;
 	</select> -->
 	
-	<select id="sumTradeMoneyByUser" resultType="java.lang.Long">
+	<select id="sumTradeMoneyByUser" resultType="java.math.BigDecimal">
 	    select sum(trade_money) from user_log where 
 	    user_id = #{userId}
 	    <if test="time != null">
@@ -79,6 +79,17 @@
 	    </if>
 	    <if test="logType != null">
 	    	and log_type = #{logType} 
+	    </if>
+	</select>
+	
+	<select id="sumTradeMoneyByUserIdAndLogTypeAndTime" resultType="java.math.BigDecimal">
+	    select sum(trade_money) from user_log where 
+	    user_id = #{userId}
+	    <if test="logType != null">
+	    	and log_type = #{logType} 
+	    </if>
+	    <if test="start != null">
+		    AND log.log_time BETWEEN #{start} and #{end}
 	    </if>
 	</select>
 	

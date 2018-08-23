@@ -7,6 +7,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodOrderService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -57,6 +58,17 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 
 	@Override
 	public ResponseMessage takeFoodCallback(@RequestParam("orderId") String orderId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage createOrder(Long macId, Long userId,
+			FoodOrderEntity order) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage calCheckTotalFee(FoodOrderEntity order) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 

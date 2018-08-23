@@ -1,12 +1,12 @@
-package com.lebaoxun.modules.operate.service.hystrix;
+package com.lebaoxun.modules.fastfood.service.hystrix;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.lebaoxun.modules.operate.entity.OperateActivityKeepDiscountEntity;
-import com.lebaoxun.modules.operate.service.IOperateActivityKeepDiscountService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
+import com.lebaoxun.modules.fastfood.service.IOperateActivityKeepDiscountService;
 
 /**
  * 连续折扣

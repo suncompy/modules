@@ -1,17 +1,22 @@
-package com.lebaoxun.modules.operate.controller;
-
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.lebaoxun.commons.exception.ResponseMessage;
-import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.modules.operate.entity.OperateActivityKeepDiscountEntity;
-import com.lebaoxun.modules.operate.service.OperateActivityKeepDiscountService;
-import com.lebaoxun.soa.core.redis.lock.RedisLock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
+import com.lebaoxun.modules.fastfood.service.OperateActivityKeepDiscountService;
+import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
 /**

@@ -1,10 +1,10 @@
-package com.lebaoxun.modules.operate.service;
+package com.lebaoxun.modules.fastfood.service;
+
+import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.modules.operate.entity.OperateActivityKeepDiscountEntity;
-
-import java.util.Map;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
 
 /**
  * 连续折扣

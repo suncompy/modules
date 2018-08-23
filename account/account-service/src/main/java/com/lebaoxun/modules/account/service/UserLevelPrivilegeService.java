@@ -16,5 +16,7 @@ import java.util.Map;
 public interface UserLevelPrivilegeService extends IService<UserLevelPrivilegeEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    
+    Integer findDisByUserId(Long userId,Integer level,String payLogType);
 }
 

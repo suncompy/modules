@@ -1,9 +1,9 @@
-package com.lebaoxun.modules.operate.dao;
+package com.lebaoxun.modules.fastfood.dao.operate;
 
 import org.apache.ibatis.annotations.Mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.lebaoxun.modules.operate.entity.OperateActivityKeepDiscountEntity;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
 
 /**
  * 连续折扣

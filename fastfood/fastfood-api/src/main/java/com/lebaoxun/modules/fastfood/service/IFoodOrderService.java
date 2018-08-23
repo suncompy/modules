@@ -1,15 +1,16 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import java.util.Map;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodOrderServiceHystrix;
-import com.lebaoxun.commons.exception.ResponseMessage;
-
-import java.util.Map;
 
 /**
  * 订单表
@@ -77,5 +78,23 @@ public interface IFoodOrderService {
     ResponseMessage takeFoodCallback(
             @RequestParam("orderId") String orderId);
     
+    /**
+     * 普通下单
+     * @param orders
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/createOrder")
+    ResponseMessage createOrder(
+    		@RequestParam("macId") Long macId,
+    		@RequestParam("userId") Long userId,
+    		@RequestBody FoodOrderEntity order);
+    
+    /**
+     * 计算订单金额，并验证产品是否有效
+     * @param order
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/calCheckTotalFee")
+    ResponseMessage calCheckTotalFee(@RequestBody FoodOrderEntity order);
 }
 

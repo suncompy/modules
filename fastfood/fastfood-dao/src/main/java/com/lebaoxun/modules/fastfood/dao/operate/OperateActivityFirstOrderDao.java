@@ -1,8 +1,9 @@
-package com.lebaoxun.modules.operate.dao;
+package com.lebaoxun.modules.fastfood.dao.operate;
 
-import com.lebaoxun.modules.operate.entity.OperateActivityFirstOrderEntity;
 import org.apache.ibatis.annotations.Mapper;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
 
 /**
  * 首单活动表

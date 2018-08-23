@@ -1,15 +1,16 @@
-package com.lebaoxun.modules.operate.service;
+package com.lebaoxun.modules.fastfood.service;
+
+import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.lebaoxun.modules.operate.entity.OperateActivityFirstOrderEntity;
-import com.lebaoxun.modules.operate.service.hystrix.OperateActivityFirstOrderServiceHystrix;
-import com.lebaoxun.commons.exception.ResponseMessage;
 
-import java.util.Map;
+import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
+import com.lebaoxun.modules.fastfood.service.hystrix.OperateActivityFirstOrderServiceHystrix;
 
 /**
  * 首单活动表
@@ -19,7 +20,7 @@ import java.util.Map;
  * @date 2018-08-10 16:36:31
  */
 
-@FeignClient(value="operate-service",fallback=OperateActivityFirstOrderServiceHystrix.class)
+@FeignClient(value="fastfood-service",fallback=OperateActivityFirstOrderServiceHystrix.class)
 public interface IOperateActivityFirstOrderService {
 	/**
      * 列表

@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.account.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +28,17 @@ public interface UserLogDao extends BaseMapper<UserLogEntity> {
 			@Param("size")Integer size,
 			@Param("offset")Integer offset);
 	
-	Long sumTradeMoneyByUser(@Param("userId") Long userId,
+	BigDecimal sumTradeMoneyByUser(@Param("userId") Long userId,
 			@Param("time") String time,
 			@Param("logType") String logType);
 	
 	List<UserLogEntity> queryUserLogByDay(@Param("user_id")long userId,
 			@Param("adjunctInfo")String adjunctInfo, 
 			@Param("dayTime")String dayTime);
+	
+	BigDecimal sumTradeMoneyByUserIdAndLogTypeAndTime(@Param("userId") Long userId,
+			@Param("logType") String logType,
+			@Param("start") String start,
+			@Param("end") String end
+			);
 }

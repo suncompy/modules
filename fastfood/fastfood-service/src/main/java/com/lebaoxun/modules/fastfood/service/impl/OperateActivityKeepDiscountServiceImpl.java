@@ -1,16 +1,17 @@
-package com.lebaoxun.modules.operate.service.impl;
+package com.lebaoxun.modules.fastfood.service.impl;
+
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
-import java.util.Map;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
-
-import com.lebaoxun.modules.operate.dao.OperateActivityKeepDiscountDao;
-import com.lebaoxun.modules.operate.entity.OperateActivityKeepDiscountEntity;
-import com.lebaoxun.modules.operate.service.OperateActivityKeepDiscountService;
+import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityKeepDiscountDao;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
+import com.lebaoxun.modules.fastfood.service.OperateActivityKeepDiscountService;
 
 
 @Service("operateActivityKeepDiscountService")

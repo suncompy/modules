@@ -1,6 +1,25 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -13,29 +32,14 @@ import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.modules.fastfood.dao.FoodMachineAisleDao;
 import com.lebaoxun.modules.fastfood.dao.FoodOrderChildsDao;
 import com.lebaoxun.modules.fastfood.dao.FoodOrderDao;
+import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityFirstOrderDao;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
-import org.apache.commons.lang.math.RandomUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 
 @Service("foodOrderService")
@@ -51,6 +55,9 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 	
 	@Resource
 	private FoodOrderChildsDao foodOrderChildsDao;
+	
+	@Resource
+	private OperateActivityFirstOrderDao operateActivityFirstOrderDao;
 	
 	@Resource
 	private RedisTemplate<String, Object> redisTemplate;
@@ -99,13 +106,15 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 	}
 	
 	@Override
-	public FoodOrderEntity calCheckTotalFee(FoodOrderEntity order) {
+	public FoodOrderEntity calCheckTotalFee(Boolean isFirstOrder,FoodOrderEntity order) {
 		// TODO Auto-generated method stub
 		if(order == null || order.getChilds() == null || order.getChilds().isEmpty()){
 			return order;
 		}
+		OperateActivityFirstOrderEntity firstOrderActivity = operateActivityFirstOrderDao.findUnderwayActivity();
 		BigDecimal totalFee = new BigDecimal("0.00");
 		Integer buyNumber = 0;
+		boolean isProductActivity = false;
 		for(FoodOrderChildsEntity orderChild : order.getChilds()){
 			Map<String,Object> aisle = foodMachineAisleDao.findProductByAisle(orderChild.getMacId(),
 					orderChild.getProductId(), null, orderChild.getAisleId());
@@ -135,6 +144,19 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 			orderChild.setProductId(productId);
 			orderChild.setProductName(productName);
 			
+			if(isFirstOrder != null && isFirstOrder == true){//首单
+				if("firstOrder".equals(aisle.get("activity")) && firstOrderActivity != null){//含有首单活动
+					fee = fee.subtract(firstOrderActivity.getAmount());
+					orderChild.setActivity("firstOrder");
+					isProductActivity = true;
+				}
+			}else{
+				if("keepDiscount".equals(aisle.get("activity")) && firstOrderActivity != null){//含有首单活动
+					fee = fee.subtract(firstOrderActivity.getAmount());
+					orderChild.setActivity("firstOrder");
+					isProductActivity = true;
+				}
+			}
 			order.setMacId(macId);
 			totalFee.add(fee);
 			logger.debug("price={},buyNumber={},fee={}",price,order.getBuyNumber(),fee);
@@ -146,12 +168,13 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public String createOrder(Long userId,
+	public FoodOrderEntity createOrder(Long userId,
+			Boolean isFirstOrder,
 			FoodOrderEntity order) {
 		
 		Date now = new Date();
 		
-		this.calCheckTotalFee(order);
+		this.calCheckTotalFee(isFirstOrder,order);
 		
 		int count = this.baseMapper
 				.selectCount(new EntityWrapper<FoodOrderEntity>().eq("user_id",
@@ -189,7 +212,7 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		message.put("orderNo", orderNo);
 		rabbitmqSender.sendContractDirect("order.qrcode.create.queue",
 				new Gson().toJson(message));
-		return orderNo;
+		return order;
 	}
 	
 	@Override

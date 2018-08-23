@@ -77,5 +77,12 @@ public class UserLevelPrivilegeController {
 		userLevelPrivilegeService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
     }
+    
+    @RequestMapping("/account/userlevelprivilege/findDisByUserId")
+    ResponseMessage findDisByUserId(@RequestParam("userId")Long userId,
+    		@RequestParam("level")Integer level,
+    		@RequestParam("payLogType")String payLogType){
+    	return ResponseMessage.ok(userLevelPrivilegeService.findDisByUserId(userId, level, payLogType));
+    }
 
 }

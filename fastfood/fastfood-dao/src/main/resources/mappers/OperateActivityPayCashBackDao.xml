@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lebaoxun.modules.operate.dao.OperateActivityKeepDiscountDao">
+<mapper namespace="com.lebaoxun.modules.fastfood.dao.operate.OperateActivityPayCashBackDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lebaoxun.modules.operate.entity.OperateActivityKeepDiscountEntity" id="operateActivityKeepDiscountMap">
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEntity" id="operateActivityPayCashBackMap">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
+        <result property="amount" column="amount"/>
+        <result property="personTime" column="person_time"/>
+        <result property="wane" column="wane"/>
         <result property="startTime" column="start_time"/>
-        <result property="period" column="period"/>
-        <result property="proIncr" column="pro_incr"/>
+        <result property="endTime" column="end_time"/>
         <result property="use" column="use"/>
         <result property="remark" column="remark"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
-	
-    <select id="findUnderwayActivity" resultMap="operateActivityKeepDiscountMap" >
-        select * from operate_activity_keep_discount where `use` = 1  and date_add(start_time, interval period day) > now()
-    </select>
+
 
 </mapper>

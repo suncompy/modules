@@ -1,4 +1,4 @@
-package com.lebaoxun.modules.operate.entity;
+package com.lebaoxun.modules.fastfood.entity.operate;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;

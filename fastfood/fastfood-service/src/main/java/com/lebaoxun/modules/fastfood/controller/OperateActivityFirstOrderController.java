@@ -1,11 +1,10 @@
-package com.lebaoxun.modules.operate.controller;
+package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lebaoxun.modules.operate.entity.OperateActivityFirstOrderEntity;
-import com.lebaoxun.modules.operate.service.OperateActivityFirstOrderService;
-import com.lebaoxun.commons.utils.PageUtils;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
+import com.lebaoxun.modules.fastfood.service.OperateActivityFirstOrderService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 

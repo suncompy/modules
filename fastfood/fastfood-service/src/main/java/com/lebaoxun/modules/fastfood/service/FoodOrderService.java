@@ -8,7 +8,6 @@ import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 订单表
@@ -32,9 +31,13 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
      * @param orders
      * @return
      */
-    String createOrder(Long userId,FoodOrderEntity order);
-    
-    FoodOrderEntity calCheckTotalFee(FoodOrderEntity order);
+    FoodOrderEntity createOrder(Long userId,Boolean isFirstOrder,FoodOrderEntity order);
+    /**
+     * 计算订单金额，并验证产品是否有效
+     * @param order
+     * @return
+     */
+    FoodOrderEntity calCheckTotalFee(Boolean isFirstOrder,FoodOrderEntity order);
     
     void modifyQrCodeByOrderNo(String orderNo,String qrCode);
 

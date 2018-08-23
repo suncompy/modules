@@ -1,8 +1,10 @@
-package com.lebaoxun.modules.operate.dao;
+package com.lebaoxun.modules.fastfood.dao.operate;
 
-import com.lebaoxun.modules.operate.entity.OperateActivityPayCashBackEntity;
 import org.apache.ibatis.annotations.Mapper;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEntity;
 
 /**
  * 充值返现表
@@ -13,5 +15,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface OperateActivityPayCashBackDao extends BaseMapper<OperateActivityPayCashBackEntity> {
-	
+	OperateActivityKeepDiscountEntity findUnderwayActivity();
 }

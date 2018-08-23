@@ -1,15 +1,16 @@
-package com.lebaoxun.modules.operate.service;
+package com.lebaoxun.modules.fastfood.service;
+
+import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.lebaoxun.modules.operate.entity.OperateActivityPayCashBackEntity;
-import com.lebaoxun.modules.operate.service.hystrix.OperateActivityPayCashBackServiceHystrix;
-import com.lebaoxun.commons.exception.ResponseMessage;
 
-import java.util.Map;
+import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEntity;
+import com.lebaoxun.modules.fastfood.service.hystrix.OperateActivityPayCashBackServiceHystrix;
 
 /**
  * 充值返现表
@@ -19,7 +20,7 @@ import java.util.Map;
  * @date 2018-08-10 16:36:30
  */
 
-@FeignClient(value="operate-service",fallback=OperateActivityPayCashBackServiceHystrix.class)
+@FeignClient(value="fastfood-service",fallback=OperateActivityPayCashBackServiceHystrix.class)
 public interface IOperateActivityPayCashBackService {
 	/**
      * 列表

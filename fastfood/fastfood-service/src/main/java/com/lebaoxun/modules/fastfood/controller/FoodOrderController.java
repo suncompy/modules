@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.common.collect.Maps;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.modules.fastfood.service.FoodOrderChildsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -88,6 +89,30 @@ public class FoodOrderController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Long[] ids){
 		foodOrderService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+    
+    /**
+     * 普通下单
+     * @param orders
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/createOrder")
+    @RedisLock(value="fastfood:foodorder:createOrder:lock:#arg0")
+    ResponseMessage createOrder(
+    		@RequestParam("macId") Long macId,
+    		@RequestParam("userId") Long userId,
+    		@RequestBody FoodOrderEntity order){
+    	return ResponseMessage.ok(foodOrderService.createOrder(userId, order));
+    }
+    
+    /**
+     * 计算订单金额，并验证产品是否有效
+     * @param order
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/calCheckTotalFee")
+    ResponseMessage calCheckTotalFee(@RequestBody FoodOrderEntity order){
+    	return ResponseMessage.ok(foodOrderService.calCheckTotalFee(order));
     }
 
     /**
