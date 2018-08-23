@@ -42,7 +42,7 @@
             food_machine_aisle f
         LEFT JOIN food_product p ON f.product_id = p.id
         LEFT JOIN food_machine_product_cat c ON p.product_cat_id = c.id
-        where mac_id=#{macId}
+        where f.mac_id=#{macId}
     </select>
     
     <select id="findProductByMacIdAndProductCatId" resultType="java.util.Map">
