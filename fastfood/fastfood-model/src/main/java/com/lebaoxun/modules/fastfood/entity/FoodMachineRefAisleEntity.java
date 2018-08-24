@@ -16,7 +16,11 @@ public class FoodMachineRefAisleEntity implements Serializable {
 
 	private Integer id;
 	/**
-	 * 机器分类
+	 * 机器渠道id集
+	 */
+	private String aisleIds;
+	/**
+	 * 机器id
 	 */
 	private Integer macId;
 	/**
@@ -39,6 +43,40 @@ public class FoodMachineRefAisleEntity implements Serializable {
 	 * 分类名称
 	 */
 	private String catName;
+
+	/**
+	 * 货道坐标
+	 */
+	private String aisleXy;
+
+	/**
+	 * 货道容量
+	 */
+	private String aisleSize;
+
+	public String getAisleIds() {
+		return aisleIds;
+	}
+
+	public void setAisleIds(String aisleIds) {
+		this.aisleIds = aisleIds;
+	}
+
+	public String getAisleXy() {
+		return aisleXy;
+	}
+
+	public void setAisleXy(String aisleXy) {
+		this.aisleXy = aisleXy;
+	}
+
+	public String getAisleSize() {
+		return aisleSize;
+	}
+
+	public void setAisleSize(String aisleSize) {
+		this.aisleSize = aisleSize;
+	}
 
 	public FoodMachineRefAisleEntity() {
 		id = 0;

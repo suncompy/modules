@@ -73,6 +73,8 @@ public class FoodMachineAisleEntity implements Serializable {
 	 */
 	@TableField(exist = false)
     private String ids;
+
+	private Float price;
 	/**
 	 * 设置：
 	 */
@@ -224,5 +226,13 @@ public class FoodMachineAisleEntity implements Serializable {
 
 	public void setIds(String ids) {
 		this.ids = ids;
+	}
+
+	public Float getPrice() {
+		return price;
+	}
+
+	public void setPrice(Float price) {
+		this.price = price;
 	}
 }
