@@ -36,12 +36,11 @@ public class FoodMachineAisleServiceImpl extends ServiceImpl<FoodMachineAisleDao
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void refProductAndType(Long adminId, FoodMachineRefAisleEntity foodMachineAisle){
-        String _ids=foodMachineAisle.getAisleIds();
-        if (StringUtils.isEmpty(_ids))
+        List<String> _ids=foodMachineAisle.getAisleIds();
+        if (_ids==null||_ids.size()==0)
             throw new I18nMessageException("100002", "机器渠道关联ID不能为空!");
-        String[] _arrayIds=_ids.split(",");
         //遍历批量集，更新产品、分类id到关联表中
-        for (String id:_arrayIds){
+        for (String id:_ids){
             FoodMachineAisleEntity _aisleObj=new FoodMachineAisleEntity();
             _aisleObj.setId(Integer.parseInt(id));
             _aisleObj.setUpdateBy(adminId);
