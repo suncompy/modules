@@ -19,7 +19,7 @@ public interface FoodMachineAisleService extends IService<FoodMachineAisleEntity
 
     PageUtils queryPage(Map<String, Object> params);
 
-    void refProductAndType(Long adminId,FoodMachineAisleEntity foodMachineAisle);
+    void refProductAndType(Long adminId,FoodMachineRefAisleEntity foodMachineAisle);
 
     List<FoodMachineRefAisleEntity> findMachineAisleListByMacId(Integer macId);
     

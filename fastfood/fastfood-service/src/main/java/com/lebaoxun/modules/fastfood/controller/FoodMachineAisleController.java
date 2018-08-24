@@ -102,7 +102,7 @@ public class FoodMachineAisleController {
      */
     @RequestMapping("/fastfood/foodmachineaisle/refProductAndType")
     @RedisLock(value="fastfood:foodmachineaisle:refProductAndType:lock:#arg0")
-    ResponseMessage refProductAndType(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineAisleEntity foodMachineAisle){
+    ResponseMessage refProductAndType(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineRefAisleEntity foodMachineAisle){
         foodMachineAisleService.refProductAndType(adminId,foodMachineAisle);
         return ResponseMessage.ok();
     }
