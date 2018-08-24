@@ -1,10 +1,14 @@
 package com.lebaoxun.modules.fastfood.dao;
 
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
+
 import org.apache.ibatis.annotations.Mapper;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +20,10 @@ import java.util.Map;
  */
 @Mapper
 public interface FoodOrderDao extends BaseMapper<FoodOrderEntity> {
-    public Map<String, Object> getSweeptCodeOrderInfo(@Param("orderId") String orderId);
+	Map<String, Object> getSweeptCodeOrderInfo(@Param("orderId") String orderId);
+
+	List<FoodOrderEntity> findOrderByUser(@Param("userId") Long userId,
+			@Param("status") Integer status, 
+			@Param("size") Integer size, 
+			@Param("offset") Integer offset);
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -45,7 +46,7 @@ public class OperateCouponRecordEntity implements Serializable {
 	/**
 	 * 折扣额度或现金数
 	 */
-	private Float amount;
+	private BigDecimal amount;
 	/**
 	 * 使用限制，满x元可用
 	 */
@@ -130,13 +131,13 @@ public class OperateCouponRecordEntity implements Serializable {
 	/**
 	 * 设置：折扣额度或现金数
 	 */
-	public void setAmount(Float amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 	/**
 	 * 获取：折扣额度或现金数
 	 */
-	public Float getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 	/**

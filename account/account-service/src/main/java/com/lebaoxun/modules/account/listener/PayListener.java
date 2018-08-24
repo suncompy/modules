@@ -9,9 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +31,7 @@ import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
  *
  */
 @Component
-@RabbitListener(queues = "pay.notify.queue")
+@RabbitListener(queues = "pay.notify.queue.recharge")
 public class PayListener {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -43,13 +43,16 @@ public class PayListener {
 	private IRabbitmqSender rabbitmqSender;
 	
 	@Bean
-    public Queue queuePay() {
-        return new Queue("pay.notify.queue",true);
+    public Queue queuePayRecharge() {
+        return new Queue("pay.notify.queue.recharge",true);
     }
 
     @Bean
-    Binding bindingDirectExchangePay(Queue queuePay, DirectExchange directExchange) {
-        return BindingBuilder.bind(queuePay).to(directExchange).with("pay.notify.queue");
+    Binding bindingTopicExchangePayRecharge(Queue queuePayRecharge, TopicExchange topicExchange) {
+        return BindingBuilder.bind(queuePayRecharge).to(topicExchange).with(""
+        		+ ""
+        		+ ""
+        		+ "");
     }
 	
 	@RabbitHandler

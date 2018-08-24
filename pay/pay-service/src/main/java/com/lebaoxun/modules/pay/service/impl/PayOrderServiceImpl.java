@@ -90,8 +90,7 @@ public class PayOrderServiceImpl extends ServiceImpl<PayOrderDao, PayOrderEntity
 		message.put("trade_type", trade_type);
 		message.put("merc_no", merc_no);
 		logger.info("rabbit|sendContractDirect|message={}",message);
-		rabbitmqSender.sendContractDirect(queueKey,
-				new Gson().toJson(message));
+		rabbitmqSender.sendContractTopic(queueKey, new Gson().toJson(message));
 	}
 
 }

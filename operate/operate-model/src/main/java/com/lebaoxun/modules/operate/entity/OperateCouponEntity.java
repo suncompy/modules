@@ -1,11 +1,12 @@
 package com.lebaoxun.modules.operate.entity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 优惠券
@@ -42,7 +43,7 @@ public class OperateCouponEntity implements Serializable {
 	/**
 	 * 折扣额度或现金数
 	 */
-	private Float amount;
+	private BigDecimal amount;
 	/**
 	 * 使用限制，满x元可用
 	 */
@@ -150,13 +151,13 @@ public class OperateCouponEntity implements Serializable {
 	/**
 	 * 设置：折扣额度或现金数
 	 */
-	public void setAmount(Float amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 	/**
 	 * 获取：折扣额度或现金数
 	 */
-	public Float getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 	/**

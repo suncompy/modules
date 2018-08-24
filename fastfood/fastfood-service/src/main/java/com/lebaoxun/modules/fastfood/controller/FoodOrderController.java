@@ -1,30 +1,24 @@
 package com.lebaoxun.modules.fastfood.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.google.common.collect.Maps;
-import com.lebaoxun.commons.exception.I18nMessageException;
-import com.lebaoxun.modules.fastfood.service.FoodOrderChildsService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
-import com.lebaoxun.modules.fastfood.service.FoodOrderService;
-import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
+import com.lebaoxun.modules.fastfood.service.FoodOrderChildsService;
+import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
-
-import javax.annotation.Resource;
 
 
 /**
@@ -91,19 +85,58 @@ public class FoodOrderController {
         return ResponseMessage.ok();
     }
     
+    
     /**
-     * 普通下单
-     * @param orders
-     * @return
-     */
+	 * 微信小程序支付订单
+	 * 
+	 * @param userId
+	 * @param isFirstOrder
+	 * @param dis
+	 * @param orderNo
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/wxAppPayForOrder")
+    @RedisLock(value="fastfood:foodorder:wxAppPayForOrder:lock:#arg0")
+	ResponseMessage wxAppPayForOrder(
+			@RequestParam("userId") Long userId, 
+			@RequestParam(value="dis",required=false)BigDecimal dis,
+			@RequestParam("spbill_create_ip")String spbill_create_ip,
+			@RequestParam("payGroup")String payGroup, 
+			@RequestParam("openid")String openid, 
+			@RequestParam("orderNo")String orderNo){
+		return foodOrderService.wxAppPayForOrder(userId, dis, spbill_create_ip, payGroup, openid, orderNo);
+	}
+	
+    /**
+	 * 购物车下单
+	 * 
+	 * @param cartIds
+	 */
+    @RequestMapping("/fastfood/foodorder/createOrderByShoppingCart")
+    @RedisLock(value="fastfood:foodorder:createOrderByShoppingCart:lock:#arg0")
+    ResponseMessage createOrderByShoppingCart(@RequestParam("macId") Integer macId,
+    		@RequestParam("userId") Long userId, 
+    		@RequestParam(value="dis",required=false)BigDecimal dis,
+    		@RequestBody List<FoodShoppingCartEntity> carts){
+    	return ResponseMessage.ok(foodOrderService.createOrderByShoppingCart(userId, dis, carts));
+    }
+
+	/**
+	 * 普通下单
+	 * 
+	 * @param orders
+	 * @return
+	 */
     @RequestMapping("/fastfood/foodorder/createOrder")
     @RedisLock(value="fastfood:foodorder:createOrder:lock:#arg0")
     ResponseMessage createOrder(
-    		@RequestParam("macId") Long macId,
+    		@RequestParam("macId") Integer macId,
     		@RequestParam("userId") Long userId,
+    		@RequestParam(value="dis",required=false)BigDecimal dis,
     		@RequestBody FoodOrderEntity order){
-    	return ResponseMessage.ok(foodOrderService.createOrder(userId, order));
+    	return ResponseMessage.ok(foodOrderService.createOrder(userId,dis, order));
     }
+	
     
     /**
      * 计算订单金额，并验证产品是否有效
@@ -111,8 +144,10 @@ public class FoodOrderController {
      * @return
      */
     @RequestMapping("/fastfood/foodorder/calCheckTotalFee")
-    ResponseMessage calCheckTotalFee(@RequestBody FoodOrderEntity order){
-    	return ResponseMessage.ok(foodOrderService.calCheckTotalFee(order));
+    ResponseMessage calCheckTotalFee(@RequestParam("userId") Long userId,
+    		@RequestParam(value="dis",required=false)BigDecimal dis,
+    		@RequestBody FoodOrderEntity order){
+    	return ResponseMessage.ok(foodOrderService.calCheckTotalFee(userId,dis,order));
     }
 
     /**
@@ -149,5 +184,14 @@ public class FoodOrderController {
     ResponseMessage takeFoodCallback(
             @RequestParam("orderId") String orderId){
         return foodOrderService.takeFoodCallback(orderId);
+    }
+    
+    @RequestMapping("/fastfood/foodorder/findOrderByUser")
+    ResponseMessage findOrderByUser(
+    		@RequestParam("userId")Long userId,
+    		@RequestParam("status")Integer status, 
+    		@RequestParam(value="size",required=false)Integer size,
+    		@RequestParam(value="offset",required=false)Integer offset){
+    	return ResponseMessage.ok(foodOrderService.findOrderByUser(userId, status, size, offset));
     }
 }

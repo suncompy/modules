@@ -1,9 +1,12 @@
 package com.lebaoxun.modules.fastfood.service.hystrix;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodOrderService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
@@ -62,13 +65,33 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 	}
 
 	@Override
-	public ResponseMessage createOrder(Long macId, Long userId,
+	public ResponseMessage wxAppPayForOrder(Long userId, BigDecimal dis,
+			String spbill_create_ip, String payGroup, String openid,
+			String orderNo) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage createOrderByShoppingCart(Integer macId, Long userId,
+			BigDecimal dis, List<FoodShoppingCartEntity> carts) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage createOrder(Integer macId, Long userId, BigDecimal dis,
 			FoodOrderEntity order) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage calCheckTotalFee(FoodOrderEntity order) {
+	public ResponseMessage calCheckTotalFee(Long userId, BigDecimal dis,
+			FoodOrderEntity order) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage findOrderByUser(Long userId, Integer status,
+			Integer size, Integer offset) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 

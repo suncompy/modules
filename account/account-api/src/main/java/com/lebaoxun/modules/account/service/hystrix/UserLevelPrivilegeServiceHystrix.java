@@ -45,7 +45,7 @@ public class UserLevelPrivilegeServiceHystrix implements IUserLevelPrivilegeServ
 	}
 
 	@Override
-	public ResponseMessage findDisByUserId(Long userId, Integer level, String payLogType) {
+	public Integer findDisByUserId(Long userId, Integer level, String payLogType) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 }

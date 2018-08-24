@@ -1,5 +1,7 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodOrderServiceHystrix;
 
 /**
@@ -79,15 +82,47 @@ public interface IFoodOrderService {
             @RequestParam("orderId") String orderId);
     
     /**
-     * 普通下单
-     * @param orders
-     * @return
-     */
+	 * 微信小程序支付订单
+	 * 
+	 * @param userId
+	 * @param isFirstOrder
+	 * @param dis
+	 * @param orderNo
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/wxAppPayForOrder")
+	ResponseMessage wxAppPayForOrder(
+			@RequestParam("userId") Long userId, 
+			@RequestParam(value="dis",required=false)BigDecimal dis,
+			@RequestParam("spbill_create_ip")String spbill_create_ip,
+			@RequestParam("payGroup")String payGroup, 
+			@RequestParam("openid")String openid, 
+			@RequestParam("orderNo")String orderNo);
+	
+    /**
+	 * 购物车下单
+	 * 
+	 * @param cartIds
+	 */
+    @RequestMapping("/fastfood/foodorder/createOrderByShoppingCart")
+    ResponseMessage createOrderByShoppingCart(@RequestParam("macId") Integer macId,
+    		@RequestParam("userId") Long userId, 
+    		@RequestParam(value="dis",required=false)BigDecimal dis,
+    		@RequestBody List<FoodShoppingCartEntity> carts);
+
+	/**
+	 * 普通下单
+	 * 
+	 * @param orders
+	 * @return
+	 */
     @RequestMapping("/fastfood/foodorder/createOrder")
     ResponseMessage createOrder(
-    		@RequestParam("macId") Long macId,
+    		@RequestParam("macId") Integer macId,
     		@RequestParam("userId") Long userId,
+    		@RequestParam(value="dis",required=false)BigDecimal dis,
     		@RequestBody FoodOrderEntity order);
+	
     
     /**
      * 计算订单金额，并验证产品是否有效
@@ -95,6 +130,15 @@ public interface IFoodOrderService {
      * @return
      */
     @RequestMapping("/fastfood/foodorder/calCheckTotalFee")
-    ResponseMessage calCheckTotalFee(@RequestBody FoodOrderEntity order);
+    ResponseMessage calCheckTotalFee(@RequestParam("userId") Long userId,
+    		@RequestParam(value="dis",required=false)BigDecimal dis,
+    		@RequestBody FoodOrderEntity order);
+    
+    @RequestMapping("/fastfood/foodorder/findOrderByUser")
+    ResponseMessage findOrderByUser(
+    		@RequestParam("userId")Long userId,
+    		@RequestParam("status")Integer status, 
+    		@RequestParam(value="size",required=false)Integer size,
+    		@RequestParam(value="offset",required=false)Integer offset);
 }
 

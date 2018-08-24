@@ -27,4 +27,7 @@ public interface OperateCouponRecordDao extends BaseMapper<OperateCouponRecordEn
 			@Param("use")Integer use,@Param("flag")Integer flag,
 			@Param("size")Integer size, @Param("offset")Integer offset);
 	
+	OperateCouponRecordEntity findByIdAndUser(
+			@Param("id")Integer id,
+			@Param("userId")Long userId);
 }

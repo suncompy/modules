@@ -44,5 +44,12 @@
 			#{size,jdbcType=INTEGER}
 		</if>
 	</select>
+	
+	<select id="findByIdAndUser" resultMap="operateCouponRecordMap">
+	    select * from operate_coupon_record where 
+		user_id = #{userId}
+		and id = #{id}
+		and date_add(start_time, interval period day) <![CDATA[>]]> now()
+	</select>
 
 </mapper>

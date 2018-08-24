@@ -54,7 +54,7 @@ public interface IUserLevelPrivilegeService {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
     @RequestMapping("/account/userlevelprivilege/findDisByUserId")
-    ResponseMessage findDisByUserId(@RequestParam("userId")Long userId,
+    Integer findDisByUserId(@RequestParam("userId")Long userId,
     		@RequestParam("level")Integer level,
     		@RequestParam("payLogType")String payLogType);
     

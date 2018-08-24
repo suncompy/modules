@@ -79,10 +79,10 @@ public class UserLevelPrivilegeController {
     }
     
     @RequestMapping("/account/userlevelprivilege/findDisByUserId")
-    ResponseMessage findDisByUserId(@RequestParam("userId")Long userId,
+    Integer findDisByUserId(@RequestParam("userId")Long userId,
     		@RequestParam("level")Integer level,
     		@RequestParam("payLogType")String payLogType){
-    	return ResponseMessage.ok(userLevelPrivilegeService.findDisByUserId(userId, level, payLogType));
+    	return userLevelPrivilegeService.findDisByUserId(userId, level, payLogType);
     }
 
 }
