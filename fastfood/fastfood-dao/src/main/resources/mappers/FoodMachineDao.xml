@@ -152,6 +152,9 @@
 		LEFT JOIN food_machine_product_cat AS cat ON mac.id = cat.mac_id
 		WHERE
 		mac.id = #{macId}
+		<if test="catId != null and catId!=''">
+			and product.cat_id=#{catId}
+		</if>
 	</select>
 	
 	<select id="searchMacByKeyword" resultMap="searchMap">
