@@ -140,5 +140,14 @@ public interface IFoodOrderService {
     		@RequestParam("status")Integer status, 
     		@RequestParam(value="size",required=false)Integer size,
     		@RequestParam(value="offset",required=false)Integer offset);
+
+	/**
+	 * 根据取餐码获取订单接口
+	 * @param macId
+	 * @return
+	 */
+	@RequestMapping("/fastfood/foodorder/take_food_code")
+	ResponseMessage takeFoodCode(@RequestParam("macId") Long macId,
+						@RequestParam("takeFoodCode") Integer takeFoodCode);
 }
 

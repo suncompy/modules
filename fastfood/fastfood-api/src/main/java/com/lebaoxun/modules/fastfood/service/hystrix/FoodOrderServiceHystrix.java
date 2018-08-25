@@ -95,5 +95,10 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
+	@Override
+	public ResponseMessage takeFoodCode(@RequestParam("macId") Long macId, @RequestParam("takeFoodCode") Integer takeFoodCode) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
 }
 
