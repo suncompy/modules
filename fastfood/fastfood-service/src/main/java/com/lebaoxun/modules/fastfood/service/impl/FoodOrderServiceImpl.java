@@ -470,7 +470,7 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 	}
 
     @Override
-    public ResponseMessage getOrderNoBycode(Long macId,Integer takeFoodCode){
+    public ResponseMessage getOrderNoByCode(Long macId,Integer takeFoodCode){
         if (macId==null||macId==0)
             return ResponseMessage.error("600003","缺少机器ID");
         String key="take:food:code:"+macId;
