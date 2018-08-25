@@ -175,7 +175,7 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		return st.toString();
 	}
 	
-	private synchronized String getOrder(Date now){
+	private synchronized String getOrder(Integer macId,Date now){
 		String date = DateFormatUtils.format(now, "yyyyMMdd");
 		String key = "mall:orderNo:" + date;
 		Integer inr = (Integer) redisTemplate.opsForValue().get(key);
@@ -186,7 +186,7 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		} else {
 			inr = redisTemplate.opsForValue().increment(key, 1).intValue();
 		}
-		String orderNo = "FD" + date + format1(inr, 5);
+		String orderNo = "FD"+ macId + date + format1(inr, 5);
 		return orderNo;
 	}
 	
@@ -346,7 +346,7 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		String keepDiscountKey = "operate:activitys:keepDiscount",
 				payCashBackKey = "operate:activitys:payCashBack";*/
 		
-		String orderNo = getOrder(now);
+		String orderNo = getOrder(order.getMacId(),now);
 		// TODO Auto-generated method stub
 
 		order.setCreateTime(now);
