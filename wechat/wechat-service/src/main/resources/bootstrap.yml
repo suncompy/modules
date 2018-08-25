@@ -7,9 +7,9 @@ spring:
     config:
       name: fastfood
       profile: dev
-      username: guess
-      password: 123123
-      uri: http://47.95.7.11:7369/
+      username: shancan
+      password: Scadmin773577
+      uri: http://39.104.97.47:7369
       label: master
 # Define the port where the Widget Foundry server would be running
 server:

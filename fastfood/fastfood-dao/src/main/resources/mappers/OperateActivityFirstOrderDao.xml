@@ -21,6 +21,6 @@
 	</select>
 	
 	<select id="findUnderwayActivityByMacId" resultMap="operateActivityFirstOrderMap">
-	    
+	    select * from operate_activity_first_order where `use` = 1 and now() BETWEEN start_time and end_time
 	</select>
 </mapper>

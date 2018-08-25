@@ -49,10 +49,7 @@ public class PayListener {
 
     @Bean
     Binding bindingTopicExchangePayRecharge(Queue queuePayRecharge, TopicExchange topicExchange) {
-        return BindingBuilder.bind(queuePayRecharge).to(topicExchange).with(""
-        		+ ""
-        		+ ""
-        		+ "");
+        return BindingBuilder.bind(queuePayRecharge).to(topicExchange).with("pay.notify.queue.#");
     }
 	
 	@RabbitHandler
