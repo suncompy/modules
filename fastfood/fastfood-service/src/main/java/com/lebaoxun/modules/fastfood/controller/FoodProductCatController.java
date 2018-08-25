@@ -44,6 +44,15 @@ public class FoodProductCatController {
         return ResponseMessage.ok(page);
     }
 
+    /**
+     * 产品分类,终端显示
+     */
+    @RequestMapping("/fastfood/foodproductcat/get_list")
+    ResponseMessage get_list(@RequestParam Map<String, Object> params){
+        PageUtils page = foodProductCatService.queryPage(params);
+        return ResponseMessage.ok(page.getList());
+    }
+
 
     /**
      * 信息

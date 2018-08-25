@@ -10,11 +10,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
+import com.lebaoxun.modules.fastfood.entity.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,11 +38,6 @@ import com.lebaoxun.modules.fastfood.dao.FoodShoppingCartDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityFirstOrderDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityKeepDiscountDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityPayCashBackDao;
-import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
-import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
-import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
-import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
-import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 import com.lebaoxun.modules.operate.dao.OperateCouponRecordDao;
@@ -471,5 +468,45 @@ public class FoodOrderServiceImpl extends ServiceImpl<FoodOrderDao, FoodOrderEnt
 		// TODO Auto-generated method stub
 		return this.baseMapper.findOrderByUser(userId, status, size, offset);
 	}
+
+    @Override
+    public ResponseMessage getOrderNoByCode(Long macId,Integer takeFoodCode){
+        if (macId==null||macId==0)
+            return ResponseMessage.error("600003","缺少机器ID");
+        String key="take:food:code:"+macId;
+        TakeFoodCodeEntity takeFoodCodeEntity=(TakeFoodCodeEntity)redisTemplate.opsForHash().get(key,takeFoodCode);
+        if (takeFoodCodeEntity==null||takeFoodCodeEntity.getOrderNo()==null)
+            return ResponseMessage.error("600004","数据异常");
+        return ResponseMessage.ok(takeFoodCodeEntity.getOrderNo());
+    }
+
+    @Override
+    public ResponseMessage createTakeFoodCode(Long macId, String orderNo) {
+        if (macId==null||macId==0)
+            return ResponseMessage.error("600003","缺少机器ID");
+        String key="take:food:code:"+macId;
+        HashOperations<String,Integer, TakeFoodCodeEntity> operations=redisTemplate.opsForHash();
+        TakeFoodCodeEntity takeFoodCode=new TakeFoodCodeEntity(orderNo,new Date().getTime());
+        //创建随机码
+        int i=0;
+        boolean isOk=false;
+        Integer code=null;
+        while (i<10&&!isOk){//只尝试10次
+            code=(int)((Math.random()*9+1)*100000);
+            isOk=operations.putIfAbsent(key,code,takeFoodCode);
+            i++;
+        }
+        return ResponseMessage.ok(code);
+    }
+
+    public void initTakeFoodCodePool(Long macId, String orderNo) {
+        String keyQueue="take:food:code:queue"+macId;
+        ListOperations<String, Object> operations=redisTemplate.opsForList();
+        operations.size(keyQueue);
+        for (int i=0;i<10;i++){
+            Integer code=(int)((Math.random()*9+1)*100000);
+            operations.rightPushIfPresent(keyQueue,code);
+        }
+    }
 
 }

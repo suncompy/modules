@@ -7,6 +7,7 @@ import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodMachineService;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 取餐机
@@ -54,7 +55,7 @@ public class FoodMachineServiceHystrix implements IFoodMachineService {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 	@Override
-	public ResponseMessage findByMacRefProductById(Integer macId){
+	public ResponseMessage findByMacRefProductById(Integer pageSize,Integer pageNo,Integer macId,Integer catId){
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
     

@@ -70,7 +70,10 @@ public interface IFoodMachineService {
     ResponseMessage findByMacId(@RequestParam("macId") Integer macId);
 
     @RequestMapping("/fastfood/foodmachine/findByMacRefProductById")
-    ResponseMessage findByMacRefProductById(@RequestParam("macId") Integer macId);
+    ResponseMessage findByMacRefProductById(@RequestParam("pageSize") Integer pageSize,
+                                            @RequestParam("pageNo") Integer pageNo,
+                                            @RequestParam("macId") Integer macId,
+                                            @RequestParam("catId") Integer catId);
     
     /**
      * 搜索

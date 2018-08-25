@@ -67,4 +67,20 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 
 	ResponseMessage pushOrder(Long orderId);
 
+	/**
+	 * 根据取餐码获取订单
+	 * @param macId
+	 * @param takeFoodCode
+	 * @return
+	 */
+	ResponseMessage getOrderNoByCode(Long macId, Integer takeFoodCode);
+
+	/**
+	 * 生成取餐码
+	 * @param macId
+	 * @param orderNo
+	 * @return
+	 */
+	ResponseMessage createTakeFoodCode(Long macId, String orderNo);
+
 }

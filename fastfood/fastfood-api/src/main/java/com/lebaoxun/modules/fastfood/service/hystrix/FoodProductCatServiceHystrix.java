@@ -7,6 +7,8 @@ import com.lebaoxun.modules.fastfood.entity.FoodProductCatEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodProductCatService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 餐品分类
@@ -51,6 +53,10 @@ public class FoodProductCatServiceHystrix implements IFoodProductCatService {
 
 	@Override
 	public ResponseMessage queryFoodMaterialById(Integer id) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+	@RequestMapping("/fastfood/foodproductcat/get_list")
+	public ResponseMessage get_list(@RequestParam Map<String, Object> params){
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
     

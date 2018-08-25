@@ -65,6 +65,12 @@ public interface IFoodProductCatService {
      */
     @RequestMapping("/fastfood/foodproductcat/queryFoodMaterialById")
     ResponseMessage queryFoodMaterialById(@RequestParam("id")Integer id);
+
+    /**
+     * 产品分类,终端显示
+     */
+    @RequestMapping("/fastfood/foodproductcat/get_list")
+    ResponseMessage get_list(@RequestParam Map<String, Object> params);
     
 }
 
