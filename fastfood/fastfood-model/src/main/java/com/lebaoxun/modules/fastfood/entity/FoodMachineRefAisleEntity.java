@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 取餐机通道产品关联，前端显示
@@ -18,7 +19,7 @@ public class FoodMachineRefAisleEntity implements Serializable {
 	/**
 	 * 机器渠道id集
 	 */
-	private String aisleIds;
+	private List<String> aisleIds;
 	/**
 	 * 机器id
 	 */
@@ -54,11 +55,11 @@ public class FoodMachineRefAisleEntity implements Serializable {
 	 */
 	private String aisleSize;
 
-	public String getAisleIds() {
+	public List<String> getAisleIds() {
 		return aisleIds;
 	}
 
-	public void setAisleIds(String aisleIds) {
+	public void setAisleIds(List<String> aisleIds) {
 		this.aisleIds = aisleIds;
 	}
 
