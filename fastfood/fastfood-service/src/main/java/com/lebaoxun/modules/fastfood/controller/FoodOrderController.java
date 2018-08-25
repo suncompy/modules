@@ -90,7 +90,6 @@ public class FoodOrderController {
 	 * 微信小程序支付订单
 	 * 
 	 * @param userId
-	 * @param isFirstOrder
 	 * @param dis
 	 * @param orderNo
 	 * @return
@@ -110,7 +109,7 @@ public class FoodOrderController {
     /**
 	 * 购物车下单
 	 * 
-	 * @param cartIds
+	 * @param macId
 	 */
     @RequestMapping("/fastfood/foodorder/createOrderByShoppingCart")
     @RedisLock(value="fastfood:foodorder:createOrderByShoppingCart:lock:#arg0")
@@ -124,7 +123,7 @@ public class FoodOrderController {
 	/**
 	 * 普通下单
 	 * 
-	 * @param orders
+	 * @param macId
 	 * @return
 	 */
     @RequestMapping("/fastfood/foodorder/createOrder")
@@ -193,5 +192,15 @@ public class FoodOrderController {
     		@RequestParam(value="size",required=false)Integer size,
     		@RequestParam(value="offset",required=false)Integer offset){
     	return ResponseMessage.ok(foodOrderService.findOrderByUser(userId, status, size, offset));
+    }
+    /**
+     * 根据取餐码获取订单接口
+     * @param macId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/take_food_code")
+    ResponseMessage takeFoodCode(@RequestParam("macId") Long macId,
+                        @RequestParam("takeFoodCode") Integer takeFoodCode){
+        return foodOrderService.getOrderNoByCode(macId,takeFoodCode);
     }
 }
