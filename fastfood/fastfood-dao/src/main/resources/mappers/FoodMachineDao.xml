@@ -155,6 +155,9 @@
 		<if test="catId != null and catId!=''">
 			and product.cat_id=#{catId}
 		</if>
+		<if test="pageSize != null and pageSize!=0 and pageNo != null and pageNo!=0">
+			and limit (#{pageNo}-1)* #{pageSize}, #{pageSize};
+		</if>
 	</select>
 	
 	<select id="searchMacByKeyword" resultMap="searchMap">
