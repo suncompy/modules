@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 取餐机
@@ -44,7 +45,7 @@ public interface FoodMachineService extends IService<FoodMachineEntity> {
     /**
      *查询机器关联产品
      */
-    List<Map<String, Object>> findByMacRefProductById(Integer macId);
+    List<Map<String, Object>> findByMacRefProductById(Integer pageSize,Integer pageNo,Integer macId,Integer catId);
     
     List<Map<String, Object>> search(String keyword);
 }

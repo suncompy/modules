@@ -25,6 +25,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineAisleService;
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
 import com.lebaoxun.modules.fastfood.service.FoodMachineService;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Service("foodMachineService")
@@ -136,7 +137,7 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
     }
 
     @Override
-    public List<Map<String, Object>> findByMacRefProductById(Integer macId) {
-        return this.baseMapper.findByMacRefProductById(macId);
+    public List<Map<String, Object>> findByMacRefProductById(Integer pageSize,Integer pageNo,Integer macId,Integer catId) {
+        return this.baseMapper.findByMacRefProductById(pageSize,pageNo,macId,catId);
     }
 }
