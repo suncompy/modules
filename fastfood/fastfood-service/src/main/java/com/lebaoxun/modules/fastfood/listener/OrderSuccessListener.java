@@ -27,8 +27,8 @@ import com.lebaoxun.upload.service.IQrcodeUploadService;
  *
  */
 @Component
-@RabbitListener(queues = "order.qrcode.create.queue")
-public class OrderQrCodeCreateListener {
+@RabbitListener(queues = "order.pay.success.queue")
+public class OrderSuccessListener {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -39,13 +39,13 @@ public class OrderQrCodeCreateListener {
 	private FoodOrderService foodOrderService;
 	
 	@Bean
-    public Queue queueQrcodeCreate() {
-        return new Queue("order.qrcode.create.queue",true);
+    public Queue queuePaySuccess() {
+        return new Queue("order.pay.success.queue",true);
     }
 
     @Bean
-    Binding bindingDirectExchangeAccountLog(Queue queueQrcodeCreate, DirectExchange directExchange) {
-        return BindingBuilder.bind(queueQrcodeCreate).to(directExchange).with("order.qrcode.create.queue");
+    Binding bindingDirectExchangeAccountLog(Queue queuePaySuccess, DirectExchange directExchange) {
+        return BindingBuilder.bind(queuePaySuccess).to(directExchange).with("order.pay.success.queue");
     }
 	
 	@RabbitHandler

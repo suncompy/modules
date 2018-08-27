@@ -1,5 +1,8 @@
 package com.lebaoxun.modules.fastfood.listener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -16,6 +19,7 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
 import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 
 /**
@@ -50,7 +54,12 @@ public class PayOrderListener {
 		String text = body.replace("\\\"", "\"");
 		JSONObject message = JSONObject.parseObject(text);
 		try {
-			String out_trade_no = message.getString("out_trade_no");
+			String orderNo = message.getString("order_no");
+			
+			Map<String,String> mqmessage = new HashMap<String,String>();
+			mqmessage.put("orderNo", orderNo);
+    		rabbitmqSender.sendContractDirect("order.pay.success.queue",
+    				new Gson().toJson(message));
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);
 			e.printStackTrace();

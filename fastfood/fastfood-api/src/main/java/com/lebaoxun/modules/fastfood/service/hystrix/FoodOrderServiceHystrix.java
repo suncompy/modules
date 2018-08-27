@@ -5,6 +5,7 @@ import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodOrderService;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,6 +68,12 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 	@Override
 	public ResponseMessage wxAppPayForOrder(Long userId, BigDecimal dis,
 			String spbill_create_ip, String payGroup, String openid,
+			String orderNo) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+	
+	@Override
+	public ResponseMessage balancePayForOrder(Long userId, BigDecimal dis,
 			String orderNo) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}

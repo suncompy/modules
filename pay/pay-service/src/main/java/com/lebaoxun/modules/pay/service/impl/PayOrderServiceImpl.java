@@ -68,19 +68,20 @@ public class PayOrderServiceImpl extends ServiceImpl<PayOrderDao, PayOrderEntity
 		order.setPayTime(buyTime);
 		order.setQueueKey(queue);
 		this.baseMapper.updateById(order);
-		sendNotify(order.getCreateUser().toString(), queue, out_trade_no, order
+		sendNotify(order.getCreateUser().toString(), queue, order.getOrderNo(), out_trade_no, order
 				.getRechargeFee().toString(), total_fee.toString(), tradeNo,
 				buyTime + "", order.getTradeType(), order.getMchId(), platform,
 				order.getGroup(),order.getScene());
 		return "sucess";
 	}
 	
-	private void sendNotify(String userId,String queueKey,String out_trade_no,String rechargeFee,String total_fee,String rransaction_id,
+	private void sendNotify(String userId,String queueKey,String orderNo,String out_trade_no,String rechargeFee,String total_fee,String rransaction_id,
 			String buyTime,String trade_type,String merc_no,String platform,String group,String scene){
 		Map<String,String> message = new HashMap<String,String>();
 		message.put("scene", scene);
 		message.put("group", group);
 		message.put("user_id", userId);
+		message.put("order_no", out_trade_no);
 		message.put("out_trade_no", out_trade_no);
 		message.put("recharge_fee", rechargeFee);
 		message.put("total_fee", total_fee);

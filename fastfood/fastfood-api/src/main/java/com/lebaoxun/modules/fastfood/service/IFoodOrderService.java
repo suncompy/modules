@@ -98,6 +98,19 @@ public interface IFoodOrderService {
 			@RequestParam("payGroup")String payGroup, 
 			@RequestParam("openid")String openid, 
 			@RequestParam("orderNo")String orderNo);
+    
+    /**
+	 * 余额支付
+	 * @param userId
+	 * @param dis
+	 * @param orderNo
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/balancePayForOrder")
+	ResponseMessage balancePayForOrder(
+			@RequestParam("userId") Long userId, 
+			@RequestParam("dis") BigDecimal dis,
+			@RequestParam("orderNo") String orderNo);
 	
     /**
 	 * 购物车下单

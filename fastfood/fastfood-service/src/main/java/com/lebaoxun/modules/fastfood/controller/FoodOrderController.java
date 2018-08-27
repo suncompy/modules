@@ -113,14 +113,7 @@ public class FoodOrderController {
 			@RequestParam("payGroup")String payGroup, 
 			@RequestParam("openid")String openid, 
 			@RequestParam("orderNo")String orderNo){
-    	ResponseMessage rm = foodOrderService.wxAppPayForOrder(userId, dis, spbill_create_ip, payGroup, openid, orderNo);
-    	if("0".equals(rm.getErrcode())){
-    		Map<String,String> message = new HashMap<String,String>();
-    		message.put("orderNo", orderNo);
-    		rabbitmqSender.sendContractDirect("account.log.queue",
-    				new Gson().toJson(message));
-    	}
-		return rm;
+		return foodOrderService.wxAppPayForOrder(userId, dis, spbill_create_ip, payGroup, openid, orderNo);
 	}
 	
     /**
@@ -138,7 +131,10 @@ public class FoodOrderController {
 			@RequestParam("orderNo") String orderNo){
     	ResponseMessage rm = foodOrderService.balancePayForOrder(userId, dis, orderNo);
     	if("0".equals(rm.getErrcode())){
-    		
+    		Map<String,String> message = new HashMap<String,String>();
+    		message.put("orderNo", orderNo);
+    		rabbitmqSender.sendContractDirect("order.pay.success.queue",
+    				new Gson().toJson(message));
     	}
 		return rm;
     }
