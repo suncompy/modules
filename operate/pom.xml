@@ -13,7 +13,7 @@
 	<module>operate-model</module>
 	<module>operate-dao</module>
 	<module>operate-api</module>
-	<!-- <module>operate-service</module> -->
+	<module>operate-service</module>
   </modules>
 
   <distributionManagement>    

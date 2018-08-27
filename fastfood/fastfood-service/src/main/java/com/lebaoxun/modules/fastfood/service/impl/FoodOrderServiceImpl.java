@@ -606,5 +606,4 @@ public class FoodOrderServiceImpl extends
 		result.put("orderTime",foodOrderEntity.getCreateTime());
 		return ResponseMessage.ok(result);
 	}
-
 }
