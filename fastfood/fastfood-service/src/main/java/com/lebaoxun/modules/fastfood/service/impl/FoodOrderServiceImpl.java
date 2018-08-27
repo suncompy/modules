@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 import com.lebaoxun.modules.fastfood.entity.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -589,6 +590,21 @@ public class FoodOrderServiceImpl extends
 			Integer code = (int) ((Math.random() * 9 + 1) * 100000);
 			operations.rightPushIfPresent(keyQueue, code);
 		}
+	}
+
+	public ResponseMessage getOrderStatus(Long orderId,String orderNo){
+		EntityWrapper<FoodOrderEntity> foodOrderWrapper=new EntityWrapper<FoodOrderEntity>();
+		if (orderId!=null&&orderId>0)
+			foodOrderWrapper.eq("id",orderId);
+		if (StringUtils.isNotEmpty(orderNo))
+			foodOrderWrapper.eq("order_no",orderNo);
+		FoodOrderEntity foodOrderEntity=this.selectOne(foodOrderWrapper);
+		Map<String,Object> result=Maps.newHashMap();
+		result.put("orderId",foodOrderEntity.getId());
+		result.put("orderNo",foodOrderEntity.getOrderNo());
+		result.put("status",foodOrderEntity.getOrderStatus());
+		result.put("orderTime",foodOrderEntity.getCreateTime());
+		return ResponseMessage.ok(result);
 	}
 
 }
