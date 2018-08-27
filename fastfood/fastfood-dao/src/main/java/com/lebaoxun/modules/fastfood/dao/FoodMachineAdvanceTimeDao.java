@@ -1,8 +1,12 @@
 package com.lebaoxun.modules.fastfood.dao;
 
-import com.lebaoxun.modules.fastfood.entity.FoodMachineAdvanceTimeEntity;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineAdvanceTimeEntity;
 
 /**
  * 取餐机预定时间配置
@@ -13,5 +17,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface FoodMachineAdvanceTimeDao extends BaseMapper<FoodMachineAdvanceTimeEntity> {
+	
+	List<FoodMachineAdvanceTimeEntity> findAdvanceTimeByMacId(@Param("macId")Integer macId);
 	
 }

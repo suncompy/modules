@@ -37,7 +37,8 @@ public class FoodWeekMenuController {
         PageUtils page = foodWeekMenuService.queryPage(params);
         return ResponseMessage.ok(page);
     }
-
+    
+    
 
     /**
      * 信息

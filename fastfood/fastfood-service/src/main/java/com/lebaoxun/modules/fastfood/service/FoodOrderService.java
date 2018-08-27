@@ -72,6 +72,16 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	FoodOrderEntity calCheckTotalFee(Long userId, BigDecimal dis,
 			FoodOrderEntity order);
 	
+	/**
+	 * 余额支付
+	 * @param userId
+	 * @param dis
+	 * @param orderNo
+	 * @return
+	 */
+	ResponseMessage balancePayForOrder(Long userId, BigDecimal dis,
+			String orderNo);
+	
 	List<FoodOrderEntity> findOrderByUser(Long userId,Integer status, Integer size,Integer offset);
 
 	void modifyQrCodeByOrderNo(String orderNo, String qrCode);

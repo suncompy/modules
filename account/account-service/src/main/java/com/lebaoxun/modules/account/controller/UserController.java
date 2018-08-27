@@ -134,6 +134,41 @@ public class UserController {
     }
     
     /**
+     * 余额支付
+     * @param userId 用户ID
+     * @param amount 变更数量
+     * @param adminId 操作人
+     * @param logType 带字母U开头，为用户本人操作产生的日志
+     * @param descr 操作说明
+     */
+    @RequestMapping("/account/user/balance/pay")
+    @RedisLock(value="account:user:balance:pay:lock:#arg0")
+    ResponseMessage balancePay(@RequestParam(value="userId") Long userId,
+    		@RequestParam(value="tradeMoney") BigDecimal tradeMoney,
+    		@RequestParam(value="platform",required=false) String platform,
+    		@RequestParam(value="adjunctInfo") String adjunctInfo,
+    		@RequestParam(value="descr",required=false) String descr){
+    	
+    	UserEntity user = userService.balancePay(userId, tradeMoney);
+    	String logType = "BALANCE_PAY";
+    	Date now = new Date();
+    	Map<String,String> message = new HashMap<String,String>();
+		String timestamp = now.getTime()+"";
+		message.put("userId", userId+"");
+		message.put("timestamp", timestamp);
+		message.put("logType", "BALANCE_PAY");
+		message.put("platform", platform);
+		message.put("tradeMoney", tradeMoney.toString());
+		message.put("money", user.getBalance().toString());
+		message.put("descr", descr);
+		message.put("adjunctInfo", adjunctInfo);
+		message.put("token", MD5.md5(logType+"_"+adjunctInfo));
+		rabbitmqSender.sendContractDirect("account.log.queue",
+				new Gson().toJson(message));
+		
+    	return ResponseMessage.ok();
+    }
+    /**
      * 修改头像
      * @param userId 用户ID
      * @param headimgurl 用户头像地址

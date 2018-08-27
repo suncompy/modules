@@ -75,6 +75,31 @@
 		and date_add(product.up_time, interval period day) > now();
     </select>
     
+    <select id="findProductByMacIdAndWeek" resultType="java.util.Map">
+		select 
+			t1.id,
+			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
+			product.id as productId,product.name as name,product.materials as materials,
+			product.show_price as showPrice, product.picture as picture,
+			product.unit as unit, product.zs_weight as zsWeight,
+			product.cp_weight as cpWeight, product.warm_flag as warmFlag,
+			product.warm_time as warmTime, product.hot_num as hotNum,
+			product.label as label, product.`status` as status,
+			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
+			product.keyword as keyword, product.descr as descr,
+			product.create_time as createTime,
+			pro_activity.activity_type as activity
+		from food_week_menu as t1 
+		left join food_product as product on product.id = t1.product_id
+		left join food_machine_aisle as aisle on aisle.product_id = t1.product_id
+		left join food_machine_pro_activity_ref as pro_activity on pro_activity.mac_id = aisle.mac_id and pro_activity.product_id = aisle.product_id
+		where 
+		t1.`week` = #{week}
+		and aisle.mac_id = #{macId}
+		and product.`status` = 1
+		and date_add(product.up_time, interval period day) > now();
+    </select>
+    
     <select id="findProductByAisle" resultType="java.util.Map">
         select 
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,

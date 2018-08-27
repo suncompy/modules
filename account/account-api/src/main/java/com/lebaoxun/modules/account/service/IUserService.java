@@ -79,6 +79,21 @@ public interface IUserService {
     		@RequestParam(value="descr",required=false) String descr);
     
     /**
+     * 余额支付
+     * @param userId 用户ID
+     * @param amount 变更数量
+     * @param adminId 操作人
+     * @param logType 带字母U开头，为用户本人操作产生的日志
+     * @param descr 操作说明
+     */
+    @RequestMapping("/account/user/balance/pay")
+    ResponseMessage balancePay(@RequestParam(value="userId") Long userId,
+    		@RequestParam(value="tradeMoney") BigDecimal tradeMoney,
+    		@RequestParam(value="platform",required=false) String platform,
+    		@RequestParam(value="adjunctInfo") String adjunctInfo,
+    		@RequestParam(value="descr",required=false) String descr);
+    
+    /**
      * 修改用户信息
      * @param userId
      * @param user

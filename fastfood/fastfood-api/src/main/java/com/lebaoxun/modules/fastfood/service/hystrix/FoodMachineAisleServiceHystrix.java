@@ -5,6 +5,7 @@ import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodMachineAisleService;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,12 +54,19 @@ public class FoodMachineAisleServiceHystrix implements IFoodMachineAisleService 
 			Integer productCatId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
 	@Override
 	public ResponseMessage findMachineAisleListByMacId(Integer macId){
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
 	@Override
 	public ResponseMessage refProductAndType(Long adminId,FoodMachineRefAisleEntity foodMachineAisle){
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage findProductByMacIdAndWeek(Integer macId, Integer week) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 }

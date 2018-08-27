@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAdvanceTimeEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodMachineAdvanceTimeServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
@@ -52,5 +53,7 @@ public interface IFoodMachineAdvanceTimeService {
     @RequestMapping("/fastfood/foodmachineadvancetime/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
+    @RequestMapping("/fastfood/foodmachineadvancetime/findAdvanceTimeByMacId")
+    ResponseMessage findAdvanceTimeByMacId(@RequestParam("macId")Integer macId);
 }
 

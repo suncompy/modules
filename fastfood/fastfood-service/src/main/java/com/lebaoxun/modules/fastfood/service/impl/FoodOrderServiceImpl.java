@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 
 import com.alibaba.fastjson.JSON;
+import com.lebaoxun.modules.account.service.IUserService;
 import com.lebaoxun.modules.fastfood.entity.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -89,6 +90,9 @@ public class FoodOrderServiceImpl extends
 
 	@Resource
 	private IWxPayService wxPayService;
+	
+	@Resource
+	private IUserService userService;
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -233,6 +237,36 @@ public class FoodOrderServiceImpl extends
 		}
 		String orderNo = "FD" + date + format1(inr, 5);
 		return orderNo;
+	}
+	
+	@Override
+	public ResponseMessage balancePayForOrder(Long userId, BigDecimal dis,
+			String orderNo) {
+		// TODO Auto-generated method stub
+		FoodOrderEntity order = this
+				.selectOne(new EntityWrapper<FoodOrderEntity>()
+						.eq("user_id", userId).eq("order_no", orderNo)
+						.eq("order_status", 0));
+		if (order == null) {
+			throw new I18nMessageException("60009", "订单不存在或已支付");
+		}
+		
+		List<FoodOrderChildsEntity> childs = foodOrderChildsDao
+				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq(
+						"user_id", userId).eq("order_id", order.getId()));
+		order.setChilds(childs);
+
+		this.calCheckTotalFee(userId, dis, order);
+
+		order.setPayType(2);// 1=余额支付
+		this.baseMapper.updateById(order);
+
+		for (FoodOrderChildsEntity child : childs) {
+			foodOrderChildsDao.updateById(child);
+		}
+
+		BigDecimal payAmount = order.getPayAmount();
+		return userService.balancePay(userId, payAmount, "", orderNo, "支付餐品订单");
 	}
 
 	@Override

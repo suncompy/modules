@@ -2,6 +2,7 @@ package com.lebaoxun.modules.fastfood.service;
 
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,5 +79,15 @@ public interface IFoodMachineAisleService {
      */
     @RequestMapping("/fastfood/foodmachineaisle/refProductAndType")
     ResponseMessage refProductAndType(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineRefAisleEntity foodMachineAisle);
+    
+    /**
+	 * 每周菜谱关联 机器产品列表
+	 * @param macId
+	 * @param week
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodmachineaisle/findProductByMacIdAndWeek")
+    ResponseMessage findProductByMacIdAndWeek(@RequestParam("macId") Integer macId, 
+    		@RequestParam("week")Integer week);
 }
 

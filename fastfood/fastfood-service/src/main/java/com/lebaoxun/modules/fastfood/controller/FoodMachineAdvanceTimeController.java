@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,11 @@ public class FoodMachineAdvanceTimeController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids){
 		foodMachineAdvanceTimeService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+    
+    @RequestMapping("/fastfood/foodmachineadvancetime/findAdvanceTimeByMacId")
+    ResponseMessage findAdvanceTimeByMacId(@RequestParam("macId")Integer macId){
+    	return ResponseMessage.ok(foodMachineAdvanceTimeService.findAdvanceTimeByMacId(macId));
     }
 
 }

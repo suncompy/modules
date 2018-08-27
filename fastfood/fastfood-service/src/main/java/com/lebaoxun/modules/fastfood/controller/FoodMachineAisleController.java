@@ -119,4 +119,10 @@ public class FoodMachineAisleController {
     		@RequestParam(value="productCatId",required=false)Integer productCatId){
     	return ResponseMessage.ok(foodMachineAisleService.findProductByMacIdAndProductCatId(macId, productCatId));
     }
+    
+    @RequestMapping("/fastfood/foodmachineaisle/findProductByMacIdAndWeek")
+    ResponseMessage findProductByMacIdAndWeek(@RequestParam("macId") Integer macId, 
+    		@RequestParam("week")Integer week){
+    	return ResponseMessage.ok(foodMachineAisleService.findProductByMacIdAndWeek(macId, week));
+    }
 }

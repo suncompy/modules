@@ -21,4 +21,4 @@ spring:
             enabled: true
 # Define the port where the Widget Foundry server would be running
 server:
-  port: 8099
+  port: 8100

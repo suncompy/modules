@@ -34,10 +34,6 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Resource(name="ossClient")
-	private OSSClient ossClient;
-	
-	@Value("${application.aliyuncloud.bucketName}")
 	private String bucketName;
 	
 	@Value("${application.aliyuncloud.endPoint}")
@@ -62,6 +58,7 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 	@Override
 	public byte[] readFileByBytes(String filePath) {
 		// TODO Auto-generated method stub
+		OSSClient ossClient = ossClient();
 		try{
 			InputStream in = null;
 			ByteArrayOutputStream bos = null;
@@ -101,6 +98,7 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 
 	@Override
 	public String uploadImg(String namespace, String imgStr, String fileType) {
+		OSSClient ossClient = ossClient();
 		String imgFileTempPath = "";
 		File file2 = null;
 		try {
@@ -140,6 +138,7 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 	@Override
 	public boolean deleteFile(String file) {
 		// TODO Auto-generated method stub
+		OSSClient ossClient = ossClient();
 		List<String> keys = new ArrayList<String>();
 		keys.add(file);
 		DeleteObjectsResult deleteObjectsResult = ossClient.deleteObjects(
@@ -149,6 +148,7 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 
 	@Override
 	public List<String> upload(String namespace, MultipartFile[] files) {
+		OSSClient ossClient = ossClient();
 		// TODO Auto-generated method stub
 		List<String> list = new ArrayList<String>();
 		if(files != null){

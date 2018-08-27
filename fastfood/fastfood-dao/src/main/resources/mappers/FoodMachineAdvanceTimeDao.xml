@@ -13,5 +13,7 @@
         <result property="createBy" column="create_by"/>
     </resultMap>
 
-
+	<select id="findAdvanceTimeByMacId" resultMap="foodMachineAdvanceTimeMap">
+	    select time from food_machine_advance_time where mac_id = #{macId}
+	</select>
 </mapper>

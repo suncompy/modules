@@ -128,7 +128,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void modifyBalance(Long userId,BigDecimal amount, String descr, Long adminId) {
+	public UserEntity modifyBalance(Long userId,BigDecimal amount, String descr, Long adminId) {
 		// TODO Auto-generated method stub
 		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
 		if(user == null){
@@ -138,6 +138,21 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setId(user.getId());
 		entity.setBalance(user.getBalance().add(amount));
 		this.updateById(entity);
+		return user;
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public UserEntity balancePay(Long userId, BigDecimal tradeMoney) {
+		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
+		if(user == null){
+			throw new I18nMessageException("500");
+		}
+		UserEntity entity = new UserEntity();
+		entity.setId(user.getId());
+		entity.setBalance(user.getBalance().subtract(tradeMoney));
+		this.updateById(entity);
+		return user;
 	}
 	
 	@Override

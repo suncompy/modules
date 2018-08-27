@@ -2,8 +2,11 @@ package com.lebaoxun.modules.fastfood.controller;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderChildsService;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
@@ -36,6 +42,9 @@ public class FoodOrderController {
 
     @Autowired
     private FoodOrderChildsService foodOrderChildsService;
+    
+    @Resource
+	private IRabbitmqSender rabbitmqSender;
 
     /**
      * 列表
@@ -104,9 +113,36 @@ public class FoodOrderController {
 			@RequestParam("payGroup")String payGroup, 
 			@RequestParam("openid")String openid, 
 			@RequestParam("orderNo")String orderNo){
-		return foodOrderService.wxAppPayForOrder(userId, dis, spbill_create_ip, payGroup, openid, orderNo);
+    	ResponseMessage rm = foodOrderService.wxAppPayForOrder(userId, dis, spbill_create_ip, payGroup, openid, orderNo);
+    	if("0".equals(rm.getErrcode())){
+    		Map<String,String> message = new HashMap<String,String>();
+    		message.put("orderNo", orderNo);
+    		rabbitmqSender.sendContractDirect("account.log.queue",
+    				new Gson().toJson(message));
+    	}
+		return rm;
 	}
 	
+    /**
+	 * 余额支付
+	 * @param userId
+	 * @param dis
+	 * @param orderNo
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/balancePayForOrder")
+    @RedisLock(value="fastfood:foodorder:balancePayForOrder:lock:#arg0")
+	ResponseMessage balancePayForOrder(
+			@RequestParam("userId") Long userId, 
+			@RequestParam("dis") BigDecimal dis,
+			@RequestParam("orderNo") String orderNo){
+    	ResponseMessage rm = foodOrderService.balancePayForOrder(userId, dis, orderNo);
+    	if("0".equals(rm.getErrcode())){
+    		
+    	}
+		return rm;
+    }
+    
     /**
 	 * 购物车下单
 	 * 

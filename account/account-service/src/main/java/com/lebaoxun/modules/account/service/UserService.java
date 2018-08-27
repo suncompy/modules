@@ -44,7 +44,9 @@ public interface UserService extends IService<UserEntity> {
      * @param logType 带字母U开头，为用户本人操作产生的日志
      * @param descr 操作说明
      */
-    void modifyBalance(Long userId,BigDecimal amount, String descr, Long adminId);
+    UserEntity modifyBalance(Long userId,BigDecimal amount, String descr, Long adminId);
+    
+    UserEntity balancePay(Long userId,BigDecimal tradeMoney);
     
     UserEntity recharge(Long userId,String orderNo,Long buyTime,String total_fee);
     

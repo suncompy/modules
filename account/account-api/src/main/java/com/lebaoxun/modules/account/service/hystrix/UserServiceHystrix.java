@@ -119,5 +119,11 @@ public class UserServiceHystrix implements IUserService {
 	public ResponseMessage modifyLastLogin(Long userId, Long lastLoginTime) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
+	@Override
+	public ResponseMessage balancePay(Long userId, BigDecimal tradeMoney,
+			String platform, String adjunctInfo, String descr) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 
