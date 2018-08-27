@@ -44,7 +44,7 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 
 	/**
 	 * 根据机器码返回所有未取餐订单
-	 * @param imei
+	 * @param imei 机器编号
 	 * @return
 	 */
 	List<Map<String, Object>> findOrderInfoByMacIMEI(String  imei);

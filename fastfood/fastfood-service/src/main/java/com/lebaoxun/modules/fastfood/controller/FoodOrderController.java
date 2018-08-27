@@ -216,4 +216,29 @@ public class FoodOrderController {
             return ResponseMessage.error("600001","orderId,orderNo至少有一个不为空!");
         return foodOrderService.getOrderStatus(orderId,orderNo);
     }
+
+    /**
+     * 机器创建扫码支付
+     *
+     * @param spbill_create_ip
+     * @param payGroup 支付码
+     * @return
+     */
+    @RequestMapping("/take_food/createOrderByMac")
+    @RedisLock(value="fastfood:foodorder:createOrderByMac:lock:#arg0")
+    ResponseMessage createOrderByMac(@RequestParam(value = "spbill_create_ip")String spbill_create_ip,
+                                     @RequestParam(value = "payGroup") String payGroup,
+                                     @RequestBody FoodOrderEntity order){
+        return foodOrderService.createOrderByMac(spbill_create_ip,payGroup,order);
+    }
+
+    /**
+     * 根据机器码返回所有未取餐订单
+     * @param imei 机器编号
+     * @return
+     */
+    @RequestMapping("/take_food/findOrderInfoByMacIMEI")
+    ResponseMessage findOrderInfoByMacIMEI(@RequestParam(value = "imei")String  imei){
+        return ResponseMessage.ok(foodOrderService.findOrderInfoByMacIMEI(imei));
+    }
 }
