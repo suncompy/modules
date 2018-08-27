@@ -9,6 +9,7 @@ import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 订单表
@@ -96,5 +97,7 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 * @return
 	 */
 	ResponseMessage createTakeFoodCode(Long macId, String orderNo);
+
+	ResponseMessage getOrderStatus(Long orderId,String orderNo);
 
 }

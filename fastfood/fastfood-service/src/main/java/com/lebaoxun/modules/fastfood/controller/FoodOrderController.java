@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -202,5 +203,17 @@ public class FoodOrderController {
     ResponseMessage takeFoodCode(@RequestParam("macId") Long macId,
                         @RequestParam("takeFoodCode") Integer takeFoodCode){
         return foodOrderService.getOrderNoByCode(macId,takeFoodCode);
+    }
+
+    /**
+     * 获取订单状态
+     * @return
+     */
+    @RequestMapping("/take_food/get_order_status")
+    ResponseMessage getOrderStatus(@RequestParam(value = "orderId",required = false) Long orderId,
+                          @RequestParam(value = "orderNo",required = false) String orderNo){
+        if ((orderId==null||orderId==0)&& StringUtils.isEmpty(orderNo))
+            return ResponseMessage.error("600001","orderId,orderNo至少有一个不为空!");
+        return foodOrderService.getOrderStatus(orderId,orderNo);
     }
 }

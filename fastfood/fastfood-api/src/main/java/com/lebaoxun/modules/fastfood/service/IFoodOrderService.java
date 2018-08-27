@@ -149,5 +149,13 @@ public interface IFoodOrderService {
 	@RequestMapping("/fastfood/foodorder/take_food_code")
 	ResponseMessage takeFoodCode(@RequestParam("macId") Long macId,
 						@RequestParam("takeFoodCode") Integer takeFoodCode);
+
+	/**
+	 * 获取订单状态
+	 * @return
+	 */
+	@RequestMapping("/take_food/get_order_status")
+	ResponseMessage getOrderStatus(@RequestParam(value = "orderId",required = false) Long orderId,
+						  @RequestParam(value = "orderNo",required = false) String orderNo);
 }
 
