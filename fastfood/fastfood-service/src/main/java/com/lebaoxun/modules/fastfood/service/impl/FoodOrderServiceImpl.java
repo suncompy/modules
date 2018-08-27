@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSON;
 import com.lebaoxun.modules.fastfood.entity.*;
 
 import org.apache.commons.lang.StringUtils;
@@ -553,12 +554,18 @@ public class FoodOrderServiceImpl extends
 		if (macId == null || macId == 0)
 			return ResponseMessage.error("600003", "缺少机器ID");
 		String key = "take:food:code:" + macId;
-		TakeFoodCodeEntity takeFoodCodeEntity = (TakeFoodCodeEntity) redisTemplate
-				.opsForHash().get(key, takeFoodCode);
+		String takeFoodCodeStr=Integer.toString(takeFoodCode);
+		HashOperations<String, String, String> operations = redisTemplate
+				.opsForHash();
+		System.out.print(operations.get(key,takeFoodCodeStr));
+		String takeFoodJson = operations.get(key, takeFoodCodeStr);
+		TakeFoodCodeEntity takeFoodCodeEntity =JSON.parseObject(takeFoodJson,TakeFoodCodeEntity.class);
 		if (takeFoodCodeEntity == null
 				|| takeFoodCodeEntity.getOrderNo() == null)
 			return ResponseMessage.error("600004", "数据异常");
-		return ResponseMessage.ok(takeFoodCodeEntity.getOrderNo());
+		Map<String,String> result=Maps.newHashMap();
+		result.put("orderNo",takeFoodCodeEntity.getOrderNo());
+		return ResponseMessage.ok(result);
 	}
 
 	@Override
@@ -566,20 +573,23 @@ public class FoodOrderServiceImpl extends
 		if (macId == null || macId == 0)
 			return ResponseMessage.error("600003", "缺少机器ID");
 		String key = "take:food:code:" + macId;
-		HashOperations<String, Integer, TakeFoodCodeEntity> operations = redisTemplate
+		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
+		System.out.println(operations.entries(key));
 		TakeFoodCodeEntity takeFoodCode = new TakeFoodCodeEntity(null,orderNo,
 				new Date().getTime());
+		String  takeFoodStr=JSON.toJSONString(takeFoodCode);
 		// 创建随机码
 		int i = 0;
 		boolean isOk = false;
-		Integer code = null;
+		String codeStr = null;
 		while (i < 10 && !isOk) {// 只尝试10次
-			code = (int) ((Math.random() * 9 + 1) * 100000);
-			isOk = operations.putIfAbsent(key, code, takeFoodCode);
+			int code = (int) ((Math.random() * 9 + 1) * 100000);
+			codeStr=Integer.toString(code);
+			isOk = operations.putIfAbsent(key, codeStr, takeFoodStr);
 			i++;
 		}
-		return ResponseMessage.ok(code);
+		return ResponseMessage.ok(codeStr);
 	}
 
 	public void initTakeFoodCodePool(Long macId, String orderNo) {

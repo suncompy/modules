@@ -206,6 +206,17 @@ public class FoodOrderController {
     }
 
     /**
+     * 根据取餐码获取订单接口
+     * @param macId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/createTakeFoodCode")
+    ResponseMessage createTakeFoodCode(@RequestParam("macId") Long macId,
+                                     @RequestParam("orderNo") String orderNo){
+        return foodOrderService.createTakeFoodCode(macId,orderNo);
+    }
+
+    /**
      * 获取订单状态
      * @return
      */
