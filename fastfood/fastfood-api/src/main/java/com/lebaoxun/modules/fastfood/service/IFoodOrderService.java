@@ -146,8 +146,8 @@ public interface IFoodOrderService {
 	 * @param macId
 	 * @return
 	 */
-	@RequestMapping("/fastfood/foodorder/take_food_code")
-	ResponseMessage takeFoodCode(@RequestParam("macId") Long macId,
+	@RequestMapping("/fastfood/foodorder/getOrderNoByCode")
+	ResponseMessage getOrderNoByCode(@RequestParam("macId") Long macId,
 						@RequestParam("takeFoodCode") Integer takeFoodCode);
 
 	/**
