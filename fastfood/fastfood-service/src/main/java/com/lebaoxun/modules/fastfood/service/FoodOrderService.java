@@ -32,7 +32,21 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 */
 	ResponseMessage wxAppPayForOrder(Long userId,BigDecimal dis, String spbill_create_ip, String payGroup, 
 			String openid, String orderNo);
+	
+	/**
+	 * 机器创建扫码支付
+	 * 
+	 * @param orders
+	 * @return
+	 */
+	ResponseMessage createOrderByMac(String spbill_create_ip, String payGroup,FoodOrderEntity order);
 
+	/**
+	 * 根据机器码返回所有未取餐订单
+	 * @param imei
+	 * @return
+	 */
+	List<Map<String, Object>> findOrderInfoByMacIMEI(String  imei);
 	/**
 	 * 购物车下单
 	 * 

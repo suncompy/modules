@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 
 /**
  * 用户反馈表
@@ -12,6 +13,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
  * @date 2018-08-07 20:01:34
  *
  */
+@TableName("user_feedback")
 public class UserFeedbackEntity implements Serializable{
 	@TableId
 	private long id;

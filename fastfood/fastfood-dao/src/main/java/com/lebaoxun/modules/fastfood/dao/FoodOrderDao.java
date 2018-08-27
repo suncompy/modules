@@ -21,6 +21,8 @@ import java.util.Map;
 @Mapper
 public interface FoodOrderDao extends BaseMapper<FoodOrderEntity> {
 	Map<String, Object> getSweeptCodeOrderInfo(@Param("orderId") String orderId);
+	
+	List<Map<String, Object>> findOrderInfoByMacIMEI(@Param("imei") String  imei);
 
 	List<FoodOrderEntity> findOrderByUser(@Param("userId") Long userId,
 			@Param("status") Integer status, 
