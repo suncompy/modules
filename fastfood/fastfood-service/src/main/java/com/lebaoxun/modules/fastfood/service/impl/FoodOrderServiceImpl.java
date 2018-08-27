@@ -568,7 +568,7 @@ public class FoodOrderServiceImpl extends
 		String key = "take:food:code:" + macId;
 		HashOperations<String, Integer, TakeFoodCodeEntity> operations = redisTemplate
 				.opsForHash();
-		TakeFoodCodeEntity takeFoodCode = new TakeFoodCodeEntity(orderNo,
+		TakeFoodCodeEntity takeFoodCode = new TakeFoodCodeEntity(null,orderNo,
 				new Date().getTime());
 		// 创建随机码
 		int i = 0;
