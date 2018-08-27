@@ -157,5 +157,25 @@ public interface IFoodOrderService {
 	@RequestMapping("/take_food/get_order_status")
 	ResponseMessage getOrderStatus(@RequestParam(value = "orderId",required = false) Long orderId,
 						  @RequestParam(value = "orderNo",required = false) String orderNo);
+
+	/**
+	 * 机器创建扫码支付
+	 *
+	 * @param spbill_create_ip
+	 * @param payGroup 支付码
+	 * @return
+	 */
+	@RequestMapping("/take_food/createOrderByMac")
+	ResponseMessage createOrderByMac(@RequestParam(value = "spbill_create_ip")String spbill_create_ip,
+									 @RequestParam(value = "payGroup") String payGroup,
+									 @RequestBody FoodOrderEntity order);
+
+	/**
+	 * 根据机器码返回所有未取餐订单
+	 * @param imei 机器编号
+	 * @return
+	 */
+	@RequestMapping("/take_food/findOrderInfoByMacIMEI")
+	ResponseMessage findOrderInfoByMacIMEI(@RequestParam(value = "imei")String  imei);
 }
 

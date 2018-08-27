@@ -6,6 +6,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodOrderService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
@@ -100,6 +101,16 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 	}
 	@Override
 	public ResponseMessage getOrderStatus(Long orderId,String orderNo){
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage createOrderByMac(@RequestParam(value = "spbill_create_ip") String spbill_create_ip, @RequestParam(value = "payGroup") String payGroup, @RequestBody FoodOrderEntity order) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage findOrderInfoByMacIMEI(@RequestParam(value = "imei") String imei) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
