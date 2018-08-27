@@ -55,9 +55,11 @@ public class PayOrderListener {
 		JSONObject message = JSONObject.parseObject(text);
 		try {
 			String orderNo = message.getString("order_no");
+			Long buy_time = message.getLong("buy_time");
 			
 			Map<String,String> mqmessage = new HashMap<String,String>();
 			mqmessage.put("orderNo", orderNo);
+			mqmessage.put("buyTime", buy_time+"");
     		rabbitmqSender.sendContractDirect("order.pay.success.queue",
     				new Gson().toJson(message));
 		}  catch (Exception e) {

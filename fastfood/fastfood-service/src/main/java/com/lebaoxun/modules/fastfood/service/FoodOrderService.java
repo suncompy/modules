@@ -9,6 +9,7 @@ import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -84,7 +85,14 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	
 	List<FoodOrderEntity> findOrderByUser(Long userId,Integer status, Integer size,Integer offset);
 
-	void modifyQrCodeByOrderNo(String orderNo, String qrCode);
+	/**
+	 * 支付订单成功接口
+	 * @param orderNo
+	 * @param qrCode
+	 * @param takeFoodCode
+	 * @return
+	 */
+	FoodOrderEntity payFoodOrder(String orderNo, String qrCode);
 
 	Map<String, Object> getSweeptCodeOrderInfo(String orderId);
 
@@ -106,7 +114,7 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 * @param orderNo
 	 * @return
 	 */
-	ResponseMessage createTakeFoodCode(Long macId, String orderNo);
+	Integer createTakeFoodCode(Integer macId, String orderNo);
 
 	ResponseMessage getOrderStatus(Long orderId,String orderNo);
 

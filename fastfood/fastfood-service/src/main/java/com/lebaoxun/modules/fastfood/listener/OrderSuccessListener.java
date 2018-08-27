@@ -1,5 +1,7 @@
 package com.lebaoxun.modules.fastfood.listener;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -18,7 +20,11 @@ import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.lebaoxun.commons.utils.MD5;
+import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 import com.lebaoxun.upload.service.IQrcodeUploadService;
 
 /**
@@ -37,6 +43,9 @@ public class OrderSuccessListener {
 	
 	@Resource
 	private FoodOrderService foodOrderService;
+	
+	@Resource
+	private IRabbitmqSender rabbitmqSender;
 	
 	@Bean
     public Queue queuePaySuccess() {
@@ -59,9 +68,29 @@ public class OrderSuccessListener {
 		logger.info("rabbit|sendContractDirect|message={}",message);
 		try {
 			String orderNo = message.getString("orderNo");
+			String buyTime = message.getString("buyTime");
 			Map<String,String> map = qrcodeUploadService.createAndUpload("aliyunCloud", "", orderNo);
 			String qrCode = map.get("uri");
-			foodOrderService.modifyQrCodeByOrderNo(orderNo, qrCode);
+			
+			//1.修改订单状态1=支付成功，2.设置取餐码 3.设置取餐码
+			FoodOrderEntity order = foodOrderService.payFoodOrder(orderNo, qrCode);
+			
+			if(order.getUserId() != null){
+				String logType = "PAY_FOOD_ORDER";
+				Map<String,String> pmessage = new HashMap<String,String>();
+				pmessage.put("userId", order.getUserId()+"");
+				pmessage.put("timestamp", buyTime);
+				pmessage.put("logType", logType);
+				pmessage.put("platform", null);
+				pmessage.put("tradeMoney", null);
+				pmessage.put("money", null);
+				pmessage.put("descr", "支付餐品订单");
+				pmessage.put("adjunctInfo", orderNo);
+				pmessage.put("token", MD5.md5(logType+"_"+orderNo));
+				
+				rabbitmqSender.sendContractDirect("account.log.queue",
+    					new Gson().toJson(message));
+			}
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);
 			e.printStackTrace();

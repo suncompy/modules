@@ -116,6 +116,12 @@ public class FoodOrderEntity implements Serializable {
 	
 	@TableField(exist=false)
 	private List<FoodOrderChildsEntity> childs;
+	
+	/**
+	 * 取餐码
+	 */
+	@TableField(exist=false)
+	private Integer takeFoodCode;
 
 	/**
 	 * 设置：订单ID
@@ -369,4 +375,11 @@ public class FoodOrderEntity implements Serializable {
 	public void setQrCode(String qrCode) {
 		this.qrCode = qrCode;
 	}
+	public Integer getTakeFoodCode() {
+		return takeFoodCode;
+	}
+	public void setTakeFoodCode(Integer takeFoodCode) {
+		this.takeFoodCode = takeFoodCode;
+	}
+	
 }

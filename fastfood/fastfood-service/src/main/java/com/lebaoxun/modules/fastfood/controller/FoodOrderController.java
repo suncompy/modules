@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.ResponseMessage;
-import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
@@ -243,9 +242,9 @@ public class FoodOrderController {
      * @return
      */
     @RequestMapping("/fastfood/foodorder/createTakeFoodCode")
-    ResponseMessage createTakeFoodCode(@RequestParam("macId") Long macId,
+    ResponseMessage createTakeFoodCode(@RequestParam("macId") Integer macId,
                                      @RequestParam("orderNo") String orderNo){
-        return foodOrderService.createTakeFoodCode(macId,orderNo);
+        return ResponseMessage.ok(foodOrderService.createTakeFoodCode(macId,orderNo));
     }
 
     /**

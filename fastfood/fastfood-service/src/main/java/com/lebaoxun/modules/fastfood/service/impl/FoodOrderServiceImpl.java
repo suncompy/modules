@@ -485,7 +485,7 @@ public class FoodOrderServiceImpl extends
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void modifyQrCodeByOrderNo(String orderNo, String qrCode) {
+	public synchronized FoodOrderEntity payFoodOrder(String orderNo, String qrCode) {
 		// TODO Auto-generated method stub
 		FoodOrderEntity order = this
 				.selectOne(new EntityWrapper<FoodOrderEntity>().eq("order_no",
@@ -493,8 +493,12 @@ public class FoodOrderServiceImpl extends
 		if (order == null) {
 			throw new I18nMessageException("60007", "订单不存在");
 		}
+		Integer takeFoodCode = createTakeFoodCode(order.getMacId(), orderNo);
 		order.setQrCode(qrCode);
+		order.setOrderStatus(1);
+		order.setTakeFoodCode(takeFoodCode);
 		this.baseMapper.updateById(order);
+		return order;
 	}
 
 	@Override
@@ -603,9 +607,9 @@ public class FoodOrderServiceImpl extends
 	}
 
 	@Override
-	public ResponseMessage createTakeFoodCode(Long macId, String orderNo) {
+	public Integer createTakeFoodCode(Integer macId, String orderNo) {
 		if (macId == null || macId == 0)
-			return ResponseMessage.error("600003", "缺少机器ID");
+			throw new I18nMessageException("600003", "缺少机器ID");
 		String key = "take:food:code:" + macId;
 		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
@@ -616,14 +620,14 @@ public class FoodOrderServiceImpl extends
 		// 创建随机码
 		int i = 0;
 		boolean isOk = false;
-		String codeStr = null;
+		Integer codeStr = null;
 		while (i < 10 && !isOk) {// 只尝试10次
 			int code = (int) ((Math.random() * 9 + 1) * 100000);
-			codeStr=Integer.toString(code);
-			isOk = operations.putIfAbsent(key, codeStr, takeFoodStr);
+			codeStr = code;
+			isOk = operations.putIfAbsent(key, codeStr+"", takeFoodStr);
 			i++;
 		}
-		return ResponseMessage.ok(codeStr);
+		return codeStr;
 	}
 
 	public void initTakeFoodCodePool(Long macId, String orderNo) {

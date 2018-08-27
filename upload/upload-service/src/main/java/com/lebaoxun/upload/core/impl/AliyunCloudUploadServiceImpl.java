@@ -51,6 +51,7 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 	
 	@Bean("ossClient")
 	OSSClient ossClient(){
+		logger.debug("endPoint={},acessKeyId={},accessKeySecret={},domain={},baseDir={}",endPoint,acessKeyId,accessKeySecret,domain,baseDir);
 		return new OSSClient(endPoint, acessKeyId,
         		accessKeySecret);
 	}
