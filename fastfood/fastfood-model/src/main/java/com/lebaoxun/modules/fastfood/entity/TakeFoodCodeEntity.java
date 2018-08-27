@@ -17,13 +17,24 @@ import java.util.List;
  */
 public class TakeFoodCodeEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private Long orderId;
     private String orderNo;
 	private Long timeStamp;
 	public TakeFoodCodeEntity(){}
-	public TakeFoodCodeEntity(String orderNo,Long timeStamp){
+	public TakeFoodCodeEntity(Long orderId,String orderNo,Long timeStamp){
+		this.orderId=orderId;
 		this.orderNo=orderNo;
 		this.timeStamp=timeStamp;
 	}
+
+	public Long getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
+
 	public String getOrderNo() {
 		return orderNo;
 	}
