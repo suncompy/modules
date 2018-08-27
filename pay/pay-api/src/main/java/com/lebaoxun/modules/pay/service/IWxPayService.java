@@ -81,7 +81,7 @@ public interface IWxPayService {
 			@RequestParam("attach") String attach, @RequestParam("group") String group, 
 			@RequestParam("userId") Long userId,
 			@RequestParam(value="rechargeFee",required=false)BigDecimal rechargeFee,
-			@RequestParam(value="scene",required=false)String scene) throws Exception;
+			@RequestParam(value="scene",required=false)String scene);
 	
 	/**
 	 * 微信APP支付付款

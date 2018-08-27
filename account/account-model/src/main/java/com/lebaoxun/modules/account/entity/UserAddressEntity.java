@@ -55,6 +55,10 @@ public class UserAddressEntity implements Serializable {
 	 */
 	private String name;
 	/**
+	 * 性别
+	 */
+	private Integer sex;
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;
@@ -173,4 +177,11 @@ public class UserAddressEntity implements Serializable {
 	public void setPos(String pos) {
 		this.pos = pos;
 	}
+	public Integer getSex() {
+		return sex;
+	}
+	public void setSex(Integer sex) {
+		this.sex = sex;
+	}
+	
 }

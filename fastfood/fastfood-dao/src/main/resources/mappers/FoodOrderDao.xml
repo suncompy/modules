@@ -103,6 +103,55 @@
         where order_t.id=#{orderId}
     </select>
     
+    <select id="findOrderInfoByMacIMEI" resultType="java.util.Map">
+    	SELECT
+            order_t.id AS orderId,
+            order_t.order_no AS orderNo,
+            order_t.user_id AS userId,
+            order_t.pay_type AS payType,
+            order_t.order_amount AS orderAmount,
+            order_t.red_packed_amount AS redPackedAmount,
+            order_t.order_score AS orderScore,
+            order_t.pay_amount AS payAmount,
+            order_t.coupon_fee AS couponFee,
+            order_t.activity_id AS activityId,
+            act. NAME AS activityName,
+            order_t.coupon_id AS couponId,
+            order_t.coupon_type AS couponType,
+            coupon.`name` AS couponName,
+            order_t.red_packed_id AS redPackedId,
+            order_t.buy_number AS buyNumber,
+            order_t.create_time AS orderTime
+        FROM
+            food_order order_t
+        LEFT JOIN operate_coupon coupon ON order_t.coupon_id = coupon.id
+        LEFT JOIN (
+            SELECT
+                1 activity_type,
+                NAME,
+                `use`
+            FROM
+                operate_activity_first_order
+            UNION ALL
+                SELECT
+                    2 activity_type,
+                    NAME,
+                    `use`
+                FROM
+                    operate_activity_keep_discount
+                UNION ALL
+                    SELECT
+                        3 activity_type,
+                        NAME,
+                        `use`
+                    FROM
+                        operate_activity_pay_cash_back
+        ) act ON order_t.activity_type = act.activity_type
+        where 
+        order_t.order_status = 1
+        and order_t.mac_id= (select id from food_machine where IMEI = #{imei})
+    </select>
+    
     <select id="findOrderByUser" resultMap="foodOrderMap" >
 		select * from food_order as t1
 		left join food_order_childs as t2 on t2.order_id = t1.id
