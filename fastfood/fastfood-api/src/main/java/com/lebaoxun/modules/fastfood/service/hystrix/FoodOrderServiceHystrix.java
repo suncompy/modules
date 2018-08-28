@@ -51,17 +51,22 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 	}
 
 	@Override
-	public ResponseMessage getSweeptCodeOrderInfo(@RequestParam("orderId") String orderId) {
+	public ResponseMessage getSweeptCodeOrderInfo(String orderId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage pushOrder(@RequestParam("orderId") Long orderId) {
+	public ResponseMessage pushOrder(Long orderId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage takeFoodCallback(@RequestParam("orderId") String orderId) {
+	public ResponseMessage takeFoodCallback(String orderId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage updateTakeNum(String orderId,String macId,String productId){
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
