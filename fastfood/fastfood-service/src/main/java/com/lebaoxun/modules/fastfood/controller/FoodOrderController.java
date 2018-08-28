@@ -223,6 +223,7 @@ public class FoodOrderController {
      * @param productId
      * @return
      */
+    @RequestMapping("/fastfood/foodorder/updateTakeNum")
     ResponseMessage updateTakeNum(
             @RequestParam("orderId") String orderId,
             @RequestParam("macId") String macId,
