@@ -13,6 +13,8 @@ import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.modules.fastfood.dao.FoodOrderChildsDao;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderChildsService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("foodOrderChildsService")
@@ -31,6 +33,12 @@ public class FoodOrderChildsServiceImpl extends ServiceImpl<FoodOrderChildsDao, 
     @Override
     public List<Map<String, Object>> getSweeptCodeOrderChildsInfo(String orderId) {
         return this.baseMapper.getSweeptCodeOrderChildsInfo(orderId);
+    }
+
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public long updateTakeNum(String orderId, String macId, String productId) {
+        return this.baseMapper.updateTakeNum(orderId,macId,productId);
     }
 
 }
