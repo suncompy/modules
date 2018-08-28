@@ -104,7 +104,8 @@ public class AdPosController {
             adPosMap.put("advertId",e.getId());
             adPosMap.put("advertCode",e.getPosCode());
             adPosMap.put("advertName",e.getPosName());
-            adPosMap.put("advertType",e.getFileType());
+            adPosMap.put("advertType",e.getPosType());
+            adPosMap.put("fileType",e.getFileType());
             adPosMap.put("url",e.getUrl());
             adPosResult.add(adPosMap);
         });
