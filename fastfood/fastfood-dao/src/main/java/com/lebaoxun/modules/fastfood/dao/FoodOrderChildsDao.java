@@ -18,4 +18,6 @@ import java.util.Map;
 @Mapper
 public interface FoodOrderChildsDao extends BaseMapper<FoodOrderChildsEntity> {
     public List<Map<String, Object>> getSweeptCodeOrderChildsInfo(@Param("orderId") String orderId);
+
+    public long updateTakeNum(@Param("orderId")String orderId,@Param("macId") String macId,@Param("productId") String productId);
 }
