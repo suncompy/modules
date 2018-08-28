@@ -9,8 +9,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +24,7 @@ import com.aliyun.oss.model.DeleteObjectsResult;
 import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
+import com.aliyun.oss.model.PutObjectResult;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.upload.core.IUploadService;
 
@@ -34,6 +33,7 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
+	@Value("${application.aliyuncloud.bucketName}")
 	private String bucketName;
 	
 	@Value("${application.aliyuncloud.endPoint}")
@@ -123,9 +123,19 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 			}
 			
 			// 生成jpeg图片
-			imgFileTempPath = "/" + namespace +"/"+ System.currentTimeMillis() + "." + fileType;//新生成的图片
-			ossClient.putObject(bucketName, imgFileTempPath, new FileInputStream(file2));
+			String fileName = System.currentTimeMillis() + "." + fileType;
+			imgFileTempPath = namespace +"/"+ fileName;//新生成的图片
 			
+			InputStream in = new FileInputStream(file2);
+			ObjectMetadata objectMetadata = new ObjectMetadata();
+			objectMetadata.setContentLength(in.available());
+			objectMetadata.setCacheControl("no-cache");
+			objectMetadata.setHeader("Pragma", "no-cache");
+			objectMetadata.setContentType(getcontentType(fileType));
+			objectMetadata.setContentDisposition("inline;filename=" + fileName);
+			// 上传文件
+			PutObjectResult putResult = ossClient.putObject(bucketName, imgFileTempPath, in, objectMetadata);
+			logger.debug("eTag={}",putResult.getETag());
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new I18nMessageException("-1","上传文件失败，请检查配置信息", e);
@@ -133,7 +143,7 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 			if(file2 != null)
 				file2.delete();
 		}
-        return domain + imgFileTempPath;
+        return domain +  "/" + imgFileTempPath;
 	}
 
 	@Override
@@ -160,7 +170,7 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
                 	try{
                 		// 取得当前上传文件的文件名称
                 		String fileName = file.getOriginalFilename();
-                		String fileType = fileName.substring(fileName.lastIndexOf("."),fileName.length());
+                		String fileType = fileName.substring(fileName.lastIndexOf("."));
                 		// 如果名称不为空,说明该文件存在，否则说明该文件不存在
                 		if (fileName.trim() != "") {
                 			newFile = new File(fileName);
@@ -169,10 +179,20 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
                 			outStream.close(); // 关闭文件输出流
                 			file.transferTo(newFile);
                 			// 生成文件
-                			String uri = "/" + namespace +"/"+ System.currentTimeMillis() + fileType;
+                			String uri = namespace +"/"+ System.currentTimeMillis() + fileType;
                 			// 上传到阿里云
-                			ossClient.putObject(bucketName, uri, new FileInputStream(newFile));
-                			list.add(domain + uri);
+                			
+                			InputStream in = new FileInputStream(newFile);
+                			ObjectMetadata objectMetadata = new ObjectMetadata();
+                			objectMetadata.setContentLength(in.available());
+                			objectMetadata.setCacheControl("no-cache");
+                			objectMetadata.setHeader("Pragma", "no-cache");
+                			objectMetadata.setContentType(getcontentType(fileType));
+                			objectMetadata.setContentDisposition("inline;filename=" + fileName);
+                			// 上传文件
+                			PutObjectResult putResult = ossClient.putObject(bucketName, uri, in, objectMetadata);
+                			logger.debug("eTag={}",putResult.getETag());
+                			list.add(domain + "/" + uri);
                 		}
                 	} catch (IOException e) {
             			e.printStackTrace();
@@ -187,4 +207,44 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 		}
 		return list;
 	}
+	
+	/**
+	 * Description: 判断OSS服务文件上传时文件的contentType
+	 *
+	 * @param FilenameExtension
+	 *            文件后缀
+	 * @return String
+	 */
+	public static String getcontentType(String filenameExtension) {
+		if (filenameExtension.equalsIgnoreCase("bmp")) {
+			return "image/bmp";
+		}
+		if (filenameExtension.equalsIgnoreCase("gif")) {
+			return "image/gif";
+		}
+		if (filenameExtension.equalsIgnoreCase("jpeg") || filenameExtension.equalsIgnoreCase("jpg")
+				|| filenameExtension.equalsIgnoreCase("png")) {
+			return "image/jpeg";
+		}
+		if (filenameExtension.equalsIgnoreCase("html")) {
+			return "text/html";
+		}
+		if (filenameExtension.equalsIgnoreCase("txt")) {
+			return "text/plain";
+		}
+		if (filenameExtension.equalsIgnoreCase("vsd")) {
+			return "application/vnd.visio";
+		}
+		if (filenameExtension.equalsIgnoreCase("pptx") || filenameExtension.equalsIgnoreCase("ppt")) {
+			return "application/vnd.ms-powerpoint";
+		}
+		if (filenameExtension.equalsIgnoreCase("docx") || filenameExtension.equalsIgnoreCase("doc")) {
+			return "application/msword";
+		}
+		if (filenameExtension.equalsIgnoreCase("xml")) {
+			return "text/xml";
+		}
+		return "image/jpeg";
+	}
+
 }
