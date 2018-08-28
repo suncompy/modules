@@ -165,6 +165,11 @@ public interface IFoodOrderService {
     		@RequestParam("status")Integer status, 
     		@RequestParam(value="size",required=false)Integer size,
     		@RequestParam(value="offset",required=false)Integer offset);
+    
+    
+    @RequestMapping("/fastfood/foodorder/findOrderInfoByUser")
+    ResponseMessage findOrderInfoByUser(@RequestParam("userId") Long userId,
+    		@RequestParam("orderNo") String orderNo);
 
 	/**
 	 * 根据取餐码获取订单接口

@@ -125,6 +125,11 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 	public ResponseMessage findOrderInfoByMacIMEI(@RequestParam(value = "imei") String imei) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
+	@Override
+	public ResponseMessage findOrderInfoByUser(Long userId, String orderNo) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 
 }
 

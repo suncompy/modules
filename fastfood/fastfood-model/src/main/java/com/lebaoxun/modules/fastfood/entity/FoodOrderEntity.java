@@ -106,6 +106,10 @@ public class FoodOrderEntity implements Serializable {
 	 */
 	private Date createTime;
 	/**
+	 * 取餐时间
+	 */
+	private Date takeFoodTime;
+	/**
 	 * 更新时间
 	 */
 	private Date updateTime;
@@ -380,6 +384,12 @@ public class FoodOrderEntity implements Serializable {
 	}
 	public void setTakeFoodCode(Integer takeFoodCode) {
 		this.takeFoodCode = takeFoodCode;
+	}
+	public Date getTakeFoodTime() {
+		return takeFoodTime;
+	}
+	public void setTakeFoodTime(Date takeFoodTime) {
+		this.takeFoodTime = takeFoodTime;
 	}
 	
 }

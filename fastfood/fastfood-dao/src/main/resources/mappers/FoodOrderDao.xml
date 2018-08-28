@@ -23,6 +23,7 @@
         <result property="source" column="source"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
+        <result property="takeFoodTime" column="take_food_time"/>
         <result property="couponType" column="coupon_type"/>
         <result property="couponFee" column="coupon_fee"/>
         
@@ -48,11 +49,11 @@
         order_no, user_id,pay_type,order_status,
         order_amount, red_packed_amount, order_score, pay_amount, buy_number,
         mac_id, activity_id, activity_type, coupon_id, red_packed_id,
-        source, create_time, update_time, coupon_type, coupon_fee) VALUES
+        source, create_time, update_time, take_food_time, coupon_type, coupon_fee) VALUES
         ( #{orderNo}, #{userId}, #{payType}, #{orderStatus},
         #{orderAmount}, #{redPackedAmount}, #{orderScore}, #{payAmount}, #{buyNumber},
         #{macId}, #{activityId}, #{activityType}, #{couponId}, #{redPackedId},
-        #{source}, #{createTime}, #{updateTime}, #{couponType}, #{couponFee});
+        #{source}, #{createTime}, #{updateTime}, #{takeFoodTime} ,#{couponType}, #{couponFee});
     </insert>
 
 
@@ -122,7 +123,8 @@
             coupon.`name` AS couponName,
             order_t.red_packed_id AS redPackedId,
             order_t.buy_number AS buyNumber,
-            order_t.create_time AS orderTime
+            order_t.create_time AS orderTime,
+            order_t.take_food_time as takeFoodTime
         FROM
             food_order order_t
         LEFT JOIN operate_coupon coupon ON order_t.coupon_id = coupon.id
@@ -168,5 +170,11 @@
 			</if>
 			#{size,jdbcType=INTEGER}
 		</if>
+    </select>
+    
+    <select id="findOrderInfoByUser" resultMap="foodOrderMap">
+        select * from food_order as t1
+		left join food_order_childs as t2 on t2.order_id = t1.id
+		where t1.user_id = #{userId} and order_no = #{orderNo}
     </select>
 </mapper>

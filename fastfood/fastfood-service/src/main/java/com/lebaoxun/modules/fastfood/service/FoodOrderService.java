@@ -87,6 +87,8 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 			String orderNo);
 	
 	List<FoodOrderEntity> findOrderByUser(Long userId,Integer status, Integer size,Integer offset);
+	
+	FoodOrderEntity findOrderInfoByUser(Long userId,String orderNo);
 
 	/**
 	 * 支付订单成功接口

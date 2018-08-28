@@ -244,6 +244,12 @@ public class FoodOrderController {
     		@RequestParam(value="offset",required=false)Integer offset){
     	return ResponseMessage.ok(foodOrderService.findOrderByUser(userId, status, size, offset));
     }
+    
+    @RequestMapping("/fastfood/foodorder/findOrderInfoByUser")
+    ResponseMessage findOrderInfoByUser(@RequestParam("userId") Long userId,
+    		@RequestParam("orderNo") String orderNo){
+    	return ResponseMessage.ok(foodOrderService.findOrderInfoByUser(userId, orderNo));
+    }
     /**
      * 根据取餐码获取订单接口
      * @param macId

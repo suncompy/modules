@@ -126,6 +126,7 @@ public class FoodOrderServiceImpl extends
 		// TODO Auto-generated method stub
 
 		order.setCreateTime(now);
+		order.setTakeFoodTime(now);
 		order.setOrderStatus(0);
 		order.setOrderNo(orderNo);
 
@@ -564,8 +565,10 @@ public class FoodOrderServiceImpl extends
 
 		String orderNo = getOrder(now);
 		// TODO Auto-generated method stub
-
 		order.setCreateTime(now);
+		if(order.getTakeFoodTime() == null){
+			order.setTakeFoodTime(now);
+		}
 		order.setUserId(userId);
 		order.setOrderStatus(0);
 		order.setOrderNo(orderNo);
@@ -817,6 +820,18 @@ public class FoodOrderServiceImpl extends
 			Integer size, Integer offset) {
 		// TODO Auto-generated method stub
 		return this.baseMapper.findOrderByUser(userId, status, size, offset);
+	}
+	
+	@Override
+	public FoodOrderEntity findOrderInfoByUser(Long userId, String orderNo) {
+		// TODO Auto-generated method stub
+		FoodOrderEntity order = this.baseMapper.findOrderInfoByUser(userId, orderNo); 
+		
+		String key = "take:food:code:" + order.getMacId();
+		HashOperations<String, String, String> operations = redisTemplate
+				.opsForHash();
+		//operations.get(key, orderNo);
+		return order;
 	}
 
 	@Override
