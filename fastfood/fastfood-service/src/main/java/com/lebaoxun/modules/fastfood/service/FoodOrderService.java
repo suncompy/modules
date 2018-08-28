@@ -66,12 +66,15 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 
 	/**
 	 * 计算订单金额，并验证产品是否有效
-	 * 
+	 * @param userId
+	 * @param dis
 	 * @param order
+	 * @param isCheckStock 是否校验库存
+	 * @param isCheckActivity 是否校验活动
 	 * @return
 	 */
 	FoodOrderEntity calCheckTotalFee(Long userId, BigDecimal dis,
-			FoodOrderEntity order);
+			FoodOrderEntity order,boolean isCheckStock,boolean isCheckActivity);
 	
 	/**
 	 * 余额支付
@@ -92,7 +95,7 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 * @param takeFoodCode
 	 * @return
 	 */
-	FoodOrderEntity payFoodOrder(String orderNo, String qrCode);
+	FoodOrderEntity payFoodOrder(String orderNo, String buyTime, String qrCode);
 
 	Map<String, Object> getSweeptCodeOrderInfo(String orderId);
 

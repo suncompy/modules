@@ -178,7 +178,7 @@ public class FoodOrderController {
     ResponseMessage calCheckTotalFee(@RequestParam("userId") Long userId,
     		@RequestParam(value="dis",required=false)BigDecimal dis,
     		@RequestBody FoodOrderEntity order){
-    	return ResponseMessage.ok(foodOrderService.calCheckTotalFee(userId,dis,order));
+    	return ResponseMessage.ok(foodOrderService.calCheckTotalFee(userId,dis,order,true,true));
     }
 
     /**

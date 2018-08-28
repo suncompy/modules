@@ -70,10 +70,10 @@ public class AliyunCloudUploadController {
 	
 	@RequestMapping(value="/upload/aliyuncloud/file",method=RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	ResponseMessage upload(@RequestParam("namespace") String namespace, 
-			@RequestPart("files") MultipartFile[] files){
+			@RequestPart("file") MultipartFile multipartFile){
 		List<String> file = null;
 		try{
-			file = uploadService.upload(namespace, files);
+			file = uploadService.upload(namespace, new MultipartFile[]{multipartFile});
 			return new ResponseMessage(file);
 		}catch(Exception e){
 			logger.error("uploadImg|error={}",e.fillInStackTrace());

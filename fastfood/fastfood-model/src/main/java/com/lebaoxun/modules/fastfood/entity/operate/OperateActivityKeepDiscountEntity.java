@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -21,7 +22,7 @@ public class OperateActivityKeepDiscountEntity implements Serializable {
 	/**
 	 * 
 	 */
-@TableId
+	@TableId
 	private Integer id=0;
 	/**
 	 * 活动名称
@@ -39,7 +40,7 @@ public class OperateActivityKeepDiscountEntity implements Serializable {
 	/**
 	 * 递增
 	 */
-	private Float proIncr;
+	private BigDecimal proIncr;
 	/**
 	 * 状态0=禁用，1=启用
 	 */
@@ -56,6 +57,14 @@ public class OperateActivityKeepDiscountEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	/**
+	 * 初始折扣率
+	 */
+	private BigDecimal initDis;
+	/**
+	 * 参加条件，订单满
+	 */
+	private BigDecimal joinRestrict;
 
 	/**
 	 * 设置：
@@ -108,13 +117,13 @@ public class OperateActivityKeepDiscountEntity implements Serializable {
 	/**
 	 * 设置：递增
 	 */
-	public void setProIncr(Float proIncr) {
+	public void setProIncr(BigDecimal proIncr) {
 		this.proIncr = proIncr;
 	}
 	/**
 	 * 获取：递增
 	 */
-	public Float getProIncr() {
+	public BigDecimal getProIncr() {
 		return proIncr;
 	}
 	/**
@@ -164,5 +173,17 @@ public class OperateActivityKeepDiscountEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public BigDecimal getInitDis() {
+		return initDis;
+	}
+	public void setInitDis(BigDecimal initDis) {
+		this.initDis = initDis;
+	}
+	public BigDecimal getJoinRestrict() {
+		return joinRestrict;
+	}
+	public void setJoinRestrict(BigDecimal joinRestrict) {
+		this.joinRestrict = joinRestrict;
 	}
 }

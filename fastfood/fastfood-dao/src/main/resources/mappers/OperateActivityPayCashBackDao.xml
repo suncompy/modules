@@ -18,5 +18,8 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <select id="findUnderwayActivity" resultMap="operateActivityPayCashBackMap" >
+        select * from operate_activity_pay_cash_back where `use` = 1  and date_add(start_time, interval period day) > now()
+    </select>
 
 </mapper>

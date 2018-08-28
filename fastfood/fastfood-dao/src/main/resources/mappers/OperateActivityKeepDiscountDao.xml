@@ -14,6 +14,8 @@
         <result property="remark" column="remark"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
+        <result property="initDis" column="init_dis"/>
+        <result property="joinRestrict" column="join_restrict"/>
     </resultMap>
 	
     <select id="findUnderwayActivity" resultMap="operateActivityKeepDiscountMap" >

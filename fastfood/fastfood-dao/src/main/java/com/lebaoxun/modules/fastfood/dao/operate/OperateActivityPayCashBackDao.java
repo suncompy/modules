@@ -15,5 +15,5 @@ import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEn
  */
 @Mapper
 public interface OperateActivityPayCashBackDao extends BaseMapper<OperateActivityPayCashBackEntity> {
-	OperateActivityKeepDiscountEntity findUnderwayActivity();
+	OperateActivityPayCashBackEntity findUnderwayActivity();
 }

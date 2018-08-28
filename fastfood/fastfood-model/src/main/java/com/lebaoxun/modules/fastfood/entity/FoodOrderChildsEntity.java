@@ -72,6 +72,14 @@ public class FoodOrderChildsEntity implements Serializable {
 	 */
 	private String activity;
 	/**
+	 * 活动优惠
+	 */
+	private BigDecimal activityFee;
+	/**
+	 * 活动ID
+	 */
+	private Integer activityId;
+	/**
 	 * 原价
 	 */
 	private BigDecimal costPrice;
@@ -228,5 +236,17 @@ public class FoodOrderChildsEntity implements Serializable {
 	}
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+	public BigDecimal getActivityFee() {
+		return activityFee;
+	}
+	public void setActivityFee(BigDecimal activityFee) {
+		this.activityFee = activityFee;
+	}
+	public Integer getActivityId() {
+		return activityId;
+	}
+	public void setActivityId(Integer activityId) {
+		this.activityId = activityId;
 	}
 }

@@ -1,6 +1,5 @@
 package com.lebaoxun.modules.fastfood.listener;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,11 +68,11 @@ public class OrderSuccessListener {
 		try {
 			String orderNo = message.getString("orderNo");
 			String buyTime = message.getString("buyTime");
-			Map<String,String> map = qrcodeUploadService.createAndUpload("aliyunCloud", "", orderNo);
+			Map<String,String> map = qrcodeUploadService.createAndUpload("aliyunCloud", "fastfood", orderNo);
 			String qrCode = map.get("uri");
 			
 			//1.修改订单状态1=支付成功，2.设置取餐码 3.设置取餐码
-			FoodOrderEntity order = foodOrderService.payFoodOrder(orderNo, qrCode);
+			FoodOrderEntity order = foodOrderService.payFoodOrder(orderNo, buyTime, qrCode);
 			
 			if(order.getUserId() != null){
 				String logType = "PAY_FOOD_ORDER";
@@ -89,7 +88,7 @@ public class OrderSuccessListener {
 				pmessage.put("token", MD5.md5(logType+"_"+orderNo));
 				
 				rabbitmqSender.sendContractDirect("account.log.queue",
-    					new Gson().toJson(message));
+    					new Gson().toJson(pmessage));
 			}
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);

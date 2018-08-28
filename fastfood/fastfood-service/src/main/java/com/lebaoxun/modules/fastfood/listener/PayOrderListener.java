@@ -61,7 +61,7 @@ public class PayOrderListener {
 			mqmessage.put("orderNo", orderNo);
 			mqmessage.put("buyTime", buy_time+"");
     		rabbitmqSender.sendContractDirect("order.pay.success.queue",
-    				new Gson().toJson(message));
+    				new Gson().toJson(mqmessage));
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);
 			e.printStackTrace();

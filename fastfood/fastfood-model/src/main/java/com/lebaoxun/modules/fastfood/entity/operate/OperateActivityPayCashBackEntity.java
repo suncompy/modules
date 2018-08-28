@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -30,7 +31,7 @@ public class OperateActivityPayCashBackEntity implements Serializable {
 	/**
 	 * 金额
 	 */
-	private Float amount;
+	private BigDecimal amount;
 	/**
 	 * 人次
 	 */
@@ -93,13 +94,13 @@ public class OperateActivityPayCashBackEntity implements Serializable {
 	/**
 	 * 设置：金额
 	 */
-	public void setAmount(Float amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 	/**
 	 * 获取：金额
 	 */
-	public Float getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 	/**

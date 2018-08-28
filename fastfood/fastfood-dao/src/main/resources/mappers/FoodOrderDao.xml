@@ -17,6 +17,7 @@
         <result property="macId" column="mac_id"/>
         <result property="activityId" column="activity_id"/>
         <result property="activityType" column="activity_type"/>
+        <result property="activityFee" column="activity_fee"/>
         <result property="couponId" column="coupon_id"/>
         <result property="redPackedId" column="red_packed_id"/>
         <result property="source" column="source"/>

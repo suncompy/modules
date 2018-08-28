@@ -12,20 +12,19 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.upload.service.hystrix.AliyunCloudUploadServiceServiceHystrix;
 
-
-@FeignClient(value="upload-service",fallback=AliyunCloudUploadServiceServiceHystrix.class)
+@FeignClient(value = "upload-service", fallback = AliyunCloudUploadServiceServiceHystrix.class)
 public interface IAliyunCloudUploadService {
 
-	@RequestMapping(value="/upload/aliyuncloud/img",method=RequestMethod.POST)
-	ResponseMessage uploadImg(@RequestParam("namespace") String namespace, 
+	@RequestMapping(value = "/upload/aliyuncloud/img", method = RequestMethod.POST)
+	ResponseMessage uploadImg(@RequestParam("namespace") String namespace,
 			@RequestParam("fileType") String fileType,
-			@RequestParam(value="check",required=false) Boolean check,
+			@RequestParam(value = "check", required = false) Boolean check,
 			@RequestBody String imgStr);
-	
-	@RequestMapping(value="/upload/aliyuncloud/file",method=RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	ResponseMessage upload(@RequestParam("namespace") String namespace, 
-			@RequestPart("files") MultipartFile[] files);
-	
-	@RequestMapping(value="/upload/aliyuncloud/file/delete",method=RequestMethod.GET)
+
+	@RequestMapping(value = "/upload/aliyuncloud/file", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_UTF8_VALUE }, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	ResponseMessage upload(@RequestParam("namespace") String namespace,
+			@RequestPart("file") MultipartFile multipartFile);
+
+	@RequestMapping(value = "/upload/aliyuncloud/file/delete", method = RequestMethod.GET)
 	ResponseMessage deleteFile(@RequestParam("file") String file);
 }

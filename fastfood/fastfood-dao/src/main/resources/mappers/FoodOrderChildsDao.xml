@@ -15,6 +15,11 @@
         <result property="productScore" column="product_score"/>
         <result property="productAmount" column="product_amount"/>
         <result property="status" column="status"/>
+        <result property="productName" column="product_name"/>
+        <result property="activityFee" column="activity_fee"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="activity" column="activity"/>
+        <result property="costPrice" column="cost_price"/>
     </resultMap>
 
     <!--扫码查询订单信息-->

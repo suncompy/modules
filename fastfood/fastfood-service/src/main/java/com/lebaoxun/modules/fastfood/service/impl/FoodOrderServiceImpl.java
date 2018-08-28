@@ -2,16 +2,14 @@ package com.lebaoxun.modules.fastfood.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
-
-import com.alibaba.fastjson.JSON;
-import com.lebaoxun.modules.account.service.IUserService;
-import com.lebaoxun.modules.fastfood.entity.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -25,14 +23,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
+import com.lebaoxun.modules.account.service.IUserService;
 import com.lebaoxun.modules.fastfood.dao.FoodMachineAisleDao;
 import com.lebaoxun.modules.fastfood.dao.FoodMachineDao;
 import com.lebaoxun.modules.fastfood.dao.FoodOrderChildsDao;
@@ -41,7 +43,15 @@ import com.lebaoxun.modules.fastfood.dao.FoodShoppingCartDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityFirstOrderDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityKeepDiscountDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityPayCashBackDao;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
+import com.lebaoxun.modules.fastfood.entity.TakeFoodCodeEntity;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 import com.lebaoxun.modules.operate.dao.OperateCouponRecordDao;
 import com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity;
@@ -78,7 +88,7 @@ public class FoodOrderServiceImpl extends
 
 	@Resource
 	private OperateActivityKeepDiscountDao operateActivityKeepDiscountDao;
-
+	
 	@Resource
 	private OperateActivityPayCashBackDao operateActivityPayCashBackDao;
 
@@ -93,7 +103,7 @@ public class FoodOrderServiceImpl extends
 	
 	@Resource
 	private IUserService userService;
-
+	
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
 		Page<FoodOrderEntity> page = this.selectPage(
@@ -109,8 +119,8 @@ public class FoodOrderServiceImpl extends
     	// TODO Auto-generated method stub
     	
     	Date now = new Date();
-		
-		this.calCheckTotalFee(null,null,order);
+    	
+		this.calCheckTotalFee(null,null,order, true, false);
 		
 		String orderNo = getOrder(now);
 		// TODO Auto-generated method stub
@@ -158,7 +168,7 @@ public class FoodOrderServiceImpl extends
 						"user_id", userId).eq("order_id", order.getId()));
 		order.setChilds(childs);
 
-		this.calCheckTotalFee(userId, dis, order);
+		this.calCheckTotalFee(userId, dis, order, false, true);
 
 		order.setPayType(1);// 1=在线支付
 		this.baseMapper.updateById(order);
@@ -256,7 +266,7 @@ public class FoodOrderServiceImpl extends
 						"user_id", userId).eq("order_id", order.getId()));
 		order.setChilds(childs);
 
-		this.calCheckTotalFee(userId, dis, order);
+		this.calCheckTotalFee(userId, dis, order, false, true);
 
 		order.setPayType(2);// 1=余额支付
 		this.baseMapper.updateById(order);
@@ -271,7 +281,7 @@ public class FoodOrderServiceImpl extends
 
 	@Override
 	public FoodOrderEntity calCheckTotalFee(Long userId, BigDecimal dis,
-			FoodOrderEntity order) {
+			FoodOrderEntity order,boolean isCheckStock,boolean isCheckActivity) {
 		// TODO Auto-generated method stub
 		if (order == null || order.getChilds() == null
 				|| order.getChilds().isEmpty()) {
@@ -284,8 +294,9 @@ public class FoodOrderServiceImpl extends
 
 		OperateActivityFirstOrderEntity firstOrderActivity = operateActivityFirstOrderDao
 				.findUnderwayActivity();
-		// OperateActivityKeepDiscountEntity keepDiscountActivity =
-		// operateActivityKeepDiscountDao.findUnderwayActivity();
+		OperateActivityKeepDiscountEntity keepDiscountActivity = operateActivityKeepDiscountDao
+				.findUnderwayActivity();
+		OperateActivityPayCashBackEntity payCashBackEntity = operateActivityPayCashBackDao.findUnderwayActivity();
 
 		BigDecimal totalFee = new BigDecimal("0.00"), payAmount = new BigDecimal(
 				"0.00");
@@ -293,7 +304,7 @@ public class FoodOrderServiceImpl extends
 		boolean isCalProductActivity = false;// 是否产品已有活动
 		boolean isCanUseCoupon = true;// 是否能使用优惠券
 
-		String firstOrderActivityType = "firstOrder";
+		String firstOrderActivityType = "1";
 
 		for (FoodOrderChildsEntity orderChild : order.getChilds()) {
 			Map<String, Object> aisle = foodMachineAisleDao.findProductByAisle(
@@ -312,7 +323,7 @@ public class FoodOrderServiceImpl extends
 
 			String productName = (String) aisle.get("productName");
 			Integer stock = (Integer) aisle.get("stock");
-			if (stock == null || stock < orderChild.getBuyNumber()) {
+			if (isCheckStock && (stock == null || stock < orderChild.getBuyNumber())) {
 				throw new I18nMessageException("60005", "‘" + productName
 						+ "’产品库存不足");
 			}
@@ -322,32 +333,85 @@ public class FoodOrderServiceImpl extends
 					.getBuyNumber()));
 			orderChild.setCostPrice(fee);
 			orderChild.setMacId(macId);
-			orderChild.setProductId(productId);
 			orderChild.setProductAmount(fee);
 			orderChild.setProductCatId(productCatId);
 			orderChild.setProductId(productId);
 			orderChild.setProductName(productName);
 			orderChild.setPrice(price);
 			orderChild.setStatus(0);
-
+			orderChild.setActivity(null);
+			orderChild.setActivityFee(null);
 			totalFee = totalFee.add(fee);
 			if (firstOrderActivityType.equals(aisle.get("activity"))
 					&& firstOrderActivity != null) {// 含有首单活动
-				if (isFirstOrder == true) {// 首单
-					fee = fee.subtract(firstOrderActivity.getAmount());
-					orderChild.setActivity(firstOrderActivityType);
+				if(isCheckActivity){
+					if (isFirstOrder == true) {// 首单
+						fee = fee.subtract(firstOrderActivity.getAmount());
+						orderChild.setActivity(firstOrderActivityType);
+						orderChild.setActivityFee(firstOrderActivity.getAmount());
+						orderChild.setActivityId(firstOrderActivity.getId());
+						isCalProductActivity = true;
+						isCanUseCoupon = false;
+					}
 				}
-				isCalProductActivity = true;
-				isCanUseCoupon = false;
 			}
-			/*
-			 * if("keepDiscount".equals(aisle.get("activity")) &&
-			 * keepDiscountActivity != null){//含有持续返利活动 String key =
-			 * keepDiscountKey+":product:"+productId;
-			 * 
-			 * fee = fee.subtract(firstOrderActivity.getAmount());
-			 * orderChild.setActivity("firstOrder"); isProductActivity = true; }
-			 */
+			
+			if ("2".equals(aisle.get("activity"))
+					&& keepDiscountActivity != null) {
+				if(isCheckActivity){
+					if(keepDiscountActivity.getJoinRestrict().compareTo(fee) >= 0){//满足参加活动状态
+						Integer count = getActivityFor("2", keepDiscountActivity.getId(), macId, productId, userId,"2");
+						if (count == 0) {//当天未参加
+							Date start = keepDiscountActivity.getStartTime(),
+									end = new Date();
+							if(start.after(end)){
+								logger.error("数据库时间与服务器时间不同步start={},end={}",start,end);
+							}else{
+								Calendar aCalendar = Calendar.getInstance();
+						        aCalendar.setTime(start);
+						        int day1 = aCalendar.get(Calendar.DAY_OF_YEAR);
+						        aCalendar.setTime(end);
+						        int day2 = aCalendar.get(Calendar.DAY_OF_YEAR);
+						        int days = day2-day1;
+						        
+								BigDecimal initDis = keepDiscountActivity.getInitDis();
+								BigDecimal keepDis = initDis.add(keepDiscountActivity.getProIncr().multiply(new BigDecimal(days))); 
+								logger.debug("cal before keepDis={},fee={}",keepDis,fee);
+								if(keepDis.compareTo(new BigDecimal("10")) >= 0){
+									keepDis = new BigDecimal("10");
+								}
+								logger.debug("cal after keepDis={},fee={}",keepDis,fee);
+								BigDecimal activityFee = fee.multiply(keepDis.divide(new BigDecimal(10)));
+								fee = fee.subtract(activityFee);
+								logger.debug("activity cal after fee={},activityFee={}",fee,activityFee);
+								orderChild.setActivity("2");
+								orderChild.setActivityFee(activityFee);
+								orderChild.setActivityId(keepDiscountActivity.getId());
+								isCalProductActivity = true;
+								isCanUseCoupon = false;
+							}
+						}
+					}
+				}
+			}
+			
+			if ("3".equals(aisle.get("activity"))
+					&& payCashBackEntity != null) {
+				if(isCheckActivity){
+					Integer count = getActivityFor("3", payCashBackEntity.getId(), macId, productId, null, null);
+					logger.debug("activity 3 count={},personTime={}",count,payCashBackEntity.getPersonTime());
+					if(count < payCashBackEntity.getPersonTime()){//人数
+						BigDecimal amount = payCashBackEntity.getAmount();
+						BigDecimal activityFee = amount.subtract(amount.multiply(new BigDecimal(count)));
+						logger.debug("activity cal after fee={}",fee);
+						orderChild.setActivity("3");
+						orderChild.setActivityFee(activityFee);
+						orderChild.setActivityId(payCashBackEntity.getId());
+						isCalProductActivity = true;
+						isCanUseCoupon = false;
+					}
+				}
+			}
 			payAmount = payAmount.add(fee);
 			logger.debug("price={},buyNumber={},fee={}", price,
 					orderChild.getBuyNumber(), fee);
@@ -360,12 +424,69 @@ public class FoodOrderServiceImpl extends
 		FoodMachineEntity mac = foodMachineDao.findByMacId(order.getMacId());
 		if (isCalProductActivity == false && mac.getActivitys() != null
 				&& mac.getActivitys().contains(firstOrderActivityType)) {
-			if (firstOrderActivity != null) {
-				isCanUseCoupon = false;
-				order.setActivityFee(firstOrderActivity.getAmount());
-				order.setActivityId(firstOrderActivity.getId());
-				order.setActivityType(firstOrderActivityType);
-				payAmount = payAmount.subtract(firstOrderActivity.getAmount());
+			if(isCheckActivity){
+				if (firstOrderActivity != null) {
+					isCanUseCoupon = false;
+					order.setActivityFee(firstOrderActivity.getAmount());
+					order.setActivityId(firstOrderActivity.getId());
+					order.setActivityType(firstOrderActivityType);
+					payAmount = payAmount.subtract(firstOrderActivity.getAmount());
+				}
+			}
+		}
+		
+		if (isCalProductActivity == false && mac.getActivitys() != null
+				&& mac.getActivitys().contains("2")) {
+			if(isCheckActivity){
+				if(keepDiscountActivity.getJoinRestrict().compareTo(payAmount) >= 0){//满足参加活动状态
+					Integer count = getActivityFor("2", keepDiscountActivity.getId(), order.getMacId(), null, userId, "2");
+					if (count == 0) {//当天未参加
+						Date start = keepDiscountActivity.getStartTime(),
+								end = new Date();
+						if(start.after(end)){
+							logger.error("数据库时间与服务器时间不同步start={},end={}",start,end);
+						}else{
+							Calendar aCalendar = Calendar.getInstance();
+					        aCalendar.setTime(start);
+					        int day1 = aCalendar.get(Calendar.DAY_OF_YEAR);
+					        aCalendar.setTime(end);
+					        int day2 = aCalendar.get(Calendar.DAY_OF_YEAR);
+					        int days = day2-day1;
+					        
+							BigDecimal initDis = keepDiscountActivity.getInitDis();
+							BigDecimal keepDis = initDis.add(keepDiscountActivity.getProIncr().multiply(new BigDecimal(days))); 
+							logger.debug("mac|cal before keepDis={},payAmount={}",keepDis,payAmount);
+							if(keepDis.compareTo(new BigDecimal("10")) >= 0){
+								keepDis = new BigDecimal("10");
+							}
+							
+							BigDecimal activityFee = payAmount.multiply(keepDis.divide(new BigDecimal(10)));
+							payAmount = payAmount.subtract(activityFee);
+							logger.debug("mac|cal after activityFee={},payAmount={}",activityFee,payAmount);
+							order.setActivityFee(activityFee);
+							order.setActivityId(keepDiscountActivity.getId());
+							order.setActivityType("2");
+							isCanUseCoupon = false;
+						}
+					}
+				}
+			}
+		}
+		
+		if (isCalProductActivity == false && mac.getActivitys() != null
+				&& mac.getActivitys().contains("3")) {
+			if(isCheckActivity){
+				Integer count = getActivityFor("3", payCashBackEntity.getId(), order.getMacId(), null, null, null);
+				logger.debug("mac|activity 3 count={},personTime={}",count,payCashBackEntity.getPersonTime());
+				if(count < payCashBackEntity.getPersonTime()){//人数
+					BigDecimal amount = payCashBackEntity.getAmount();
+					BigDecimal activityFee = amount.subtract(amount.multiply(new BigDecimal(count)));
+					logger.debug("mac|activity cal after payAmount={}",payAmount);
+					order.setActivityFee(activityFee);
+					order.setActivityId(payCashBackEntity.getId());
+					order.setActivityType("3");
+					isCanUseCoupon = false;
+				}
 			}
 		}
 
@@ -432,7 +553,7 @@ public class FoodOrderServiceImpl extends
 					+ "个尚未支付订单，请立即处理!");
 		}
 
-		this.calCheckTotalFee(userId, dis, order);
+		this.calCheckTotalFee(userId, dis, order, true, true);
 
 		/*
 		 * OperateActivityKeepDiscountEntity keepDiscountActivity =
@@ -485,7 +606,7 @@ public class FoodOrderServiceImpl extends
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public synchronized FoodOrderEntity payFoodOrder(String orderNo, String qrCode) {
+	public synchronized FoodOrderEntity payFoodOrder(String orderNo, String buyTime, String qrCode) {
 		// TODO Auto-generated method stub
 		FoodOrderEntity order = this
 				.selectOne(new EntityWrapper<FoodOrderEntity>().eq("order_no",
@@ -498,7 +619,118 @@ public class FoodOrderServiceImpl extends
 		order.setOrderStatus(1);
 		order.setTakeFoodCode(takeFoodCode);
 		this.baseMapper.updateById(order);
+		
+		putActivity(order,buyTime);
+		
 		return order;
+	}
+	
+	private void putActivity(FoodOrderEntity order, String buyTime){
+		if(order == null || order.getUserId() == null){
+			return;
+		}
+		String activity = order.getActivityType();
+		Integer macId = order.getMacId();
+		Long userId = order.getUserId();
+		
+		if(StringUtils.isBlank(order.getActivityType())){
+			//产品是否有活动
+			List<FoodOrderChildsEntity> childs = foodOrderChildsDao
+					.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq(
+							"user_id", userId).eq("order_id", order.getId()));
+			for(FoodOrderChildsEntity child : childs){
+				if("3".equals(order.getActivityType())){
+					String logType = "ACTIVITY_ORDER_BACK_MONEY";
+					Map<String,String> pmessage = new HashMap<String,String>();
+					
+					String unq = order.getOrderNo()+"_"+child.getActivity()+"_mac_"+order.getMacId()+"product_"+child.getProductId();
+					pmessage.put("out_trade_no", order.getOrderNo());
+					pmessage.put("recharge_fee", child.getActivityFee().toString());
+					pmessage.put("log_type", logType);
+					pmessage.put("descr", "活动返现");
+					pmessage.put("adjunctInfo", unq);
+					pmessage.put("user_id", order.getUserId()+"");
+					pmessage.put("buy_time", buyTime);
+					pmessage.put("token", MD5.md5(logType.toString()+"_"+unq));
+					
+					rabbitmqSender.sendContractDirect("account.balance.queue.award",
+	    					new Gson().toJson(pmessage));
+				}
+				putActivityFor(child.getActivity(), order.getActivityId(), macId, child.getProductId(), userId);
+			}
+		}else{
+			//处理机器活动
+			if(StringUtils.isNotBlank(order.getActivityType())){
+				if("3".equals(order.getActivityType())){//通知返现队列
+					String logType = "ACTIVITY_ORDER_BACK_MONEY";
+					Map<String,String> pmessage = new HashMap<String,String>();
+					String unq = order.getOrderNo()+"_"+activity+"_mac_"+order.getMacId();
+					pmessage.put("out_trade_no", order.getOrderNo());
+					pmessage.put("recharge_fee", order.getActivityFee().toString());
+					pmessage.put("log_type", logType);
+					pmessage.put("descr", "活动返现");
+					pmessage.put("adjunctInfo", unq);
+					pmessage.put("user_id", order.getUserId()+"");
+					pmessage.put("buy_time", buyTime);
+					pmessage.put("token", MD5.md5(logType.toString()+"_"+unq));
+					
+					rabbitmqSender.sendContractDirect("account.balance.queue.award",
+	    					new Gson().toJson(pmessage));
+				}
+				putActivityFor(activity, order.getActivityId(), macId, null, userId);
+			}
+		}
+	}
+	
+	private Integer putActivityFor(String activity,Integer activityId,Integer macId,Integer productId,Long userId){
+		HashOperations<String, String, Integer> operations = redisTemplate
+				.opsForHash();
+		String hashKey = Long.toString(userId);
+		
+		if("2".equals(activity)){//累计折扣活动，每人每天只能参加一次
+			hashKey += "_"+DateFormatUtils.format(new Date(), "yyyyMMdd");
+		}
+		String	key = "activitys:" + activity + ":" + activityId +":"+macId;
+		if(productId != null){
+			key += ":"+productId;
+		}
+		if(operations.hasKey(key, hashKey)){
+			operations.increment(key, hashKey, 1);
+		}else{
+			operations.put(key, hashKey, 1);
+		}
+		List<Integer> values = operations.values(key);
+		Integer total = 0;
+		for(Integer item : values){
+			total += item;
+		}
+		return total;
+	}
+	
+	private Integer getActivityFor(String activity,Integer activityId,Integer macId,Integer productId,Long userId,String flag){
+		HashOperations<String, String, Integer> operations = redisTemplate
+				.opsForHash();
+		
+		String	key = "activitys:" + activity + ":" + activityId + ":"+macId;
+		if(productId != null){
+			key += ":"+productId;
+		}
+		Integer total = 0;
+		if(userId == null){
+			List<Integer> values = operations.values(key);
+			for(Integer item : values){
+				total += item;
+			}
+		}else{
+			String hashKey = Long.toString(userId);
+			if("2".equals(flag)){//累计折扣活动，每人每天只能参加一次
+				hashKey += "_"+DateFormatUtils.format(new Date(), "yyyyMMdd");
+			}
+			if(operations.hasKey(key, hashKey)){
+				total = operations.get(key, hashKey);
+			}
+		}
+		return total;
 	}
 
 	@Override
@@ -595,7 +827,7 @@ public class FoodOrderServiceImpl extends
 		String takeFoodCodeStr=Integer.toString(takeFoodCode);
 		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
-		System.out.print(operations.get(key,takeFoodCodeStr));
+		logger.debug("operations.get({},{})={}",key,takeFoodCodeStr,operations.get(key,takeFoodCodeStr));
 		String takeFoodJson = operations.get(key, takeFoodCodeStr);
 		TakeFoodCodeEntity takeFoodCodeEntity =JSON.parseObject(takeFoodJson,TakeFoodCodeEntity.class);
 		if (takeFoodCodeEntity == null

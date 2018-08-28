@@ -17,7 +17,7 @@ public class AliyunCloudUploadServiceServiceHystrix implements IAliyunCloudUploa
 	}
 
 	@Override
-	public ResponseMessage upload(String namespace, MultipartFile[] files) {
+	public ResponseMessage upload(String namespace, MultipartFile multipartFile) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
