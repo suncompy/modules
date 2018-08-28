@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.upload.config.FeignMultipartSupportConfig;
 import com.lebaoxun.upload.service.hystrix.AliyunCloudUploadServiceServiceHystrix;
 
-@FeignClient(value = "upload-service", fallback = AliyunCloudUploadServiceServiceHystrix.class)
+@FeignClient(value = "upload-service", fallback = AliyunCloudUploadServiceServiceHystrix.class, configuration = FeignMultipartSupportConfig.class)
 public interface IAliyunCloudUploadService {
 
 	@RequestMapping(value = "/upload/aliyuncloud/img", method = RequestMethod.POST)
