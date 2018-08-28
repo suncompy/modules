@@ -80,6 +80,18 @@ public interface IFoodOrderService {
     @RequestMapping("/take_food/takeFoodCallback")
     ResponseMessage takeFoodCallback(
             @RequestParam("orderId") String orderId);
+
+	/**
+	 * 取餐回调更改已取餐商品数
+	 * @param orderId
+	 * @param productId
+	 * @return
+	 */
+	@RequestMapping("/fastfood/foodorder/updateTakeNum")
+	ResponseMessage updateTakeNum(
+			@RequestParam("orderId") String orderId,
+			@RequestParam("macId") String macId,
+			@RequestParam("productId") String productId);
     
     /**
 	 * 微信小程序支付订单

@@ -216,6 +216,25 @@ public class FoodOrderController {
             @RequestParam("orderId") String orderId){
         return foodOrderService.takeFoodCallback(orderId);
     }
+
+    /**
+     * 取餐回调更改已取餐商品数
+     * @param orderId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/updateTakeNum")
+    ResponseMessage updateTakeNum(
+            @RequestParam("orderId") String orderId,
+            @RequestParam("macId") String macId,
+            @RequestParam("productId") String productId){
+        long ret=foodOrderChildsService.updateTakeNum(orderId, macId, productId);
+        if (ret>0)
+            return ResponseMessage.ok();
+        else
+            return ResponseMessage.error("60001","更新失败");
+
+    }
     
     @RequestMapping("/fastfood/foodorder/findOrderByUser")
     ResponseMessage findOrderByUser(

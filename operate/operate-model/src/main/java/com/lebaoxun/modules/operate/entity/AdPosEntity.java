@@ -52,6 +52,19 @@ public class AdPosEntity implements Serializable {
 	private Long updateBy;
 
 	/**
+	 * 广告类型：0普通广告，1屏保，2轮播图
+	 */
+	private Integer posType;
+
+	public Integer getPosType() {
+		return posType;
+	}
+
+	public void setPosType(Integer posType) {
+		this.posType = posType;
+	}
+
+	/**
 	 * 设置：
 	 */
 	public void setId(Integer id) {

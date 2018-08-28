@@ -25,5 +25,7 @@ public interface FoodOrderChildsService extends IService<FoodOrderChildsEntity> 
      * @return
      */
     public List<Map<String, Object>> getSweeptCodeOrderChildsInfo(String orderId);
+
+    long updateTakeNum(String orderId,String macId,String productId);
 }
 

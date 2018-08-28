@@ -94,7 +94,7 @@ public class AdPosController {
         if (StringUtils.isNotEmpty(advertCode))
             entityWrapper.eq("pos_code",advertCode);
         if (StringUtils.isNotEmpty(advertType))
-            entityWrapper.eq("file_type",advertType);
+            entityWrapper.eq("pos_type",advertType);
         List<Map<String,Object>> adPosResult= Lists.newArrayList();
         List<AdPosEntity> adPosEntityList=adPosService.selectList(entityWrapper);
         if (adPosEntityList==null||adPosEntityList.size()==0)
@@ -104,7 +104,8 @@ public class AdPosController {
             adPosMap.put("advertId",e.getId());
             adPosMap.put("advertCode",e.getPosCode());
             adPosMap.put("advertName",e.getPosName());
-            adPosMap.put("advertType",e.getFileType());
+            adPosMap.put("advertType",e.getPosType());
+            adPosMap.put("fileType",e.getFileType());
             adPosMap.put("url",e.getUrl());
             adPosResult.add(adPosMap);
         });

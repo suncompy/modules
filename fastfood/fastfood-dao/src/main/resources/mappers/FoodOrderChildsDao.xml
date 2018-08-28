@@ -44,4 +44,14 @@
         AND childs.product_id = aisle.product_id
         where childs.order_id=#{orderId}
     </select>
+    
+    <update id="updateTakeNum">
+        UPDATE food_order_childs f
+        SET f.take_food_num = f.take_food_num + 1
+        WHERE
+        f.order_id = #{orderId}
+        AND f.mac_id = #{macId}
+        AND f.product_id = #{productId}
+        AND f.take_food_num &lt; f.buy_number
+    </update>
 </mapper>
