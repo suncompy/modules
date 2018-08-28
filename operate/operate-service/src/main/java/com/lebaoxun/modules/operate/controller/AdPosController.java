@@ -94,7 +94,7 @@ public class AdPosController {
         if (StringUtils.isNotEmpty(advertCode))
             entityWrapper.eq("pos_code",advertCode);
         if (StringUtils.isNotEmpty(advertType))
-            entityWrapper.eq("file_type",advertType);
+            entityWrapper.eq("pos_type",advertType);
         List<Map<String,Object>> adPosResult= Lists.newArrayList();
         List<AdPosEntity> adPosEntityList=adPosService.selectList(entityWrapper);
         if (adPosEntityList==null||adPosEntityList.size()==0)
