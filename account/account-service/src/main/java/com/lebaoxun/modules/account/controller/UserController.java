@@ -156,13 +156,42 @@ public class UserController {
 		String timestamp = now.getTime()+"";
 		message.put("userId", userId+"");
 		message.put("timestamp", timestamp);
-		message.put("logType", "BALANCE_PAY");
+		message.put("logType", logType);
 		message.put("platform", platform);
 		message.put("tradeMoney", tradeMoney.toString());
 		message.put("money", user.getBalance().toString());
 		message.put("descr", descr);
 		message.put("adjunctInfo", adjunctInfo);
-		message.put("token", MD5.md5(logType+"_"+adjunctInfo));
+		message.put("token", MD5.md5(logType+"_"+timestamp+"_"+adjunctInfo));
+		rabbitmqSender.sendContractDirect("account.log.queue",
+				new Gson().toJson(message));
+		
+    	return ResponseMessage.ok();
+    }
+    
+    @RequestMapping("/account/user/score/pay")
+    @RedisLock(value="account:user:score:pay:lock:#arg0")
+    ResponseMessage scorePay(@RequestParam(value="userId")Long userId, 
+    		Integer score,
+    		@RequestParam(value="platform",required=false) String platform,
+    		@RequestParam(value="adjunctInfo") String adjunctInfo,
+    		@RequestParam(value="descr",required=false) String descr){
+    	
+    	UserEntity user = userService.scorePay(userId, score);
+    	String logType = "SCORE_PAY";
+    	Date now = new Date();
+    	Map<String,String> message = new HashMap<String,String>();
+		String timestamp = now.getTime()+"";
+		message.put("userId", userId+"");
+		message.put("timestamp", timestamp);
+		message.put("logType", logType);
+		message.put("platform", platform);
+		message.put("tradeMoney", null);
+		message.put("score", user.getSource().toString());
+		message.put("tradeScore", score.toString());
+		message.put("descr", descr);
+		message.put("adjunctInfo", adjunctInfo);
+		message.put("token", MD5.md5(logType+"_"+timestamp+"_"+adjunctInfo));
 		rabbitmqSender.sendContractDirect("account.log.queue",
 				new Gson().toJson(message));
 		

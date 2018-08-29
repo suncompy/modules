@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -43,6 +44,7 @@ import com.lebaoxun.modules.fastfood.dao.FoodShoppingCartDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityFirstOrderDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityKeepDiscountDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperateActivityPayCashBackDao;
+import com.lebaoxun.modules.fastfood.dao.operate.OperatePrizeGetLogDao;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
@@ -52,6 +54,7 @@ import com.lebaoxun.modules.fastfood.entity.TakeFoodCodeEntity;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEntity;
+import com.lebaoxun.modules.fastfood.entity.operate.OperatePrizeGetLogEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 import com.lebaoxun.modules.operate.dao.OperateCouponRecordDao;
 import com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity;
@@ -104,6 +107,9 @@ public class FoodOrderServiceImpl extends
 	@Resource
 	private IUserService userService;
 	
+	@Resource
+	private OperatePrizeGetLogDao operatePrizeGetLogDao;
+	
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
 		Page<FoodOrderEntity> page = this.selectPage(
@@ -142,6 +148,7 @@ public class FoodOrderServiceImpl extends
 			foodMachineAisleDao.updateById(aisle);
 			foodOrderChildsDao.insert(child);
 		}
+		order.setSource("MAC");
 		order.setPayType(1);//1=在线支付
     	this.baseMapper.updateById(order);
 		
@@ -251,6 +258,7 @@ public class FoodOrderServiceImpl extends
 	}
 	
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public ResponseMessage balancePayForOrder(Long userId, BigDecimal dis,
 			String orderNo) {
 		// TODO Auto-generated method stub
@@ -277,9 +285,13 @@ public class FoodOrderServiceImpl extends
 		}
 
 		BigDecimal payAmount = order.getPayAmount();
-		return userService.balancePay(userId, payAmount, "", orderNo, "支付餐品订单");
+		ResponseMessage rm = userService.balancePay(userId, payAmount, "", orderNo, "支付餐品订单");
+		if("0".equals(rm.getErrcode())){
+			return rm;
+		}
+		throw new I18nMessageException(rm.getErrcode(),rm.getErrmsg());
 	}
-
+	
 	@Override
 	public FoodOrderEntity calCheckTotalFee(Long userId, BigDecimal dis,
 			FoodOrderEntity order,boolean isCheckStock,boolean isCheckActivity) {
@@ -534,6 +546,64 @@ public class FoodOrderServiceImpl extends
 		order.setPayAmount(payAmount);
 		return order;
 	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public FoodOrderEntity prizeExchangeForOrder(Long userId, Integer prizeLogId) {
+		// TODO Auto-generated method stub
+		
+		OperatePrizeGetLogEntity log = operatePrizeGetLogDao.findLogById(userId, prizeLogId);
+		if(log == null || log.getStatus() != 0){
+			throw new I18nMessageException("70005","奖品已兑换");
+		}
+		if(log.getAisle() == null){
+			throw new I18nMessageException("70006","奖品不支持订单兑换");
+		}
+		FoodMachineAisleEntity aisle = new FoodMachineAisleEntity();
+		aisle.setId(log.getAisle());
+		aisle = foodMachineAisleDao.selectOne(aisle);
+		
+		FoodOrderEntity order = new FoodOrderEntity();
+		order.setMacId(aisle.getMacId());
+		order.setSource("PRIZE_EXCHANGE");
+		order.setPayType(3);
+		order.setOrderStatus(0);
+		order.setUserId(userId);
+		
+		FoodOrderChildsEntity child = new FoodOrderChildsEntity();
+		child.setAisleId(log.getAisle());
+		child.setBuyNumber(1);
+		child.setMacId(aisle.getMacId());
+		child.setProductId(aisle.getProductId());
+		child.setProductCatId(aisle.getProductCatId());
+		child.setStatus(0);
+		List<FoodOrderChildsEntity> childs = new ArrayList<FoodOrderChildsEntity>();
+		childs.add(child);
+		order.setChilds(childs);
+		this.calCheckTotalFee(userId, null, order, true, false);
+		
+		Date now = new Date();
+		String orderNo = getOrder(now);
+		// TODO Auto-generated method stub
+		order.setCreateTime(now);
+		if(order.getTakeFoodTime() == null){
+			order.setTakeFoodTime(now);
+		}
+		order.setOrderNo(orderNo);
+
+		this.baseMapper.insert(order);
+
+		for (FoodOrderChildsEntity c : childs) {
+			c.setOrderId(order.getId());
+			FoodMachineAisleEntity macAisle = new FoodMachineAisleEntity();
+			macAisle.setId(c.getAisleId());
+			macAisle = foodMachineAisleDao.selectOne(aisle);
+			macAisle.setStock(macAisle.getStock() - c.getBuyNumber());
+			foodMachineAisleDao.updateById(aisle);
+			foodOrderChildsDao.insert(c);
+		}
+		return order;
+	}
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
@@ -569,6 +639,7 @@ public class FoodOrderServiceImpl extends
 		if(order.getTakeFoodTime() == null){
 			order.setTakeFoodTime(now);
 		}
+		order.setSource("NORMAL");
 		order.setUserId(userId);
 		order.setOrderStatus(0);
 		order.setOrderNo(orderNo);
@@ -819,18 +890,33 @@ public class FoodOrderServiceImpl extends
 	public List<FoodOrderEntity> findOrderByUser(Long userId, Integer status,
 			Integer size, Integer offset) {
 		// TODO Auto-generated method stub
-		return this.baseMapper.findOrderByUser(userId, status, size, offset);
+		List<FoodOrderEntity> list = this.baseMapper.findOrderByUser(userId, status, size, offset);
+		
+		if(list != null && !list.isEmpty()){
+			for(FoodOrderEntity order: list){
+				String key = "take:food:code:" + order.getMacId();
+				HashOperations<String, String, String> operations = redisTemplate
+						.opsForHash();
+				if(redisTemplate.hasKey(key)){
+					Map<String,String> entries = operations.entries(key);
+					order.setTakeFoodCode(getTakeFoodCode(entries, order.getOrderNo()));
+				}
+			}
+		}
+		return list;
 	}
 	
 	@Override
 	public FoodOrderEntity findOrderInfoByUser(Long userId, String orderNo) {
 		// TODO Auto-generated method stub
 		FoodOrderEntity order = this.baseMapper.findOrderInfoByUser(userId, orderNo); 
-		
 		String key = "take:food:code:" + order.getMacId();
 		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
-		//operations.get(key, orderNo);
+		if(redisTemplate.hasKey(key)){
+			Map<String,String> entries = operations.entries(key);
+			order.setTakeFoodCode(getTakeFoodCode(entries, orderNo));
+		}
 		return order;
 	}
 
@@ -853,6 +939,18 @@ public class FoodOrderServiceImpl extends
 		return ResponseMessage.ok(result);
 	}
 
+	private Integer getTakeFoodCode(Map<String,String> entries,String orderNo){
+		if(entries != null){
+			for(String code : entries.keySet()){
+				String  takeFoodStr = entries.get(code);
+				TakeFoodCodeEntity tfc = JSONObject.parseObject(takeFoodStr, TakeFoodCodeEntity.class);
+				if(orderNo.equals(tfc.getOrderNo())){
+					return Integer.parseInt(takeFoodStr);
+				}
+			}
+		}
+		return null;
+	}
 	@Override
 	public Integer createTakeFoodCode(Integer macId, String orderNo) {
 		if (macId == null || macId == 0)
@@ -860,7 +958,7 @@ public class FoodOrderServiceImpl extends
 		String key = "take:food:code:" + macId;
 		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
-		System.out.println(operations.entries(key));
+		logger.debug("{}",operations.entries(key));
 		TakeFoodCodeEntity takeFoodCode = new TakeFoodCodeEntity(null,orderNo,
 				new Date().getTime());
 		String  takeFoodStr=JSON.toJSONString(takeFoodCode);

@@ -94,6 +94,22 @@ public interface IUserService {
     		@RequestParam(value="descr",required=false) String descr);
     
     /**
+     * 积分支付
+     * @param userId 用户ID
+     * @param score 变更数量
+     * @param platform
+     * @param adjunctInfo
+     * @param descr
+     * @return
+     */
+    @RequestMapping("/account/user/score/pay")
+    ResponseMessage scorePay(@RequestParam(value="userId")Long userId, 
+    		Integer score,
+    		@RequestParam(value="platform",required=false) String platform,
+    		@RequestParam(value="adjunctInfo") String adjunctInfo,
+    		@RequestParam(value="descr",required=false) String descr);
+    
+    /**
      * 修改用户信息
      * @param userId
      * @param user

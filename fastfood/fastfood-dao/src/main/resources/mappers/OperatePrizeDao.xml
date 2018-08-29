@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.fastfood.dao.operate.OperatePrizeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.operate.OperatePrizeEntity" id="operatePrizeMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="icon" column="icon"/>
+        <result property="aisle" column="aisle"/>
+        <result property="weight" column="weight"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isDefault" column="is_default"/>
+        <result property="status" column="status"/>
+        <result property="group" column="group"/>
+        <result property="score" column="score"/>
+    </resultMap>
+
+    <select id="findPrizeByGroup" resultMap="operatePrizeMap">
+        select id,name,icon,aisle,score from operate_prize where group = #{group} and status = 1
+    </select>
+</mapper>

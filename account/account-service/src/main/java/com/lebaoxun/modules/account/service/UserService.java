@@ -48,6 +48,8 @@ public interface UserService extends IService<UserEntity> {
     
     UserEntity balancePay(Long userId,BigDecimal tradeMoney);
     
+    UserEntity scorePay(Long userId,Integer score);
+    
     UserEntity recharge(Long userId,String orderNo,Long buyTime,String total_fee);
     
     /**

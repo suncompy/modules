@@ -74,7 +74,9 @@ public class AliyunCloudUploadController {
 		List<String> file = null;
 		try{
 			file = uploadService.upload(namespace, new MultipartFile[]{multipartFile});
-			return new ResponseMessage(file);
+			Map<String,String> request = new HashMap<String,String>();
+			request.put("uri", file.get(0));
+			return new ResponseMessage(request);
 		}catch(Exception e){
 			logger.error("uploadImg|error={}",e.fillInStackTrace());
 			if(file != null){

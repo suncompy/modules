@@ -147,6 +147,17 @@ public interface IFoodOrderService {
     		@RequestParam("userId") Long userId,
     		@RequestParam(value="dis",required=false)BigDecimal dis,
     		@RequestBody FoodOrderEntity order);
+    
+    /**
+	 * 抽奖兑换
+	 * @param userId
+	 * @param dis
+	 * @param orderNo
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/prizeExchangeForOrder")
+    ResponseMessage prizeExchangeForOrder(@RequestParam("userId") Long userId, 
+			@RequestParam("prizeLogId") Integer prizeLogId);
 	
     
     /**

@@ -86,6 +86,15 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	ResponseMessage balancePayForOrder(Long userId, BigDecimal dis,
 			String orderNo);
 	
+	/**
+	 * 抽奖兑换
+	 * @param userId
+	 * @param dis
+	 * @param orderNo
+	 * @return
+	 */
+	FoodOrderEntity prizeExchangeForOrder(Long userId, Integer prizeLogId);
+	
 	List<FoodOrderEntity> findOrderByUser(Long userId,Integer status, Integer size,Integer offset);
 	
 	FoodOrderEntity findOrderInfoByUser(Long userId,String orderNo);

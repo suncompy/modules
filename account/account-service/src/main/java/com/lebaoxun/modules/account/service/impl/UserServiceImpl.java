@@ -148,10 +148,26 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user == null){
 			throw new I18nMessageException("500");
 		}
-		UserEntity entity = new UserEntity();
-		entity.setId(user.getId());
-		entity.setBalance(user.getBalance().subtract(tradeMoney));
-		this.updateById(entity);
+		if(user.getBalance().compareTo(tradeMoney) < 0){
+			throw new I18nMessageException("40008");
+		}
+		user.setBalance(user.getBalance().subtract(tradeMoney));
+		this.updateById(user);
+		return user;
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public UserEntity scorePay(Long userId, Integer score) {
+		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
+		if(user == null){
+			throw new I18nMessageException("500");
+		}
+		if(user.getScore() < score){
+			throw new I18nMessageException("40007");
+		}
+		user.setScore(user.getScore() - score);
+		this.updateById(user);
 		return user;
 	}
 	

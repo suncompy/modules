@@ -88,6 +88,11 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 			BigDecimal dis, List<FoodShoppingCartEntity> carts) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
+	@Override
+	public ResponseMessage prizeExchangeForOrder(Long userId, Integer prizeLogId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 
 	@Override
 	public ResponseMessage createOrder(Integer macId, Long userId, BigDecimal dis,

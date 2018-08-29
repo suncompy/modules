@@ -2,6 +2,7 @@ package com.lebaoxun.modules.fastfood.controller;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
@@ -167,6 +169,44 @@ public class FoodOrderController {
     		@RequestBody FoodOrderEntity order){
     	return ResponseMessage.ok(foodOrderService.createOrder(userId,dis, order));
     }
+    
+    /**
+	 * 抽奖兑换
+	 * @param userId
+	 * @param dis
+	 * @param orderNo
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/prizeExchangeForOrder")
+    @RedisLock(value="fastfood:foodorder:prizeExchangeForOrder:lock:#arg0")
+    ResponseMessage prizeExchangeForOrder(@RequestParam("userId") Long userId, 
+			@RequestParam("prizeLogId") Integer prizeLogId){
+    	FoodOrderEntity order = foodOrderService.prizeExchangeForOrder(userId, prizeLogId);
+    	if(order != null && order.getId() != null){
+    		Map<String,String> message = new HashMap<String,String>();
+    		message.put("orderNo", order.getOrderNo());
+    		rabbitmqSender.sendContractDirect("order.pay.success.queue",
+    				new Gson().toJson(message));
+    		
+    		String adjunctInfo = "prizeLogId="+prizeLogId+"|orderNo="+order.getOrderNo();
+    		String logType = "PRIZE_EXCHANGE_FOR_ORDER";
+        	Date now = new Date();
+        	message = new HashMap<String,String>();
+    		String timestamp = now.getTime()+"";
+    		message.put("userId", userId+"");
+    		message.put("timestamp", timestamp);
+    		message.put("logType", logType);
+    		message.put("platform", null);
+    		message.put("tradeMoney", null);
+    		message.put("money", null);
+    		message.put("descr", "");
+    		message.put("adjunctInfo", adjunctInfo);
+    		message.put("token", MD5.md5(logType+"_"+adjunctInfo));
+    		rabbitmqSender.sendContractDirect("account.log.queue",
+    				new Gson().toJson(message));
+    	}
+    	return ResponseMessage.ok(order);
+	}
 	
     
     /**
