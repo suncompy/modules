@@ -934,8 +934,9 @@ public class FoodOrderServiceImpl extends
 		if (takeFoodCodeEntity == null
 				|| takeFoodCodeEntity.getOrderNo() == null)
 			return ResponseMessage.error("600004", "数据异常");
-		Map<String,String> result=Maps.newHashMap();
+		Map<String,Object> result=Maps.newHashMap();
 		result.put("orderNo",takeFoodCodeEntity.getOrderNo());
+		result.put("orderId",takeFoodCodeEntity.getOrderId());
 		return ResponseMessage.ok(result);
 	}
 
@@ -959,7 +960,12 @@ public class FoodOrderServiceImpl extends
 		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
 		logger.debug("{}",operations.entries(key));
-		TakeFoodCodeEntity takeFoodCode = new TakeFoodCodeEntity(null,orderNo,
+		EntityWrapper<FoodOrderEntity> entityWrapper=new EntityWrapper<>();
+		entityWrapper.eq("order_no",orderNo);
+		FoodOrderEntity foodOrderEntity=this.selectOne(entityWrapper);
+		if (foodOrderEntity==null||foodOrderEntity.getId()==0)
+			throw new I18nMessageException("600002", "订单不存在！");
+		TakeFoodCodeEntity takeFoodCode = new TakeFoodCodeEntity(foodOrderEntity.getId(),orderNo,
 				new Date().getTime());
 		String  takeFoodStr=JSON.toJSONString(takeFoodCode);
 		// 创建随机码
