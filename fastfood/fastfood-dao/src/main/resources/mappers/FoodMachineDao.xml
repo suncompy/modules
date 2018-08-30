@@ -156,7 +156,7 @@
 			and product.cat_id=#{catId}
 		</if>
 		<if test="pageSize != null and pageSize!=0 and pageNo != null and pageNo!=0">
-			and limit (#{pageNo}-1)* #{pageSize}, #{pageSize};
+			and limit #{pageNo}, #{pageSize};
 		</if>
 	</select>
 	
