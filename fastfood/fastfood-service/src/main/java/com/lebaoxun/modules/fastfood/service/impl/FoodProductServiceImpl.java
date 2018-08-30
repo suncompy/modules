@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.lebaoxun.commons.exception.ResponseMessage;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,11 +41,16 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
 
         return new PageUtils(page);
     }
+    
 	@Override
 	public List<FoodProductEntity> findProductInfoByParams(Map<String, Object> params){
 		return this.selectByMap(params);
 	}
 
+	@Override
+	public List<FoodProductEntity> findAllProductByCat(Integer catId) {
+		return this.selectList(new EntityWrapper<FoodProductEntity>().eq("product_cat_id", catId));
+	}
     
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
