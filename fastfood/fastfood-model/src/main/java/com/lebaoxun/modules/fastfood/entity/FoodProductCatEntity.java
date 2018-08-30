@@ -65,7 +65,27 @@ public class FoodProductCatEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
-	
+
+	private String selectedImg;
+
+	private String nSelectedImg;
+
+	public String getSelectedImg() {
+		return selectedImg;
+	}
+
+	public void setSelectedImg(String selectedImg) {
+		this.selectedImg = selectedImg;
+	}
+
+	public String getnSelectedImg() {
+		return nSelectedImg;
+	}
+
+	public void setnSelectedImg(String nSelectedImg) {
+		this.nSelectedImg = nSelectedImg;
+	}
+
 	/**
 	 * 分类ID
 	 */
