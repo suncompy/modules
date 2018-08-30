@@ -153,7 +153,7 @@
 		WHERE
 		mac.id = #{macId}
 		<if test="catId != null and catId!=''">
-			and product.cat_id=#{catId}
+			and product.product_cat_id=#{catId}
 		</if>
 		<if test="pageSize != null and pageSize!=0 and pageNo != null and pageNo!=0">
 			and limit #{pageNo}, #{pageSize};
