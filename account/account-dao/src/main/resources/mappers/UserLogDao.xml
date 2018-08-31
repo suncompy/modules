@@ -31,13 +31,13 @@
 		user_id, account, create_time,
 		log_type, log_time, trade_money,
 		money, score, trade_score,
-		platform, host_ip, descr,adjunct_info,
+		platform, descr,adjunct_info,
 		token)
 		VALUES
 		( #{id}, #{userId}, #{account},
 		#{createTime}, #{logType}, #{logTime},
 		#{tradeMoney}, #{money}, #{score},
-		#{tradeScore},#{platform},#{hostIp},
+		#{tradeScore},#{platform},
 		#{descr}, #{adjunctInfo}, #{token});
 	</insert>
 	

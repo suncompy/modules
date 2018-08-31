@@ -134,7 +134,7 @@ public class OperatePrizeGetLogServiceImpl extends
 	public static void main(String[] args) {
 		List<OperatePrizeEntity> prizes = new ArrayList<OperatePrizeEntity>();
 		Map<String,Integer> count = new HashMap<String,Integer>();
-		Integer weights[] = new Integer[]{50,40,30,20,10};
+		Integer weights[] = new Integer[]{8000,1500,479,20,1};
 		for(int i=0;i<weights.length;i++){
 			Integer weight = weights[i];
 			OperatePrizeEntity p1 = new OperatePrizeEntity();
