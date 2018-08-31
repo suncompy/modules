@@ -143,6 +143,9 @@
 			product.up_time AS upTime,
 			product.down_time AS downTime,
 			product.descr,
+			product.is_meal as isMeal,
+			ais.price,
+			ais.stock,
 			mac.cat_id AS catId,
 			cat.NAME AS catName
 		FROM
