@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,15 +61,21 @@ public class FoodMachineCouponRefController {
     @RequestMapping("/fastfood/foodmachinecouponref/refCouponByMacId")
     ResponseMessage refCouponByMacId(
             @RequestParam("adminId")Long adminId,
-            @RequestParam("foodMachineCouponRefList")List<FoodMachineCouponRefEntity>foodMachineCouponRefList){
+            @RequestBody List<FoodMachineCouponRefEntity>foodMachineCouponRefList){
         if(foodMachineCouponRefList==null)return ResponseMessage.error("00002","数据异常");
         // 关联机器前，先删除，再关联
         foodMachineCouponRefList.forEach(e->{
              //如果id为空，说明该产品还没关联
             if ((e.getId()==null||e.getId()==0)&&e.getIsRef()==1){
-                e.setCreateBy((int)adminId.longValue());
-                e.setCreateTime(new Date());
-                foodMachineCouponRefService.insert(e);
+                EntityWrapper<FoodMachineCouponRefEntity> couponRefWrapper=new EntityWrapper();
+                couponRefWrapper.eq("mac_id",e.getMacId());
+                couponRefWrapper.eq("coupon_id",e.getCouponId());
+                FoodMachineCouponRefEntity couponRef=foodMachineCouponRefService.selectOne(couponRefWrapper);
+                if (couponRef==null||couponRef.getId()==0) {
+                    e.setCreateBy((int)adminId.longValue());
+                    e.setCreateTime(new Date());
+                    foodMachineCouponRefService.insert(e);
+                }
             }else if (e.getId()>0&&e.getIsRef()==2){//如果已经关联，但前端又设置了不关联，则删除
                 foodMachineCouponRefService.deleteById(e.getId());
             }
