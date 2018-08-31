@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import com.lebaoxun.modules.fastfood.entity.FoodMachineCouponRefEntity;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodMachineServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -82,5 +84,19 @@ public interface IFoodMachineService {
      */
     @RequestMapping("/fastfood/foodmachine/search")
     ResponseMessage search(@RequestParam("keyword") String keyword);
+
+    /**
+     * 关联机器优惠券
+     */
+    @RequestMapping("/fastfood/foodmachinecouponref/findMacCouponListByMacId")
+    ResponseMessage findMacCouponListByMacId(@RequestParam("macId")Integer macId);
+
+    /**
+     * 关联机器优惠券
+     */
+    @RequestMapping("/fastfood/foodmachinecouponref/refCouponByMacId")
+    ResponseMessage refCouponByMacId(
+            @RequestParam("adminId")Long adminId,
+            @RequestBody List<FoodMachineCouponRefEntity> foodMachineCouponRefList);
 }
 
