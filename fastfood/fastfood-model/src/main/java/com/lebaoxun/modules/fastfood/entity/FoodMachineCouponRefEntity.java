@@ -22,7 +22,7 @@ public class FoodMachineCouponRefEntity implements Serializable {
 	 * 
 	 */
 @TableId
-	private Integer id;
+	private Integer id=0;
 	/**
 	 * 机器id
 	 */
@@ -35,6 +35,12 @@ public class FoodMachineCouponRefEntity implements Serializable {
 	 * 
 	 */
 	private Integer createBy;
+
+	/**
+	 * 发行量
+	 */
+	@TableField(exist = false)
+	private Integer total;
 	/**
 	 * 
 	 */
@@ -45,6 +51,14 @@ public class FoodMachineCouponRefEntity implements Serializable {
 
 	@TableField(exist = false)
 	private String couponName;
+
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
 
 	/**
 	 * 设置：
