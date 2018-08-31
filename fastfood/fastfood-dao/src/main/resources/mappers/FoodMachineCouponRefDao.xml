@@ -23,24 +23,28 @@
 
     <select id="findMacCouponListByMacId" resultMap="findfoodMachineCouponRefMap">
         SELECT
-        r.id,
-        r.mac_id,
-        c.total,
-        c.id as coupon_id,
-        c.name as coupon_name
-        DECODE(r.mac_id, 2) is_ref
-        FROM
-        `operate_coupon` c
-        LEFT JOIN
-        (
+            r.id,
+            r.mac_id,
+            c.total,
+            c.id AS coupon_id,
+            c. NAME AS coupon_name,
+            CASE
+            WHEN r.mac_id IS NULL THEN
+            2
+            ELSE
+            1
+            END AS is_ref
+            FROM
+            `operate_coupon` c
+            LEFT JOIN (
             SELECT
             *
             FROM
             food_machine_coupon_ref
             WHERE
             mac_id=#{macId}
-        ) r ON c.id = r.coupon_id
-        AND (
+            ) r ON c.id = r.coupon_id
+            AND (
             c.period > 0
             OR (
             SYSDATE() > c.start_get_time
