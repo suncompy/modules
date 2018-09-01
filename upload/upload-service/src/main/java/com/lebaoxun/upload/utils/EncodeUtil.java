@@ -33,7 +33,7 @@ public class EncodeUtil {
 	
     private static final int WIDTH = 430; // 二维码图片宽度
     private static final int HEIGHT = 430; // 二维码图片高度
-    private static final String FORMAT = "gif";// 二维码的图片格式 gif
+    private static final String FORMAT = "jpg";// 二维码的图片格式 gif
     private static final int BLACK = 0xFF000000;//用于设置图案的颜色  
     private static final int WHITE = 0xFFFFFFFF; //用于背景色  
     private static final String TEMP_FOLDER = "/www/temp/";  // 二维码绘制后的临时输出目录
