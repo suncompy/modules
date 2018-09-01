@@ -690,10 +690,12 @@ public class FoodOrderServiceImpl extends
 		if (order == null) {
 			throw new I18nMessageException("60007", "订单不存在");
 		}
+		logger.debug("qrCode={}",qrCode);
 		Integer takeFoodCode = createTakeFoodCode(order.getMacId(), orderNo);
 		order.setQrCode(qrCode);
 		order.setOrderStatus(1);
 		order.setTakeFoodCode(takeFoodCode);
+		logger.debug("payFoodOrder|order={}",new Gson().toJson(order));
 		this.baseMapper.updateById(order);
 		
 		putActivity(order,buyTime);

@@ -57,8 +57,13 @@ public class EncodeUtil {
         BufferedImage image = toBufferedImage(bitMatrix);
         
         // 将绘制好的二维码图片流，生成二维码   
-        String path = TEMP_FOLDER+"qrcode_"+ System.currentTimeMillis()+FORMAT;
+        String path = TEMP_FOLDER+"qrcode_"+ System.currentTimeMillis()+"."+FORMAT;
+        File file = new File(TEMP_FOLDER);
+        if(!file.isDirectory()){
+        	file.mkdirs();
+        }
         File outputFile = new File(path);//指定输出路径  
+        
         if (!ImageIO.write(image, FORMAT, outputFile)) {  
             throw new IOException("Could not write an image of format " + FORMAT + " to " + outputFile); 
         }else{

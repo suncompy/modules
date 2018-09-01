@@ -108,7 +108,7 @@ public class UserLogListener {
 				tackMsg.put("action", logType.toString());
 				
 				rabbitmqSender.sendContractDirect("account.score.award.queue",
-						new Gson().toJson(message));
+						new Gson().toJson(tackMsg));
 			}
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);

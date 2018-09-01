@@ -26,7 +26,7 @@
         <result property="takeFoodTime" column="take_food_time"/>
         <result property="couponType" column="coupon_type"/>
         <result property="couponFee" column="coupon_fee"/>
-        
+        <result property="qrCode" column="qr_code"/>
         <collection property="childs" resultMap="foodOrderChildsMap" ofType="com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity"></collection>
     </resultMap>
     
@@ -42,7 +42,7 @@
         <result property="productAmount" column="product_amount"/>
         <result property="status" column="status"/>
     </resultMap>
-
+    
     <insert id="insert" parameterType="com.lebaoxun.modules.fastfood.entity.FoodOrderEntity"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO food_order (
@@ -55,20 +55,37 @@
         #{macId}, #{activityId}, #{activityType}, #{couponId}, #{redPackedId},
         #{source}, #{createTime}, #{updateTime}, #{takeFoodTime} ,#{couponType}, #{couponFee});
     </insert>
-
+    
+    <resultMap type="java.util.Map" id="foodMacOrderMap">
+        <result property="orderAmount" column="orderAmount"/>
+        <result property="redPackedAmount" column="redPackedAmount"/>
+        <result property="orderScore" column="orderScore"/>
+        <result property="payAmount" column="payAmount"/>
+        <result property="couponFee" column="couponFee"/>
+        <result property="buyNumber" column="buyNumber"/>
+        <result property="orderTime" column="orderTime"/>
+        <result property="takeFoodTime" column="takeFoodTime"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <collection property="childs" resultMap="foodMacOrderChildsMap" ofType="java.util.Map"></collection>
+    </resultMap>
+    
+    <resultMap type="java.util.Map" id="foodMacOrderChildsMap">
+        <result property="buyNumber" column="childBuyNumber"/>
+        <result property="price" column="price"/>
+        <result property="costPrice" column="costPrice"/>
+        <result property="productName" column="productName"/>
+        <result property="x" column="x"/>
+        <result property="y" column="y"/>
+    </resultMap>
 
     <!--扫码查询订单信息-->
-    <select  id="getSweeptCodeOrderInfo" resultType="java.util.Map">
+    <select  id="getSweeptCodeOrderInfo" resultMap="foodMacOrderMap" >
         SELECT
             order_t.order_amount AS orderAmount,
 			order_t.red_packed_amount AS redPackedAmount,
 			order_t.order_score AS orderScore,
 			order_t.pay_amount AS payAmount,
 			order_t.coupon_fee AS couponFee,
-			order_t.activity_id AS activityId,
-			order_t.coupon_id AS couponId,
-			order_t.coupon_type AS couponType,
-			order_t.red_packed_id AS redPackedId,
 			order_t.buy_number AS buyNumber,
 			order_t.create_time AS orderTime,
 			order_t.take_food_time as takeFoodTime,
@@ -86,17 +103,14 @@
         where order_t.order_no=#{orderNo}
     </select>
     
-    <select id="findOrderInfoByMacIMEI" resultType="java.util.Map">
+    <select id="findOrderInfoByMacIMEI" resultMap="foodMacOrderMap">
         SELECT
 	      	order_t.order_amount AS orderAmount,
+	      	order_t.order_no AS orderNo,
 			order_t.red_packed_amount AS redPackedAmount,
 			order_t.order_score AS orderScore,
 			order_t.pay_amount AS payAmount,
 			order_t.coupon_fee AS couponFee,
-			order_t.activity_id AS activityId,
-			order_t.coupon_id AS couponId,
-			order_t.coupon_type AS couponType,
-			order_t.red_packed_id AS redPackedId,
 			order_t.buy_number AS buyNumber,
 			order_t.create_time AS orderTime,
 			order_t.take_food_time as takeFoodTime,
