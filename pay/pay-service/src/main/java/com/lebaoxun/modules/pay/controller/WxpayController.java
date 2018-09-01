@@ -448,6 +448,7 @@ public class WxpayController {
 		Map<String, Object> ret = new HashMap<String, Object>();
 		ret.put("prepay_id", prepay_id);
 		ret.put("code_url", code_url);
+		ret.put("order_no", orderNo);
 		return new ResponseMessage(ret);
 	}
 	

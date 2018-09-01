@@ -320,9 +320,11 @@ public class FoodOrderServiceImpl extends
 		String firstOrderActivityType = "1";
 
 		for (FoodOrderChildsEntity orderChild : order.getChilds()) {
+			logger.debug("orderChild={}",new Gson().toJson(orderChild));
 			Map<String, Object> aisle = foodMachineAisleDao.findProductByAisle(
 					orderChild.getMacId(), orderChild.getProductId(), null,
 					orderChild.getAisleId());
+			logger.debug("aisle={}",new Gson().toJson(aisle));
 			if (aisle == null) {
 				throw new I18nMessageException("60001", "对不起，产品不存在或已过期");
 			}

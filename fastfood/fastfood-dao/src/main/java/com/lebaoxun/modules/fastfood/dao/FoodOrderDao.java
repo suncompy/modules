@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Mapper
 public interface FoodOrderDao extends BaseMapper<FoodOrderEntity> {
-	Map<String, Object> getSweeptCodeOrderInfo(@Param("orderId") String orderId);
+	Map<String, Object> getSweeptCodeOrderInfo(@Param("orderNo") String orderNo);
 	
 	List<Map<String, Object>> findOrderInfoByMacIMEI(@Param("imei") String  imei);
 
