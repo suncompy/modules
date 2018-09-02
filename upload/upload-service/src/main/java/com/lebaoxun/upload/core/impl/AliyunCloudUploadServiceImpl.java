@@ -246,5 +246,40 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 		}
 		return "image/jpeg";
 	}
+	
+	public static void main(String[] args) {
+		String endPoint = "http://oss-cn-beijing.aliyuncs.com",acessKeyId="LTAIqYlxwrBmuOgm",
+				accessKeySecret = "miE4TbBA5s3x7Y0s5Vt4RXXQMkJQcr",
+						bucketName = "dechenginfo",
+						domain = "http://oss.dechengpingtai.com";
+		OSSClient ossClient = new OSSClient(endPoint, acessKeyId,
+        		accessKeySecret);
+		String fileName = "/Users/mac/Documents/workspace/config-repo/game-dev.properties";
+		File file = null;
+    	try{
+    		// 取得当前上传文件的文件名称
+    		// 如果名称不为空,说明该文件存在，否则说明该文件不存在
+    			file = new File(fileName);
+    			String fileType = fileName.substring(fileName.lastIndexOf("."));
+    			// 生成文件
+    			String uri = System.currentTimeMillis() + fileType;
+    			// 上传到阿里云
+    			
+    			InputStream in = new FileInputStream(file);
+    			ObjectMetadata objectMetadata = new ObjectMetadata();
+    			objectMetadata.setContentLength(in.available());
+    			objectMetadata.setCacheControl("no-cache");
+    			objectMetadata.setHeader("Pragma", "no-cache");
+    			objectMetadata.setContentType(getcontentType(fileType));
+    			objectMetadata.setContentDisposition("inline;filename=" + fileName);
+    			// 上传文件
+    			PutObjectResult putResult = ossClient.putObject(bucketName, uri, in, objectMetadata);
+    			System.out.println("eTag="+putResult.getETag());
+    	} catch (IOException e) {
+			e.printStackTrace();
+			throw new I18nMessageException("-1","上传文件失败，请检查配置信息", e);
+		}finally{
+		}
+	}
 
 }

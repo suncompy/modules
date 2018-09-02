@@ -66,7 +66,7 @@
         <result property="orderTime" column="orderTime"/>
         <result property="takeFoodTime" column="takeFoodTime"/>
         <result property="orderStatus" column="orderStatus"/>
-        <collection property="childs" resultMap="foodMacOrderChildsMap" ofType="java.util.Map"></collection>
+        <collection property="childs" resultMap="foodMacOrderChildsMap" ofType="java.util.Map" javaType="java.util.ArrayList"></collection>
     </resultMap>
     
     <resultMap type="java.util.Map" id="foodMacOrderChildsMap">
@@ -82,6 +82,7 @@
     <select  id="getSweeptCodeOrderInfo" resultMap="foodMacOrderMap" >
         SELECT
             order_t.order_amount AS orderAmount,
+            order_t.order_no AS orderNo,
 			order_t.red_packed_amount AS redPackedAmount,
 			order_t.order_score AS orderScore,
 			order_t.pay_amount AS payAmount,
