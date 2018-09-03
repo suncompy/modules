@@ -36,7 +36,7 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 	 * 产品id
 	 */
 	@TableField(exist = false)
-	private Integer productName;
+	private String productName;
 	/**
 	 * 活动类型  1.首单 2.折扣 3.返现
 	 */
@@ -69,11 +69,11 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 		this.rowId = rowId;
 	}
 
-	public Integer getProductName() {
+	public String getProductName() {
 		return productName;
 	}
 
-	public void setProductName(Integer productName) {
+	public void setProductName(String productName) {
 		this.productName = productName;
 	}
 
@@ -117,18 +117,15 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 	public Integer getMacId() {
 		return macId;
 	}
-	/**
-	 * 设置：产品id
-	 */
-	public void setProductId(Integer productId) {
-		this.productId = productId;
-	}
-	/**
-	 * 获取：产品id
-	 */
+
 	public Integer getProductId() {
 		return productId;
 	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
 	/**
 	 * 设置：活动类型  1.首单 2.折扣 3.返现
 	 */
