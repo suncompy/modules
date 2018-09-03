@@ -1,6 +1,8 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCouponRefEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineProActivityRefEntity;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,5 +100,32 @@ public interface IFoodMachineService {
     ResponseMessage refCouponByMacId(
             @RequestParam("adminId")Long adminId,
             @RequestBody List<FoodMachineCouponRefEntity> foodMachineCouponRefList);
+
+
+    /**
+     * 关联机器活动
+     */
+    @RequestMapping("/fastfood/foodmachineactivityref/findMacActivityListByMacId")
+    ResponseMessage findMacActListByMacId(@RequestParam("macId")Integer macId);
+
+    /**
+     */
+    @RequestMapping("/fastfood/foodmachineactivityref/refMacActivity")
+    ResponseMessage refActByMacId(
+            @RequestParam("adminId")Long adminId,
+            @RequestBody List<FoodMachineActivityRefEntity> activityRefEntityList);
+
+    /**
+     * 关联机器产品活动
+     */
+    @RequestMapping("/fastfood/foodmachineproactivityref/findProActivityListByMacId")
+    ResponseMessage findMacProActListByMacId(@RequestParam("macId")Integer macId);
+
+    /**
+     */
+    @RequestMapping("/fastfood/foodmachineproactivityref/refMacActivity")
+    ResponseMessage refProActByMacId(
+            @RequestParam("adminId")Long adminId,
+            @RequestBody List<FoodMachineProActivityRefEntity> activityRefEntityList);
 }
 
