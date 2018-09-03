@@ -25,7 +25,7 @@ public class OperateActivityPayCashBackServiceHystrix implements IOperateActivit
 	}
 
 	@Override
-	public ResponseMessage info(Integer id) {
+	public ResponseMessage info() {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
@@ -44,5 +44,9 @@ public class OperateActivityPayCashBackServiceHystrix implements IOperateActivit
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
     
+	@Override
+	public OperateActivityPayCashBackEntity findUnderwayActivity() {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 

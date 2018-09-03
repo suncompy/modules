@@ -32,8 +32,8 @@ public interface IOperateActivityFirstOrderService {
     /**
      * 信息
      */
-    @RequestMapping("/operate/operateactivityfirstorder/info/{id}")
-    ResponseMessage info(@PathVariable("id") Integer id);
+    @RequestMapping("/operate/operateactivityfirstorder/info")
+    ResponseMessage info();
 
     /**
      * 保存

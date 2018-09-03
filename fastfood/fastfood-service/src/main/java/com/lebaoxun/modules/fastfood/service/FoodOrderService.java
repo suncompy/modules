@@ -10,8 +10,6 @@ import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodShoppingCartEntity;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 /**
  * 订单表
  *
@@ -63,6 +61,20 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 * @return
 	 */
 	FoodOrderEntity createOrder(Long userId, BigDecimal dis, FoodOrderEntity order);
+	
+	/**
+	 * 订单设置
+	 * @param timeOut
+	 * @param nopayLimit
+	 * @return
+	 */
+	Map<String,Integer> modifyOrderConfig(Integer timeOut,Integer nopayLimit);
+	
+	/**
+	 * 查询订单配置
+	 * @return
+	 */
+	Map<String,Integer> findOrderConfig();
 
 	/**
 	 * 计算订单金额，并验证产品是否有效
@@ -96,6 +108,8 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	FoodOrderEntity prizeExchangeForOrder(Long userId, Integer prizeLogId);
 	
 	List<FoodOrderEntity> findOrderByUser(Long userId,Integer status, Integer size,Integer offset);
+	
+	void closeOrderByNopayAndTimeout();
 	
 	FoodOrderEntity findOrderInfoByUser(Long userId,String orderNo);
 

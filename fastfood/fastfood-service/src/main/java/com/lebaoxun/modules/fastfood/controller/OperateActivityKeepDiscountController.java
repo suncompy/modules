@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
 import com.lebaoxun.modules.fastfood.service.OperateActivityKeepDiscountService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
@@ -44,15 +46,9 @@ public class OperateActivityKeepDiscountController {
     /**
      * 信息
      */
-    @RequestMapping("/operate/operateactivitykeepdiscount/info/{id}")
-    ResponseMessage info(@PathVariable("id") Integer id){
-        List<OperateActivityKeepDiscountEntity> operateActivityKeepDiscountEntities=operateActivityKeepDiscountService.selectList(new EntityWrapper<OperateActivityKeepDiscountEntity>());
-        OperateActivityKeepDiscountEntity operateActivityKeepDiscountEntity=null;
-        if (operateActivityKeepDiscountEntities==null||operateActivityKeepDiscountEntities.size()==0)
-            operateActivityKeepDiscountEntity=new OperateActivityKeepDiscountEntity();
-        else
-            operateActivityKeepDiscountEntity=operateActivityKeepDiscountEntities.get(0);
-        return ResponseMessage.ok().put("operateActivityKeepDiscount", operateActivityKeepDiscountEntity);
+    @RequestMapping("/operate/operateactivitykeepdiscount/info")
+    ResponseMessage info(){
+    	return ResponseMessage.ok(operateActivityKeepDiscountService.selectOne(new EntityWrapper<OperateActivityKeepDiscountEntity>().orderBy("update_time", false).last("limit 1")));
     }
 
     /**
@@ -61,6 +57,8 @@ public class OperateActivityKeepDiscountController {
     @RequestMapping("/operate/operateactivitykeepdiscount/save")
     @RedisLock(value="operate:operateactivitykeepdiscount:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody OperateActivityKeepDiscountEntity operateActivityKeepDiscount){
+    	operateActivityKeepDiscount.setUpdateBy(adminId);
+    	operateActivityKeepDiscount.setUpdateTime(new Date());
 		operateActivityKeepDiscountService.insert(operateActivityKeepDiscount);
         return ResponseMessage.ok();
     }
@@ -71,6 +69,8 @@ public class OperateActivityKeepDiscountController {
     @RequestMapping("/operate/operateactivitykeepdiscount/update")
     @RedisLock(value="operate:operateactivitykeepdiscount:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody OperateActivityKeepDiscountEntity operateActivityKeepDiscount){
+    	operateActivityKeepDiscount.setUpdateBy(adminId);
+    	operateActivityKeepDiscount.setUpdateTime(new Date());
 		operateActivityKeepDiscountService.updateById(operateActivityKeepDiscount);
         return ResponseMessage.ok();
     }

@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,8 @@ public class FoodWeekMenuController {
     @RequestMapping("/fastfood/foodweekmenu/save")
     @RedisLock(value="fastfood:foodweekmenu:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodWeekMenuEntity foodWeekMenu){
+    	foodWeekMenu.setCreateBy(adminId);
+    	foodWeekMenu.setCreateTime(new Date());
 		foodWeekMenuService.insert(foodWeekMenu);
         return ResponseMessage.ok();
     }

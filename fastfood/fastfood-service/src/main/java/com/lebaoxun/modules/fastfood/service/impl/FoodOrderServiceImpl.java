@@ -11,7 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
+import com.lebaoxun.commons.utils.StringUtils;
+
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -606,6 +607,28 @@ public class FoodOrderServiceImpl extends
 		}
 		return order;
 	}
+	
+	@Override
+	public Map<String, Integer> modifyOrderConfig(Integer timeOut,
+			Integer nopayLimit) {
+		// TODO Auto-generated method stub
+		if(timeOut != null){
+			redisTemplate.opsForValue().set("order:config:timeout", timeOut);
+		}
+		if(nopayLimit != null){
+			redisTemplate.opsForValue().set("order:config:nopay:limit", nopayLimit);
+		}
+		return findOrderConfig();
+	}
+	
+	@Override
+	public Map<String, Integer> findOrderConfig() {
+		// TODO Auto-generated method stub
+		Map<String, Integer> config = new HashMap<String, Integer>();
+		config.put("timeOut", (Integer)redisTemplate.opsForValue().get("order:config:timeout"));
+		config.put("nopayLimit", (Integer)redisTemplate.opsForValue().get("order:config:nopay:limit"));
+		return config;
+	}
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
@@ -620,7 +643,7 @@ public class FoodOrderServiceImpl extends
 
 		redisTemplate.opsForValue().get("order:config:timeout");
 		Integer nopayMaxCount = (Integer) redisTemplate.opsForValue().get(
-				"order:config:nopay_max_count");
+				"order:config:nopay:limit");
 		if (nopayMaxCount != null && count > nopayMaxCount) {
 			throw new I18nMessageException("60006", "订单创建失败，您有" + count
 					+ "个尚未支付订单，请立即处理!");
@@ -1008,5 +1031,15 @@ public class FoodOrderServiceImpl extends
 		result.put("status",foodOrderEntity.getOrderStatus());
 		result.put("orderTime",foodOrderEntity.getCreateTime());
 		return ResponseMessage.ok(result);
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void closeOrderByNopayAndTimeout() {
+		// TODO Auto-generated method stub
+		Integer timeOut = (Integer) redisTemplate.opsForValue().get("order:config:timeout");
+		if(timeOut != null){
+			this.baseMapper.closeOrderByNopayAndTimeout(timeOut);
+		}
 	}
 }

@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEntity;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
 import com.lebaoxun.modules.fastfood.service.OperateActivityFirstOrderService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
@@ -45,15 +46,9 @@ public class OperateActivityFirstOrderController {
     /**
      * 信息
      */
-    @RequestMapping("/operate/operateactivityfirstorder/info/{id}")
-    ResponseMessage info(@PathVariable("id") Integer id){
-        List<OperateActivityFirstOrderEntity> operateActivityFirstOrderEntities=operateActivityFirstOrderService.selectList(new EntityWrapper<OperateActivityFirstOrderEntity>());
-        OperateActivityFirstOrderEntity operateActivityFirstOrder=null;
-        if (operateActivityFirstOrderEntities==null||operateActivityFirstOrderEntities.size()==0)
-            operateActivityFirstOrder=new OperateActivityFirstOrderEntity();
-        else
-            operateActivityFirstOrder=operateActivityFirstOrderEntities.get(0);
-        return ResponseMessage.ok().put("operateActivityFirstOrder", operateActivityFirstOrder);
+    @RequestMapping("/operate/operateactivityfirstorder/info")
+    ResponseMessage info(){
+        return ResponseMessage.ok(operateActivityFirstOrderService.selectOne(new EntityWrapper<OperateActivityFirstOrderEntity>().orderBy("update_time", false).last("limit 1")));
     }
 
     /**

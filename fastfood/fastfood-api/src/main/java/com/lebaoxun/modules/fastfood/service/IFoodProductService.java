@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import com.lebaoxun.modules.fastfood.entity.FoodProductEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodProductServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
@@ -30,6 +31,9 @@ public interface IFoodProductService {
     @RequestMapping("/fastfood/foodproduct/findProductInfoByParams")
     ResponseMessage findProductInfoByParams(@RequestParam Map<String, Object> params);
 
+    @RequestMapping("/fastfood/foodproduct/findAllProductByCat")
+    ResponseMessage findAllProductByCat(@RequestParam("catId") Integer catId);
+    
     /**
      * 信息
      */

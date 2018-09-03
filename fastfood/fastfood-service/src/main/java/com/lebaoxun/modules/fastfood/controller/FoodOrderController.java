@@ -9,7 +9,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
+import com.lebaoxun.commons.utils.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -348,4 +349,26 @@ public class FoodOrderController {
     ResponseMessage findOrderInfoByMacIMEI(@RequestParam(value = "imei")String  imei){
         return ResponseMessage.ok(foodOrderService.findOrderInfoByMacIMEI(imei));
     }
+    
+    /**
+	 * 订单设置
+	 * @param timeOut
+	 * @param nopayLimit
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/modifyOrderConfig")
+    @RedisLock(value="fastfood:foodorder:modifyOrderConfig:lock:")
+    ResponseMessage modifyOrderConfig(@RequestParam(value = "timeOut") Integer timeOut,
+    		@RequestParam(value = "nopayLimit")Integer nopayLimit){
+    	return ResponseMessage.ok(foodOrderService.modifyOrderConfig(timeOut, nopayLimit));
+    }
+	
+	/**
+	 * 查询订单配置
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/findOrderConfig")
+    ResponseMessage findOrderConfig(){
+    	return ResponseMessage.ok(foodOrderService.findOrderConfig());
+	}
 }

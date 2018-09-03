@@ -218,5 +218,23 @@ public interface IFoodOrderService {
 	 */
 	@RequestMapping("/take_food/findOrderInfoByMacIMEI")
 	ResponseMessage findOrderInfoByMacIMEI(@RequestParam(value = "imei")String  imei);
+	
+	
+	/**
+	 * 订单设置
+	 * @param timeOut
+	 * @param nopayLimit
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/modifyOrderConfig")
+    ResponseMessage modifyOrderConfig(@RequestParam(value = "timeOut") Integer timeOut,
+    		@RequestParam(value = "nopayLimit")Integer nopayLimit);
+	
+	/**
+	 * 查询订单配置
+	 * @return
+	 */
+    @RequestMapping("/fastfood/foodorder/findOrderConfig")
+    ResponseMessage findOrderConfig();
 }
 

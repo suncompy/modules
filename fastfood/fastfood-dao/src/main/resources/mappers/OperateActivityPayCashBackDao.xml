@@ -21,5 +21,9 @@
     <select id="findUnderwayActivity" resultMap="operateActivityPayCashBackMap" >
         select * from operate_activity_pay_cash_back where `use` = 1  and now() BETWEEN start_time and end_time
     </select>
+    
+    <update id="closeAllActivity">
+        update operate_activity_pay_cash_back set `use` = 0;
+    </update>
 
 </mapper>

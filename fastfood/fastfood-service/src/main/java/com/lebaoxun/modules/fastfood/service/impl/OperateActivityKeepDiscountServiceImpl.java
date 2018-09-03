@@ -3,6 +3,8 @@ package com.lebaoxun.modules.fastfood.service.impl;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -31,5 +33,18 @@ public class OperateActivityKeepDiscountServiceImpl extends ServiceImpl<OperateA
 	public OperateActivityKeepDiscountEntity findUnderwayActivity() {
 		return this.baseMapper.findUnderwayActivity();
 	}
-
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public boolean updateById(OperateActivityKeepDiscountEntity entity) {
+		// TODO Auto-generated method stub
+		OperateActivityKeepDiscountEntity underway = this.findUnderwayActivity();
+		if(underway == null || (underway.getUse() == 0 && entity.getUse() == 1)){//如果重新开放
+			this.baseMapper.closeAllActivity();
+			entity.setId(0);
+			this.baseMapper.insert(entity);
+			return true;
+		}
+		return super.updateById(entity);
+	}
 }

@@ -15,4 +15,6 @@ import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountE
 @Mapper
 public interface OperateActivityKeepDiscountDao extends BaseMapper<OperateActivityKeepDiscountEntity> {
 	OperateActivityKeepDiscountEntity findUnderwayActivity();
+	
+	void closeAllActivity();
 }

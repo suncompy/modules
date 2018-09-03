@@ -29,6 +29,8 @@ public interface FoodOrderDao extends BaseMapper<FoodOrderEntity> {
 			@Param("size") Integer size, 
 			@Param("offset") Integer offset);
 	
+	void closeOrderByNopayAndTimeout(@Param("timeOut") Integer timeOut);
+	
 	FoodOrderEntity findOrderInfoByUser(@Param("userId") Long userId, 
 			@Param("orderNo") String orderNo);
 }

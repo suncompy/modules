@@ -32,8 +32,8 @@ public interface IOperateActivityKeepDiscountService {
     /**
      * 信息
      */
-    @RequestMapping("/operate/operateactivitykeepdiscount/info/{id}")
-    ResponseMessage info(@PathVariable("id") Integer id);
+    @RequestMapping("/operate/operateactivitykeepdiscount/info")
+    ResponseMessage info();
 
     /**
      * 保存
@@ -53,7 +53,7 @@ public interface IOperateActivityKeepDiscountService {
     @RequestMapping("/operate/operateactivitykeepdiscount/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
-    @RequestMapping("/operate/operateactivityfirstorder/findUnderwayActivity")
+    @RequestMapping("/operate/operateactivitykeepdiscount/findUnderwayActivity")
     OperateActivityKeepDiscountEntity findUnderwayActivity();
 }
 

@@ -32,8 +32,8 @@ public interface IOperateActivityPayCashBackService {
     /**
      * 信息
      */
-    @RequestMapping("/operate/operateactivitypaycashback/info/{id}")
-    ResponseMessage info(@PathVariable("id") Integer id);
+    @RequestMapping("/operate/operateactivitypaycashback/info")
+    ResponseMessage info();
 
     /**
      * 保存
@@ -52,6 +52,9 @@ public interface IOperateActivityPayCashBackService {
      */
     @RequestMapping("/operate/operateactivitypaycashback/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
+    
+    @RequestMapping("/operate/operateactivitypaycashback/findUnderwayActivity")
+    OperateActivityPayCashBackEntity findUnderwayActivity();
     
 }
 

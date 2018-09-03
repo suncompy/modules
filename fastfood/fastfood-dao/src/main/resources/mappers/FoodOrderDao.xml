@@ -152,4 +152,8 @@
 		left join food_order_childs as t2 on t2.order_id = t1.id
 		where t1.user_id = #{userId} and order_no = #{orderNo}
     </select>
+    
+    <update id="closeOrderByNopayAndTimeout">
+        update food_order set order_status=-1 where order_status = 0 and NOW() > DATE_ADD(create_time,INTERVAL #{timeOut} DAY_MINUTE);
+    </update>
 </mapper>

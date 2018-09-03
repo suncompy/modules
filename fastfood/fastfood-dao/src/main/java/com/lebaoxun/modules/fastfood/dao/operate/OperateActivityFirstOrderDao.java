@@ -15,5 +15,5 @@ import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityFirstOrderEnt
 @Mapper
 public interface OperateActivityFirstOrderDao extends BaseMapper<OperateActivityFirstOrderEntity> {
 	OperateActivityFirstOrderEntity findUnderwayActivity();
-	
+	void closeAllActivity();
 }

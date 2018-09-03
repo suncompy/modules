@@ -22,4 +22,7 @@
         select * from operate_activity_keep_discount where `use` = 1  and date_add(start_time, interval period day) > now()
     </select>
 
+    <update id="closeAllActivity">
+        update operate_activity_keep_discount set `use` = 0;
+    </update>
 </mapper>

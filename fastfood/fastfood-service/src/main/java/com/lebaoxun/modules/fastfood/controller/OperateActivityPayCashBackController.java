@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEntity;
 import com.lebaoxun.modules.fastfood.service.OperateActivityPayCashBackService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
@@ -45,15 +46,9 @@ public class OperateActivityPayCashBackController {
     /**
      * 信息
      */
-    @RequestMapping("/operate/operateactivitypaycashback/info/{id}")
-    ResponseMessage info(@PathVariable("id") Integer id){
-        List<OperateActivityPayCashBackEntity> operateActivityPayCashBackEntities=operateActivityPayCashBackService.selectList(new EntityWrapper<OperateActivityPayCashBackEntity>());
-        OperateActivityPayCashBackEntity operateActivityPayCashBackEntity=null;
-        if (operateActivityPayCashBackEntities==null||operateActivityPayCashBackEntities.size()==0)
-            operateActivityPayCashBackEntity=new OperateActivityPayCashBackEntity();
-        else
-            operateActivityPayCashBackEntity=operateActivityPayCashBackEntities.get(0);
-        return ResponseMessage.ok().put("operateActivityPayCashBack", operateActivityPayCashBackEntity);
+    @RequestMapping("/operate/operateactivitypaycashback/info")
+    ResponseMessage info(){
+    	return ResponseMessage.ok(operateActivityPayCashBackService.selectOne(new EntityWrapper<OperateActivityPayCashBackEntity>().orderBy("update_time", false).last("limit 1")));
     }
 
     /**
@@ -88,6 +83,11 @@ public class OperateActivityPayCashBackController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids){
 		operateActivityPayCashBackService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+    
+    @RequestMapping("/operate/operateactivitypaycashback/findUnderwayActivity")
+    OperateActivityPayCashBackEntity findUnderwayActivity(){
+    	return operateActivityPayCashBackService.findUnderwayActivity();
     }
 
 }

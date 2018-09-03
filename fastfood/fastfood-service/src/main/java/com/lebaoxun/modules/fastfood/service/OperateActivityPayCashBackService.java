@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityKeepDiscountEntity;
 import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEntity;
 
 /**
@@ -16,5 +17,7 @@ import com.lebaoxun.modules.fastfood.entity.operate.OperateActivityPayCashBackEn
 public interface OperateActivityPayCashBackService extends IService<OperateActivityPayCashBackEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    
+    OperateActivityPayCashBackEntity findUnderwayActivity();
 }
 

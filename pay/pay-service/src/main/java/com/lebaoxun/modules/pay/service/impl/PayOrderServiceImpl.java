@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,7 @@ import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
+import com.lebaoxun.commons.utils.StringUtils;
 import com.lebaoxun.modules.pay.dao.PayOrderDao;
 import com.lebaoxun.modules.pay.entity.PayOrderEntity;
 import com.lebaoxun.modules.pay.service.IPayOrderService;
@@ -36,9 +36,21 @@ public class PayOrderServiceImpl extends ServiceImpl<PayOrderDao, PayOrderEntity
 	
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+    	String userId = (String)params.get("userId"),
+    			orderNo = (String)params.get("orderNo"),
+    			outOrderNo = (String)params.get("outOrderNo"),
+    			group = (String)params.get("group"),
+    			scene = (String)params.get("scene"),
+    			status = (String)params.get("status");
         Page<PayOrderEntity> page = this.selectPage(
                 new Query<PayOrderEntity>(params).getPage(),
                 new EntityWrapper<PayOrderEntity>()
+                .eq(StringUtils.isNotBlank(orderNo), "order_no", orderNo)
+                .eq(StringUtils.isNotBlank(outOrderNo), "out_order_no", outOrderNo)
+                .eq(StringUtils.isNotBlank(group), "group", group)
+                .eq(StringUtils.isNotBlank(scene), "scene", scene)
+                .eq(StringUtils.isNotBlank(userId) && StringUtils.isNumeric(userId), "user_id", userId)
+                .eq(StringUtils.isNotBlank(status) && StringUtils.isInteger(status), "status", status)
         );
 
         return new PageUtils(page);

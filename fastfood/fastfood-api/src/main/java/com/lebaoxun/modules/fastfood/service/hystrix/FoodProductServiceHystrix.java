@@ -7,6 +7,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodProductEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodProductService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -47,6 +48,11 @@ public class FoodProductServiceHystrix implements IFoodProductService {
 
 	@Override
 	public ResponseMessage delete(Long adminId,Integer[] ids) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage findAllProductByCat(Integer catId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
     

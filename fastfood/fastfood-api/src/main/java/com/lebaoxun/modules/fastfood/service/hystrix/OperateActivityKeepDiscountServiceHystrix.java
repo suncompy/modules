@@ -25,7 +25,7 @@ public class OperateActivityKeepDiscountServiceHystrix implements IOperateActivi
 	}
 
 	@Override
-	public ResponseMessage info(Integer id) {
+	public ResponseMessage info() {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
