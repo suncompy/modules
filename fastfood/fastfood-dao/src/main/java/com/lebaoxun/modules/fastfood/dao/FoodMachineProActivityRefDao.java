@@ -1,8 +1,12 @@
 package com.lebaoxun.modules.fastfood.dao;
 
+import com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineProActivityRefEntity;
 import org.apache.ibatis.annotations.Mapper;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 
@@ -13,5 +17,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface FoodMachineProActivityRefDao extends BaseMapper<FoodMachineProActivityRefEntity> {
-	
+    public List<FoodMachineProActivityRefEntity> foodMachineProActListByMacId(@Param("macId")Integer macId);
 }

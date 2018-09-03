@@ -24,10 +24,16 @@
 
     <select id="findMacActivityListByMacId" resultMap="findMachineActivityRefMap">
        SELECT
-	r.id,
-	r.mac_id,
-	t.`NAME` as activity_name ,
-	DECODE(r.mac_id, 2) is_ref
+		r.id,
+		r.mac_id,
+		t.activity_type,
+		t.`NAME` as activity_name ,
+	CASE
+		WHEN r.id IS NULL THEN
+		2
+		ELSE
+		1
+	END AS is_ref
 FROM
 	(
 		SELECT

@@ -8,10 +8,70 @@
         <result property="id" column="id"/>
         <result property="macId" column="mac_id"/>
         <result property="productId" column="product_id"/>
+        <result property="productName" column="product_Name"/>
         <result property="activityType" column="activity_type"/>
-        <result property="createBy" column="create_by"/>
-        <result property="createTime" column="create_time"/>
+        <result property="activityName" column="activity_name"/>
+        <result property="isRef" column="is_ref"/>
     </resultMap>
 
+    <select id="foodMachineProActListByMacId" resultMap="foodMachineProActivityRefMap">
+        SELECT
+            pro_act.id,
+            aisle.mac_id,
+            aisle.`name` AS product_name,
+            aisle.product_id,
+            act.activity_type,
+            act.`NAME` AS activity_name,
+              CASE
+                    WHEN pro_act.id IS NULL THEN
+                    2
+                    ELSE
+                    1
+                END AS is_ref
+        FROM
+            (
+                SELECT
+                    a.mac_id,
+                    a.product_id,
+                    f.`name`
+                FROM
+                    food_machine_aisle a,
+                    food_product f
+                WHERE
+                    a.product_id = f.id
+                AND a.mac_id =  #{macId}
+            ) aisle
+        LEFT JOIN (
+            SELECT
+                *
+            FROM
+                food_machine_pro_activity_ref r
+            WHERE
+                mac_id =  #{macId}
+        ) pro_act ON aisle.mac_id = pro_act.mac_id
+        AND aisle.product_id = pro_act.product_id
+        LEFT JOIN (
+            SELECT
+                1 activity_type,
+                NAME,
+                `use`
+            FROM
+                operate_activity_first_order
+            UNION ALL
+                SELECT
+                    2 activity_type,
+                    NAME,
+                    `use`
+                FROM
+                    operate_activity_keep_discount
+                UNION ALL
+                    SELECT
+                        3 activity_type,
+                        NAME,
+                        `use`
+                    FROM
+                        operate_activity_pay_cash_back
+        ) act ON pro_act.activity_type = act.activity_type
+    </select>
 
 </mapper>
