@@ -1,8 +1,10 @@
 package com.lebaoxun.modules.fastfood.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineCouponRefEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineActivityRefService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,11 @@ public class FoodMachineActivityRefController {
     ResponseMessage findMacActivityListByMacId(@RequestParam("macId")Integer macId){
         List<FoodMachineActivityRefEntity> foodMachineActivityRefEntities = foodMachineActivityRefService.findMacActivityListByMacId(macId);
         int totalCount=foodMachineActivityRefEntities.size();
+        if (totalCount>0){
+            for (int i=0;i<totalCount;i++){
+                foodMachineActivityRefEntities.get(i).setRowId(i+1);
+            }
+        }
         int pageSize=100;
         int currPage=0;
         PageUtils page=new PageUtils(foodMachineActivityRefEntities,totalCount,pageSize,0);
@@ -52,13 +59,21 @@ public class FoodMachineActivityRefController {
      */
     @RequestMapping("/fastfood/foodmachineactivityref/refMacActivity")
     ResponseMessage refMacActivity(@RequestParam("adminId")Long adminId,
-                                   @RequestParam("foodMachineActivityRefEntityList")List<FoodMachineActivityRefEntity>foodMachineActivityRefEntityList){
+                                   @RequestBody List<FoodMachineActivityRefEntity>foodMachineActivityRefEntityList){
         if (foodMachineActivityRefEntityList==null)return ResponseMessage.error("00002","数据异常");
         foodMachineActivityRefEntityList.forEach(e->{
             if ((e.getId()==null||e.getId()==0)&&e.getIsRef()==1){
-                e.setCreateBy((int)adminId.longValue());
-                e.setCreateTime(new Date());
-                foodMachineActivityRefService.insert(e);
+                EntityWrapper<FoodMachineActivityRefEntity> actRefWrapper=new EntityWrapper();
+                actRefWrapper.eq("mac_id",e.getMacId());
+                actRefWrapper.eq("activity_type",e.getActivityType());
+                FoodMachineActivityRefEntity actnRef=foodMachineActivityRefService.selectOne(actRefWrapper);
+                if (actnRef==null||actnRef.getId()==0) {
+                    e.setCreateBy((int)adminId.longValue());
+                    e.setCreateTime(new Date());
+                    foodMachineActivityRefService.insert(e);
+                }else{//更新
+                    foodMachineActivityRefService.updateById(e);
+                }
             }else if (e.getId()>0&&e.getIsRef()==2){//如果已经关联，但前端又设置了不关联，则删除
                 foodMachineActivityRefService.deleteById(e.getId());
             }

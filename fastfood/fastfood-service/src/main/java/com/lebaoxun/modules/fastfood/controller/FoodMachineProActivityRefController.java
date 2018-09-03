@@ -1,8 +1,12 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +40,52 @@ public class FoodMachineProActivityRefController {
     ResponseMessage list(@RequestParam Map<String, Object> params){
         PageUtils page = foodMachineProActivityRefService.queryPage(params);
         return ResponseMessage.ok(page);
+    }
+
+    /**
+     * 查询关联机器产品活动
+     */
+    @RequestMapping("/fastfood/foodmachineproactivityref/findProActivityListByMacId")
+    ResponseMessage findProActivityListByMacId(@RequestParam("macId")Integer macId){
+        List<FoodMachineProActivityRefEntity> foodMachineProActList = foodMachineProActivityRefService.foodMachineProActListByMacId(macId);
+        int totalCount=foodMachineProActList.size();
+        if (totalCount>0){
+            for (int i=0;i<totalCount;i++){
+                foodMachineProActList.get(i).setRowId(i+1);
+            }
+        }
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(foodMachineProActList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
+    }
+
+    /**
+     * 关联机器活动
+     */
+    @RequestMapping("/fastfood/foodmachineproactivityref/refMacActivity")
+    ResponseMessage refMacProActivity(@RequestParam("adminId")Long adminId,
+                                      @RequestBody List<FoodMachineProActivityRefEntity>foodMachineProActList){
+        if (foodMachineProActList==null)return ResponseMessage.error("00002","数据异常");
+        foodMachineProActList.forEach(e->{
+            if ((e.getId()==null||e.getId()==0)&&e.getIsRef()==1){
+                EntityWrapper<FoodMachineProActivityRefEntity> actProRefWrapper=new EntityWrapper();
+                actProRefWrapper.eq("mac_id",e.getMacId());
+                actProRefWrapper.eq("product_id",e.getProductId());
+                actProRefWrapper.eq("activity_type",e.getActivityType());
+                FoodMachineProActivityRefEntity actProRef=foodMachineProActivityRefService.selectOne(actProRefWrapper);
+                if (actProRef==null||actProRef.getId()==0) {
+                    e.setCreateBy((int)adminId.longValue());
+                    e.setCreateTime(new Date());
+                    foodMachineProActivityRefService.insert(e);
+                }else{//更新
+                    foodMachineProActivityRefService.updateById(e);
+                }
+            }else if (e.getId()>0&&e.getIsRef()==2){//如果已经关联，但前端又设置了不关联，则删除
+                foodMachineProActivityRefService.deleteById(e.getId());
+            }
+        });
+        return ResponseMessage.ok();
     }
 
 
