@@ -24,10 +24,16 @@
 
     <select id="findMacActivityListByMacId" resultMap="findMachineActivityRefMap">
        SELECT
-	r.id,
-	r.mac_id,
-	t.`NAME` as activity_name ,
-	DECODE(r.mac_id, 2) is_ref
+		r.id,
+		r.mac_id,
+		t.activity_type,
+		t.`NAME` as activity_name ,
+	CASE
+		WHEN r.id IS NULL THEN
+		2
+		ELSE
+		1
+	END AS is_ref
 FROM
 	(
 		SELECT
@@ -35,21 +41,21 @@ FROM
 			NAME,
 			`use`
 		FROM
-			operate_activity_first_order
+			operate_activity_first_order where `use` = 1
 		UNION ALL
 		SELECT
 			2 activity_type,
 			NAME,
 			`use`
 		FROM
-			operate_activity_keep_discount
+			operate_activity_keep_discount where `use` = 1
 		UNION ALL
 		SELECT
 			3 activity_type,
 			NAME,
 			`use`
 		FROM
-			operate_activity_pay_cash_back
+			operate_activity_pay_cash_back where `use` = 1
 	) t
 	LEFT JOIN (
                 SELECT

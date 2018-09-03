@@ -2,8 +2,10 @@ package com.lebaoxun.modules.fastfood.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineProActivityRefEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface FoodMachineProActivityRefService extends IService<FoodMachineProActivityRefEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<FoodMachineProActivityRefEntity> foodMachineProActListByMacId(Integer macId);
 }
 

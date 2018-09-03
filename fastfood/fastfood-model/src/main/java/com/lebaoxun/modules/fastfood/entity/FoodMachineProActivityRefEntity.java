@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -21,7 +22,7 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 	 * 
 	 */
 @TableId
-	private Integer id;
+	private Integer id=0;
 	/**
 	 * 机器id
 	 */
@@ -30,10 +31,24 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 	 * 产品id
 	 */
 	private Integer productId;
+
+	/**
+	 * 产品id
+	 */
+	@TableField(exist = false)
+	private String productName;
 	/**
 	 * 活动类型  1.首单 2.折扣 3.返现
 	 */
 	private Integer activityType;
+	/**
+	 * 1.关联 2.否
+	 */
+	@TableField(exist = false)
+	private Integer isRef;
+
+	@TableField(exist = false)
+	private String activityName;
 	/**
 	 * 
 	 */
@@ -42,6 +57,41 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 	 * 
 	 */
 	private Date createTime;
+
+	@TableField(exist = false)
+	private Integer rowId;
+
+	public Integer getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(Integer rowId) {
+		this.rowId = rowId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public Integer getIsRef() {
+		return isRef;
+	}
+
+	public void setIsRef(Integer isRef) {
+		this.isRef = isRef;
+	}
+
+	public String getActivityName() {
+		return activityName;
+	}
+
+	public void setActivityName(String activityName) {
+		this.activityName = activityName;
+	}
 
 	/**
 	 * 设置：
@@ -67,18 +117,15 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 	public Integer getMacId() {
 		return macId;
 	}
-	/**
-	 * 设置：产品id
-	 */
-	public void setProductId(Integer productId) {
-		this.productId = productId;
-	}
-	/**
-	 * 获取：产品id
-	 */
+
 	public Integer getProductId() {
 		return productId;
 	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
 	/**
 	 * 设置：活动类型  1.首单 2.折扣 3.返现
 	 */

@@ -1,6 +1,8 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -25,5 +27,8 @@ public class FoodMachineProActivityRefServiceImpl extends ServiceImpl<FoodMachin
 
         return new PageUtils(page);
     }
-
+    @Override
+    public List<FoodMachineProActivityRefEntity> foodMachineProActListByMacId(Integer macId){
+        return this.baseMapper.foodMachineProActListByMacId(macId);
+    }
 }
