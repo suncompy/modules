@@ -75,6 +75,8 @@ public class FoodMachineCouponRefController {
                     e.setCreateBy((int)adminId.longValue());
                     e.setCreateTime(new Date());
                     foodMachineCouponRefService.insert(e);
+                }else{//更新
+                    foodMachineCouponRefService.updateById(e);
                 }
             }else if (e.getId()>0&&e.getIsRef()==2){//如果已经关联，但前端又设置了不关联，则删除
                 foodMachineCouponRefService.deleteById(e.getId());
