@@ -22,7 +22,7 @@ public class FoodMachineActivityRefEntity implements Serializable {
 	 * 
 	 */
 @TableId
-	private Integer id;
+	private Integer id=0;
 	/**
 	 * 机器id
 	 */
@@ -40,12 +40,25 @@ public class FoodMachineActivityRefEntity implements Serializable {
 	 */
 	private Date createTime;
 
+	/**
+	 * 1.关联 2.否
+	 */
 	@TableField(exist = false)
 	private Integer isRef;
 
 	@TableField(exist = false)
 	private String activityName;
 
+	@TableField(exist = false)
+	private Integer rowId;
+
+	public Integer getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(Integer rowId) {
+		this.rowId = rowId;
+	}
 
 	/**
 	 * 设置：
