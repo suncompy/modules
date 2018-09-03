@@ -56,21 +56,21 @@
                 NAME,
                 `use`
             FROM
-                operate_activity_first_order
+                operate_activity_first_order where `use` = 1
             UNION ALL
                 SELECT
                     2 activity_type,
                     NAME,
                     `use`
                 FROM
-                    operate_activity_keep_discount
+                    operate_activity_keep_discount where `use` = 1
                 UNION ALL
                     SELECT
                         3 activity_type,
                         NAME,
                         `use`
                     FROM
-                        operate_activity_pay_cash_back
+                        operate_activity_pay_cash_back where `use` = 1
         ) act ON pro_act.activity_type = act.activity_type
     </select>
 
