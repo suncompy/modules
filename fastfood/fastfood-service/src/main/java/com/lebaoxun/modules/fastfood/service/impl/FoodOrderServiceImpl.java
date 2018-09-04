@@ -62,6 +62,7 @@ import com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity;
 import com.lebaoxun.modules.pay.service.IWxPayService;
 import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 import com.lebaoxun.soa.core.redis.IRedisHash;
+import com.lebaoxun.upload.service.IQrcodeUploadService;
 
 @Service("foodOrderService")
 public class FoodOrderServiceImpl extends
@@ -110,6 +111,9 @@ public class FoodOrderServiceImpl extends
 	
 	@Resource
 	private OperatePrizeGetLogDao operatePrizeGetLogDao;
+	
+	@Resource
+	private IQrcodeUploadService qrcodeUploadService;
 	
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
@@ -705,14 +709,16 @@ public class FoodOrderServiceImpl extends
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public synchronized FoodOrderEntity payFoodOrder(String orderNo, String buyTime, String qrCode) {
+	public synchronized FoodOrderEntity payFoodOrder(String orderNo, String buyTime) {
 		// TODO Auto-generated method stub
 		FoodOrderEntity order = this
 				.selectOne(new EntityWrapper<FoodOrderEntity>().eq("order_no",
 						orderNo));
-		if (order == null) {
+		if (order == null || order.getOrderStatus() != 0) {
 			throw new I18nMessageException("60007", "订单不存在");
 		}
+		Map<String,String> map = qrcodeUploadService.createAndUpload("aliyunCloud", "fastfood", orderNo);
+		String qrCode = map.get("uri");
 		logger.debug("qrCode={}",qrCode);
 		Integer takeFoodCode = createTakeFoodCode(order.getMacId(), orderNo);
 		order.setQrCode(qrCode);

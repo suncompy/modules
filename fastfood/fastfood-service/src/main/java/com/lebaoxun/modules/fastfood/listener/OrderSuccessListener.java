@@ -38,9 +38,6 @@ public class OrderSuccessListener {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Resource
-	private IQrcodeUploadService qrcodeUploadService;
-	
-	@Resource
 	private FoodOrderService foodOrderService;
 	
 	@Resource
@@ -68,11 +65,9 @@ public class OrderSuccessListener {
 		try {
 			String orderNo = message.getString("orderNo");
 			String buyTime = message.getString("buyTime");
-			Map<String,String> map = qrcodeUploadService.createAndUpload("aliyunCloud", "fastfood", orderNo);
-			String qrCode = map.get("uri");
 			
 			//1.修改订单状态1=支付成功，2.设置取餐码 3.设置取餐码
-			FoodOrderEntity order = foodOrderService.payFoodOrder(orderNo, buyTime, qrCode);
+			FoodOrderEntity order = foodOrderService.payFoodOrder(orderNo, buyTime);
 			
 			if(order.getUserId() != null){
 				String logType = "PAY_FOOD_ORDER";

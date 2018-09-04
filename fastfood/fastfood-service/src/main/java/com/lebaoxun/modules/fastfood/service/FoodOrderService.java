@@ -120,7 +120,7 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 * @param takeFoodCode
 	 * @return
 	 */
-	FoodOrderEntity payFoodOrder(String orderNo, String buyTime, String qrCode);
+	FoodOrderEntity payFoodOrder(String orderNo, String buyTime);
 
 	Map<String, Object> getSweeptCodeOrderInfo(String orderId);
 
