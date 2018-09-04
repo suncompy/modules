@@ -59,7 +59,7 @@
 			product.warm_time as warmTime, product.hot_num as hotNum,
 			product.label as label, product.`status` as status,
 			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
-			product.keyword as keyword, product.descr as descr,
+			product.keyword as keyword, product.descr as descr, product.type as type,
 			product.create_time as createTime,
 			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec,
 			pro_activity.activity_type as activity
@@ -89,7 +89,7 @@
 			product.warm_time as warmTime, product.hot_num as hotNum,
 			product.label as label, product.`status` as status,
 			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
-			product.keyword as keyword, product.descr as descr,
+			product.keyword as keyword, product.descr as descr, product.type as type,
 			product.create_time as createTime,
 			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec,
 			pro_activity.activity_type as activity
@@ -116,7 +116,7 @@
 			product.warm_time as warmTime, product.hot_num as hotNum,
 			product.label as label, product.`status` as status,
 			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
-			product.keyword as keyword, product.descr as descr,
+			product.keyword as keyword, product.descr as descr, product.type as type,
 			product.create_time as createTime,
 			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec,
 			pro_activity.activity_type as activity

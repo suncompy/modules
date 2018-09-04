@@ -26,7 +26,7 @@
 			product.warm_time as warmTime, product.hot_num as hotNum,
 			product.label as label, product.`status` as status,
 			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
-			product.keyword as keyword, product.descr as descr,
+			product.keyword as keyword, product.descr as descr, product.type as type,
 			product.create_time as createTime,
 		  (product.`status` = 1 AND date_add(product.up_time, interval period day) > now()) as flag
 		FROM

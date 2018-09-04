@@ -55,6 +55,9 @@ public class FoodOrderBackController {
     @RequestMapping("/fastfood/foodorderback/save")
     @RedisLock(value="fastfood:foodorderback:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodOrderBackEntity foodOrderBack){
+    	foodOrderBack.setFeedbackTime(new Date());
+    	foodOrderBack.setCreateTime(new Date());
+    	foodOrderBack.setCreateBy(adminId);
 		foodOrderBackService.insert(foodOrderBack);
         return ResponseMessage.ok();
     }
@@ -67,6 +70,23 @@ public class FoodOrderBackController {
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodOrderBackEntity foodOrderBack){
 		foodOrderBackService.updateById(foodOrderBack);
         return ResponseMessage.ok();
+    }
+    
+    /**
+     * 审核
+     * @param checkId
+     * @param orderNo
+     * @param checkRemark
+     * @param status
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorderback/checkOrderBack")
+    @RedisLock(value="fastfood:foodorderback:checkOrderBack:lock:#arg0")
+    ResponseMessage checkOrderBack(@RequestParam("checkId")Long checkId,
+    		@RequestParam("orderNos")String[] orderNos,
+    		@RequestParam("checkRemark")String checkRemark,
+    		@RequestParam("status")Integer status){
+    	return ResponseMessage.ok(foodOrderBackService.checkOrderBack(checkId, orderNos, checkRemark, status));
     }
 
     /**

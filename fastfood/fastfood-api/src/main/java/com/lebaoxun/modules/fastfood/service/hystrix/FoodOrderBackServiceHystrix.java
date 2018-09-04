@@ -43,6 +43,11 @@ public class FoodOrderBackServiceHystrix implements IFoodOrderBackService {
 	public ResponseMessage delete(Long adminId,Long[] ids) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
-    
+	
+	@Override
+	public ResponseMessage checkOrderBack(Long checkId, String[] orderNos,
+			String checkRemark, Integer status) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 

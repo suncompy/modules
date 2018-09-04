@@ -39,7 +39,10 @@ public class OperateActivityPayCashBackServiceImpl extends ServiceImpl<OperateAc
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean updateById(OperateActivityPayCashBackEntity entity) {
-		OperateActivityPayCashBackEntity underway = this.findUnderwayActivity();
+		OperateActivityPayCashBackEntity underway = null;
+    	if(entity.getId() != null){
+    		underway = this.selectById(entity.getId());
+    	}
 		if(underway == null || (underway.getUse() == 0 && entity.getUse() == 1)){//如果重新开放
 			this.baseMapper.closeAllActivity();
 			entity.setId(0);

@@ -132,6 +132,10 @@ public class FoodProductEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	/**
+	 * 类型，0=冷餐，1=热餐，2=饮品
+	 */
+	private Integer type;
 	
 	@TableField(exist=false)
 	private List<Integer> materialIds;
@@ -474,5 +478,11 @@ public class FoodProductEntity implements Serializable {
 	}
 	public void setList(List<FoodMaterialEntity> list) {
 		this.list = list;
+	}
+	public Integer getType() {
+		return type;
+	}
+	public void setType(Integer type) {
+		this.type = type;
 	}
 }

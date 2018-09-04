@@ -42,7 +42,7 @@ public class FoodOrderBackEntity implements Serializable {
 	/**
 	 * 反馈时间
 	 */
-	private Date feddbackTime;
+	private Date feedbackTime;
 	/**
 	 * 审核时间
 	 */
@@ -54,11 +54,11 @@ public class FoodOrderBackEntity implements Serializable {
 	/**
 	 * 反馈用户
 	 */
-	private Integer userId;
+	private Long userId;
 	/**
 	 * 审核人
 	 */
-	private Integer checkId;
+	private Long checkId;
 	/**
 	 * 退款金额
 	 */
@@ -67,6 +67,10 @@ public class FoodOrderBackEntity implements Serializable {
 	 * 创建时间
 	 */
 	private Date createTime;
+	/**
+	 * 创建人
+	 */
+	private Long createBy;
 	/**
 	 * 状态0=未处理，1=已处理
 	 */
@@ -135,14 +139,14 @@ public class FoodOrderBackEntity implements Serializable {
 	/**
 	 * 设置：反馈时间
 	 */
-	public void setFeddbackTime(Date feddbackTime) {
-		this.feddbackTime = feddbackTime;
+	public void setFeedbackTime(Date feedbackTime) {
+		this.feedbackTime = feedbackTime;
 	}
 	/**
 	 * 获取：反馈时间
 	 */
-	public Date getFeddbackTime() {
-		return feddbackTime;
+	public Date getFeedbackTime() {
+		return feedbackTime;
 	}
 	/**
 	 * 设置：审核时间
@@ -171,25 +175,25 @@ public class FoodOrderBackEntity implements Serializable {
 	/**
 	 * 设置：反馈用户
 	 */
-	public void setUserId(Integer userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 	/**
 	 * 获取：反馈用户
 	 */
-	public Integer getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 	/**
 	 * 设置：审核人
 	 */
-	public void setCheckId(Integer checkId) {
+	public void setCheckId(Long checkId) {
 		this.checkId = checkId;
 	}
 	/**
 	 * 获取：审核人
 	 */
-	public Integer getCheckId() {
+	public Long getCheckId() {
 		return checkId;
 	}
 	/**
@@ -227,5 +231,11 @@ public class FoodOrderBackEntity implements Serializable {
 	 */
 	public Integer getStatus() {
 		return status;
+	}
+	public Long getCreateBy() {
+		return createBy;
+	}
+	public void setCreateBy(Long createBy) {
+		this.createBy = createBy;
 	}
 }

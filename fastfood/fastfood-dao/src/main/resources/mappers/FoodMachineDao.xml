@@ -144,6 +144,7 @@
 			product.down_time AS downTime,
 			product.descr,
 			product.is_meal as isMeal,
+			product.type as type,
 			ais.price,
 			ais.stock,
 			mac.cat_id AS catId,
@@ -198,7 +199,7 @@
 		product.warm_time as warmTime, product.hot_num as hotNum,
 		product.label as label, product.`status` as status,
 		product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
-		product.keyword as keyword, product.descr as descr,
+		product.keyword as keyword, product.descr as descr, product.type as type,
 		product.create_time as createTime
 		from food_machine_aisle as aisle
 		left join food_product as product on product.id = aisle.product_id
@@ -215,7 +216,7 @@
 		<result property="address" column="address" />
 		<result property="catId" column="catId" />
 		<result property="catName" column="catName" />
-		<collection property="products" ofType="java.util.Map">
+		<collection property="products" ofType="java.util.Map" javaType="java.util.ArrayList">
 			<result property="aisleId" column="aisleId"/>
 			<result property="stock" column="stock"/>
 			<result property="productCatId" column="productCatId"/>
@@ -237,6 +238,7 @@
 			<result property="downTime" column="downTime"/>
 			<result property="keyword" column="keyword"/>
 			<result property="descr" column="descr"/>
+			<result property="type" column="type"/>
 			<result property="createTime" column="createTime"/>
 		</collection>
 	</resultMap>

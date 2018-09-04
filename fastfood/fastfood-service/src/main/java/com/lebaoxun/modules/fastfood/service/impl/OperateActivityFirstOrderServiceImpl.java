@@ -38,7 +38,10 @@ public class OperateActivityFirstOrderServiceImpl extends ServiceImpl<OperateAct
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean updateById(OperateActivityFirstOrderEntity entity) {
 		// TODO Auto-generated method stub
-    	OperateActivityFirstOrderEntity underway = this.findUnderwayActivity();
+    	OperateActivityFirstOrderEntity underway = null;
+    	if(entity.getId() != null){
+    		underway = this.selectById(entity.getId());
+    	}
 		if(underway == null || (underway.getUse() == 0 && entity.getUse() == 1)){//如果重新开放
 			this.baseMapper.closeAllActivity();
 			entity.setId(0);

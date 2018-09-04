@@ -76,6 +76,9 @@
         <result property="productName" column="productName"/>
         <result property="x" column="x"/>
         <result property="y" column="y"/>
+        <result property="warmFlag" column="warmFlag"/>
+        <result property="warmTime" column="warmTime"/>
+        <result property="type" column="type"/>
     </resultMap>
 
     <!--扫码查询订单信息-->
@@ -96,11 +99,15 @@
 		  	child.cost_price as costPrice,
 	      	child.product_name as productName,
 			aisle.x,
-	     	aisle.y
+	     	aisle.y,
+	     	product.warm_flag as warmFlag,
+	     	product.warm_time as warmTime,
+	     	product.type
         FROM
             food_order order_t
         LEFT JOIN food_order_childs as child ON child.order_id = order_t.id
 	    LEFT JOIN food_machine_aisle as aisle on aisle.id = child.aisle_id
+	    LEFT JOIN food_product as product on product.id = aisle.product_id
         where order_t.order_no=#{orderNo}
     </select>
     
@@ -120,11 +127,15 @@
 		  	child.cost_price as costPrice,
 	      	child.product_name as productName,
 			aisle.x,
-	     	aisle.y
+	     	aisle.y,
+	     	product.warm_flag as warmFlag,
+	     	product.warm_time as warmTime,
+	     	product.type
 		FROM
 			food_order order_t
 		LEFT JOIN food_order_childs as child ON child.order_id = order_t.id
 	    LEFT JOIN food_machine_aisle as aisle on aisle.id = child.aisle_id
+	    LEFT JOIN food_product as product on product.id = aisle.product_id
 		where 
 		order_t.order_status = 1
 		and order_t.mac_id= (select id from food_machine where IMEI = #{imei})

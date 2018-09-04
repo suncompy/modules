@@ -1,15 +1,16 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import java.util.Map;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderBackEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodOrderBackServiceHystrix;
-import com.lebaoxun.commons.exception.ResponseMessage;
-
-import java.util.Map;
 
 /**
  * 订单退款表
@@ -52,5 +53,18 @@ public interface IFoodOrderBackService {
     @RequestMapping("/fastfood/foodorderback/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Long[] ids);
     
+    /**
+     * 审核
+     * @param checkId
+     * @param orderNo
+     * @param checkRemark
+     * @param status
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorderback/checkOrderBack")
+    ResponseMessage checkOrderBack(@RequestParam("checkId")Long checkId,
+    		@RequestParam("orderNos")String[] orderNos,
+    		@RequestParam("checkRemark")String checkRemark,
+    		@RequestParam("status")Integer status);
 }
 
