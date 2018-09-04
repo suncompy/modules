@@ -72,7 +72,7 @@ public class FoodOrderServiceImpl extends
 	@Resource
 	private IRabbitmqSender rabbitmqSender;
 
-	@Resource
+	@Resource(name="functionDomainRedisTemplate")
 	private RedisTemplate<String, Object> redisTemplate;
 
 	@Resource
