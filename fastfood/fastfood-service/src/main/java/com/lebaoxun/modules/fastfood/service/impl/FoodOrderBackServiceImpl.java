@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,8 @@ import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 @Service("foodOrderBackService")
 public class FoodOrderBackServiceImpl extends ServiceImpl<FoodOrderBackDao, FoodOrderBackEntity> implements FoodOrderBackService {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Resource
 	private FoodOrderDao foodOrderDao;
 	
@@ -124,6 +128,7 @@ public class FoodOrderBackServiceImpl extends ServiceImpl<FoodOrderBackDao, Food
     			pmessage.put("buy_time", new Date().getTime()+"");
     			pmessage.put("token", MD5.md5(logType.toString()+"_"+orderBack.getOrderNo()));
     			
+    			logger.debug("订单退款|pmessage={}",new Gson().toJson(pmessage));
     			rabbitmqSender.sendContractDirect("account.balance.queue.award",
     					new Gson().toJson(pmessage));
     		}

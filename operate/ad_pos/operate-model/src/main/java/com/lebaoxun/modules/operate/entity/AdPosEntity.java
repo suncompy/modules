@@ -11,7 +11,7 @@ import java.util.Date;
  * 
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-22 23:06:49
+ * @date 2018-09-05 14:15:42
  */
 @TableName("ad_pos")
 public class AdPosEntity implements Serializable {
@@ -20,8 +20,8 @@ public class AdPosEntity implements Serializable {
 	/**
 	 * 
 	 */
-	@TableId
-	private Integer id=0;
+@TableId
+	private Integer id;
 	/**
 	 * 广告码
 	 */
@@ -35,7 +35,7 @@ public class AdPosEntity implements Serializable {
 	 */
 	private String url;
 	/**
-	 * 文件类型
+	 * 文件类型 0.图片 1.视频
 	 */
 	private Integer fileType;
 	/**
@@ -50,19 +50,10 @@ public class AdPosEntity implements Serializable {
 	 * 编辑人
 	 */
 	private Long updateBy;
-
 	/**
 	 * 广告类型：0普通广告，1屏保，2轮播图
 	 */
 	private Integer posType;
-
-	public Integer getPosType() {
-		return posType;
-	}
-
-	public void setPosType(Integer posType) {
-		this.posType = posType;
-	}
 
 	/**
 	 * 设置：
@@ -113,13 +104,13 @@ public class AdPosEntity implements Serializable {
 		return url;
 	}
 	/**
-	 * 设置：文件类型
+	 * 设置：文件类型 0.图片 1.视频
 	 */
 	public void setFileType(Integer fileType) {
 		this.fileType = fileType;
 	}
 	/**
-	 * 获取：文件类型
+	 * 获取：文件类型 0.图片 1.视频
 	 */
 	public Integer getFileType() {
 		return fileType;
@@ -159,5 +150,17 @@ public class AdPosEntity implements Serializable {
 	 */
 	public Long getUpdateBy() {
 		return updateBy;
+	}
+	/**
+	 * 设置：广告类型：0普通广告，1屏保，2轮播图
+	 */
+	public void setPosType(Integer posType) {
+		this.posType = posType;
+	}
+	/**
+	 * 获取：广告类型：0普通广告，1屏保，2轮播图
+	 */
+	public Integer getPosType() {
+		return posType;
 	}
 }
