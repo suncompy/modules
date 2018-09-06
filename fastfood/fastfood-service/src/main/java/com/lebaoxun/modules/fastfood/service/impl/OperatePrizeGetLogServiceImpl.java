@@ -21,6 +21,7 @@ import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
+import com.lebaoxun.commons.utils.StringUtils;
 import com.lebaoxun.modules.account.service.IUserService;
 import com.lebaoxun.modules.fastfood.dao.operate.OperatePrizeDao;
 import com.lebaoxun.modules.fastfood.dao.operate.OperatePrizeGetLogDao;
@@ -43,9 +44,25 @@ public class OperatePrizeGetLogServiceImpl extends
 
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
+		String userId = (String)params.get("userId"),
+		prizeId = (String)params.get("prizeId"),
+		name = (String)params.get("name"),
+		group = (String)params.get("group"),
+		status = (String)params.get("status"),
+		orderNo = (String)params.get("orderNo"),
+		createTime = (String)params.get("createTime");
+			
 		Page<OperatePrizeGetLogEntity> page = this.selectPage(
 				new Query<OperatePrizeGetLogEntity>(params).getPage(),
-				new EntityWrapper<OperatePrizeGetLogEntity>());
+				new EntityWrapper<OperatePrizeGetLogEntity>()
+				.eq(StringUtils.isNotBlank(userId) && StringUtils.isInteger(userId), "user_id", userId)
+				.eq(StringUtils.isNotBlank(prizeId) && StringUtils.isInteger(prizeId), "prize_id", prizeId)
+				.eq(StringUtils.isNotBlank(status) && StringUtils.isInteger(status), "status", status)
+				.eq(StringUtils.isNotBlank(group), "group", group)
+				.eq(StringUtils.isNotBlank(orderNo), "order_no", orderNo)
+				.eq(StringUtils.isNotBlank(createTime), "date_format(create_time,'%Y-%m-%d')", createTime)
+				.like(StringUtils.isNotBlank(name), "name", name)
+				);
 
 		return new PageUtils(page);
 	}

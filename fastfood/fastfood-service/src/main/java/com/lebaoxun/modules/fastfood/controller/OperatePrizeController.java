@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,8 @@ public class OperatePrizeController {
     @RequestMapping("/operate/operateprize/save")
     @RedisLock(value="operate:operateprize:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody OperatePrizeEntity operatePrize){
+    	operatePrize.setCreateBy(adminId);
+    	operatePrize.setCreateTime(new Date());
 		operatePrizeService.insert(operatePrize);
         return ResponseMessage.ok();
     }

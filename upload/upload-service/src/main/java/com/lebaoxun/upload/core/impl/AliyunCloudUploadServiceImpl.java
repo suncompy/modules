@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,7 +102,8 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 	public String uploadImg(String namespace, String imgStr, String fileType) {
 		OSSClient ossClient = ossClient();
 		String imgFileTempPath = "";
-		File file2 = null;
+		File file3 = null;
+		InputStream in = null;
 		try {
 			String base64String = imgStr.substring(imgStr.indexOf(",")+1);
 			// Base64解码
@@ -117,7 +119,8 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 				file.mkdirs();
 			}
 			
-			file2 = new File(baseDir+ "/" + namespace + "/");
+			File file2 = new File(baseDir+ "/" + namespace + "/");
+			logger.debug("file2.isDirectory={}",file2.isDirectory());
 			if(!file2.isDirectory()){
 				file2.mkdirs();
 			}
@@ -125,8 +128,17 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 			// 生成jpeg图片
 			String fileName = System.currentTimeMillis() + "." + fileType;
 			imgFileTempPath = namespace +"/"+ fileName;//新生成的图片
+			logger.debug("imgFileTempPath={}",imgFileTempPath);
 			
-			InputStream in = new FileInputStream(file2);
+			String cacheFile = baseDir + "/"+ imgFileTempPath;
+			// 生成jpeg图片
+			OutputStream out = new FileOutputStream(cacheFile);
+			out.write(b);
+			out.flush();
+			out.close();
+			
+			file3 = new File(cacheFile);
+			in = new FileInputStream(file3);
 			ObjectMetadata objectMetadata = new ObjectMetadata();
 			objectMetadata.setContentLength(in.available());
 			objectMetadata.setCacheControl("no-cache");
@@ -140,8 +152,15 @@ public class AliyunCloudUploadServiceImpl implements IUploadService{
 			e.printStackTrace();
 			throw new I18nMessageException("-1","上传文件失败，请检查配置信息", e);
 		}finally{
-			if(file2 != null)
-				file2.delete();
+			if(in != null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(file3 != null)
+				file3.delete();
 		}
         return domain +  "/" + imgFileTempPath;
 	}

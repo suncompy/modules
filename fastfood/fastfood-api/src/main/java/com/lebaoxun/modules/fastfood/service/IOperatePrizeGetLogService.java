@@ -20,7 +20,7 @@ import com.lebaoxun.modules.fastfood.service.hystrix.OperatePrizeGetLogServiceHy
  * @date 2018-08-29 15:11:29
  */
 
-@FeignClient(value="operate-service",fallback=OperatePrizeGetLogServiceHystrix.class)
+@FeignClient(value="fastfood-service",fallback=OperatePrizeGetLogServiceHystrix.class)
 public interface IOperatePrizeGetLogService {
 	/**
      * 列表

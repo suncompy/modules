@@ -45,11 +45,10 @@ public class AliyunCloudUploadController {
 		String file = null;
 		try{
 			file = uploadService.uploadImg(namespace, imgStr, fileType);
-			
-			byte[] bdtmp = uploadService.readFileByBytes(file);
-			String imgStrForBaidu = Base64Util.encode(bdtmp);
 			boolean audit = true;
 			if(check != null && check){
+				byte[] bdtmp = uploadService.readFileByBytes(file);
+				String imgStrForBaidu = Base64Util.encode(bdtmp);
 				audit = baiduAuditImgService.userDefinedImage(imgStrForBaidu);
 			}
 			logger.debug("uploadImg|audit={}",audit);
@@ -59,7 +58,8 @@ public class AliyunCloudUploadController {
 				return new ResponseMessage(request);
 			}
 		}catch(Exception e){
-			logger.error("uploadImg|error={}",e.fillInStackTrace());
+			e.printStackTrace();
+			logger.error("uploadImg|error={}",e.getMessage());
 			if(file != null){
 				uploadService.deleteFile(file);
             }

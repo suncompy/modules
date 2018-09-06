@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>抽奖奖品配置</title>
+	<#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <a id="btn-power-add" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            <a id="btn-power-update" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            <a id="btn-power-del" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">奖品名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.name" placeholder="奖品名称"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">图标</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.icon" placeholder="图标"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">通道ID</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.aisle" placeholder="通道ID"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">权重，概率</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.weight" placeholder="权重，概率"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建人</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.createBy" placeholder="创建人"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.createTime" placeholder="创建时间"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">是否默认，用户补足100%概率</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.isDefault" placeholder="是否默认，用户补足100%概率"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">状态0=未激活，1=已激活</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.status" placeholder="状态0=未激活，1=已激活"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2 control-label">分组，区分奖品位置</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="operatePrize.group" placeholder="分组，区分奖品位置"/>
+                        </div>
+                    </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/statics/js/modules/fastfood/operateprize.js?_${.now?long}"></script>
+</body>
+</html>

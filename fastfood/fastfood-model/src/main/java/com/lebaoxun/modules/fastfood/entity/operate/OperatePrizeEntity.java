@@ -21,7 +21,7 @@ public class OperatePrizeEntity implements Serializable {
 	 * 
 	 */
 	@TableId
-	private Integer id;
+	private Integer id=0;
 	/**
 	 * 奖品名称
 	 */
@@ -62,6 +62,10 @@ public class OperatePrizeEntity implements Serializable {
 	 * 消耗积分
 	 */
 	private Integer score;
+	/**
+	 * 排序值
+	 */
+	private Integer orderBy;
 
 	/**
 	 * 设置：
@@ -188,5 +192,11 @@ public class OperatePrizeEntity implements Serializable {
 	}
 	public void setScore(Integer score) {
 		this.score = score;
+	}
+	public Integer getOrderBy() {
+		return orderBy;
+	}
+	public void setOrderBy(Integer orderBy) {
+		this.orderBy = orderBy;
 	}
 }
