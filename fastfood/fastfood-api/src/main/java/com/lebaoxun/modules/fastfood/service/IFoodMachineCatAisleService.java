@@ -9,6 +9,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodMachineCatAisleServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,7 +28,12 @@ public interface IFoodMachineCatAisleService {
     @RequestMapping("/fastfood/foodmachinecataisle/list")
     ResponseMessage list(@RequestParam Map<String, Object> params);
 
+    @RequestMapping("/fastfood/foodmachinecataisle/findAisleInfoByCatId")
+    ResponseMessage findAisleInfoByCatId(@RequestParam("catId")Integer catId);
 
+    @RequestMapping("/fastfood/foodmachinecataisle/refMacCatByAisle")
+    ResponseMessage refMacCatByAisle(@RequestParam("adminId")Long adminId,
+                                     @RequestBody List<FoodMachineCatAisleEntity> catAisleEntityList);
     /**
      * 信息
      */

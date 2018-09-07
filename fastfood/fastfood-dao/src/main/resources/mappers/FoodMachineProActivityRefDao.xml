@@ -6,6 +6,7 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineProActivityRefEntity" id="foodMachineProActivityRefMap">
         <result property="id" column="id"/>
+        <result property="aisle_id" column="aisleId"/>
         <result property="macId" column="mac_id"/>
         <result property="productId" column="product_id"/>
         <result property="productName" column="product_Name"/>
@@ -15,22 +16,24 @@
     </resultMap>
 
     <select id="foodMachineProActListByMacId" resultMap="foodMachineProActivityRefMap">
-        SELECT
+       SELECT
             pro_act.id,
+            aisle.aisle_id,
             aisle.mac_id,
             aisle.`name` AS product_name,
             aisle.product_id,
             act.activity_type,
             act.`NAME` AS activity_name,
-              CASE
-                    WHEN pro_act.id IS NULL THEN
-                    2
-                    ELSE
-                    1
-                END AS is_ref
+            CASE
+        WHEN pro_act.id IS NULL THEN
+            2
+        ELSE
+            1
+        END AS is_ref
         FROM
             (
                 SELECT
+              a.id as aisle_id,
                     a.mac_id,
                     a.product_id,
                     f.`name`
@@ -47,9 +50,9 @@
             FROM
                 food_machine_pro_activity_ref r
             WHERE
-                mac_id =  #{macId}
+                mac_id = #{macId}
         ) pro_act ON aisle.mac_id = pro_act.mac_id
-        AND aisle.product_id = pro_act.product_id
+        AND aisle.aisle_id = pro_act.aisle_id
         LEFT JOIN (
             SELECT
                 1 activity_type,

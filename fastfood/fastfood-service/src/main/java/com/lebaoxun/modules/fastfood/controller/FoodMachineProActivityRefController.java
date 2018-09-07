@@ -68,11 +68,10 @@ public class FoodMachineProActivityRefController {
                                       @RequestBody List<FoodMachineProActivityRefEntity>foodMachineProActList){
         if (foodMachineProActList==null)return ResponseMessage.error("00002","数据异常");
         foodMachineProActList.forEach(e->{
-            if ((e.getId()==null||e.getId()==0)&&e.getIsRef()==1){
+            if ((e.getId()==null||e.getId()==0)||e.getIsRef()==1){
                 EntityWrapper<FoodMachineProActivityRefEntity> actProRefWrapper=new EntityWrapper();
                 actProRefWrapper.eq("mac_id",e.getMacId());
-                actProRefWrapper.eq("product_id",e.getProductId());
-                actProRefWrapper.eq("activity_type",e.getActivityType());
+                actProRefWrapper.eq("aisle_id",e.getAisleId());
                 FoodMachineProActivityRefEntity actProRef=foodMachineProActivityRefService.selectOne(actProRefWrapper);
                 if (actProRef==null||actProRef.getId()==0) {
                     e.setCreateBy((int)adminId.longValue());
