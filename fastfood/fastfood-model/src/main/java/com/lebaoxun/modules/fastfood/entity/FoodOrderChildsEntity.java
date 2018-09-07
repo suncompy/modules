@@ -202,7 +202,7 @@ public class FoodOrderChildsEntity implements Serializable {
 		this.status = status;
 	}
 	/**
-	 * 获取：订单状态 -2=已删除，-1=已取消，0=待支付，1=已支付，2=已取单，3=已评价
+	 * 获取：订单状态0=未评价，1=已评价
 	 */
 	public Integer getStatus() {
 		return status;

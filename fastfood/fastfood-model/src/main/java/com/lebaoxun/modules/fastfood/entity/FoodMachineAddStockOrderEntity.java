@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -27,25 +28,9 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	 */
 	private Integer macId;
 	/**
-	 * X坐标
+	 * 通道ID
 	 */
-	private Integer x;
-	/**
-	 * Y坐标
-	 */
-	private Integer y;
-	/**
-	 * Z坐标
-	 */
-	private Integer z;
-	/**
-	 * 总容量
-	 */
-	private Integer size;
-	/**
-	 * 库存
-	 */
-	private Integer stock;
+	private Integer aisleId;
 	/**
 	 * 进货数
 	 */
@@ -78,6 +63,9 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	
+	@TableField(exist=false)
+	private FoodMachineAisleEntity aisle;
 
 	/**
 	 * 设置：
@@ -102,66 +90,6 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	 */
 	public Integer getMacId() {
 		return macId;
-	}
-	/**
-	 * 设置：X坐标
-	 */
-	public void setX(Integer x) {
-		this.x = x;
-	}
-	/**
-	 * 获取：X坐标
-	 */
-	public Integer getX() {
-		return x;
-	}
-	/**
-	 * 设置：Y坐标
-	 */
-	public void setY(Integer y) {
-		this.y = y;
-	}
-	/**
-	 * 获取：Y坐标
-	 */
-	public Integer getY() {
-		return y;
-	}
-	/**
-	 * 设置：Z坐标
-	 */
-	public void setZ(Integer z) {
-		this.z = z;
-	}
-	/**
-	 * 获取：Z坐标
-	 */
-	public Integer getZ() {
-		return z;
-	}
-	/**
-	 * 设置：总容量
-	 */
-	public void setSize(Integer size) {
-		this.size = size;
-	}
-	/**
-	 * 获取：总容量
-	 */
-	public Integer getSize() {
-		return size;
-	}
-	/**
-	 * 设置：库存
-	 */
-	public void setStock(Integer stock) {
-		this.stock = stock;
-	}
-	/**
-	 * 获取：库存
-	 */
-	public Integer getStock() {
-		return stock;
 	}
 	/**
 	 * 设置：进货数
@@ -258,5 +186,17 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public Integer getAisleId() {
+		return aisleId;
+	}
+	public void setAisleId(Integer aisleId) {
+		this.aisleId = aisleId;
+	}
+	public FoodMachineAisleEntity getAisle() {
+		return aisle;
+	}
+	public void setAisle(FoodMachineAisleEntity aisle) {
+		this.aisle = aisle;
 	}
 }

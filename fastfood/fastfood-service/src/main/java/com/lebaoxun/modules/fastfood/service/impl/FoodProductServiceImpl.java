@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.lebaoxun.commons.exception.ResponseMessage;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +55,10 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
     public boolean insert(FoodProductEntity entity) {
     	// TODO Auto-generated method stub
     	List<Integer> materialIds = entity.getMaterialIds();
+    	
+    	int period = (int) ((entity.getDownTime().getTime()  - entity.getUpTime().getTime()) / (1000*3600*24));
+    	
+    	entity.setPeriod(period);
     	boolean result = super.insert(entity);
     	if(materialIds != null){
     		for(Integer materialId : materialIds){
@@ -99,6 +101,9 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
     	for(Integer materialId : l2){
     		foodProductMaterialRcrtDao.delete(new EntityWrapper<FoodProductMaterialRcrtEntity>().eq("material_id", materialId).eq("product_id", entity.getId()));
     	}
+    	int period = (int) ((entity.getDownTime().getTime()  - entity.getUpTime().getTime()) / (1000*3600*24));
+    	
+    	entity.setPeriod(period);
     	return super.updateById(entity);
     }
     

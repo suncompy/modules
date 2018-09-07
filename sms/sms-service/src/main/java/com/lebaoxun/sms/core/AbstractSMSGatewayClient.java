@@ -39,6 +39,7 @@ public abstract class AbstractSMSGatewayClient {
 	
 	public String refreshVfCode(String tel){
 		String vfcode = GenerateCode.gen(5)+"";
+		logger.info("refreshVfCode vfcode={}",vfcode);
 		redisCache.set(String.format(RedisKeyConstant.SMS_SEND_VFCODE_MOBILE, tel), vfcode, 10 * 60l);
 		return vfcode;
 	}

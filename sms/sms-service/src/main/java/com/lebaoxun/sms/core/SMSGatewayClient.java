@@ -41,9 +41,11 @@ public class SMSGatewayClient extends AbstractSMSGatewayClient implements Applic
 		String content = (String) redisHash.hGet(RedisKeyConstant.HASH_SMS_VFCODE_TEMPLATE_IDS, template_id);
 		Assert.notEmpty(content, "10401" , "为没有找到短信模板");
 		
-		String vfCode = refreshVfCode(mobile);
-		content = content.replace("#signature#", "【"+config.getSignature()+"】").replace("#vfcode#", vfCode);
-		
+		content = content.replace("#signature#", "【"+config.getSignature()+"】");
+		if(content.indexOf("#vfcode#") > 0){
+			String vfCode = refreshVfCode(mobile);
+			content =  content.replace("#vfcode#", vfCode);
+		}
 		if(datas != null){
 			content = String.format(content, datas);
 		}

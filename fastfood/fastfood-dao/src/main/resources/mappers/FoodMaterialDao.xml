@@ -22,6 +22,6 @@
 	    select t1.id,t1.name,t1.cat_id,t1.picture,t2.`name` as cat_name from food_material as t1 
 		left join food_material_cat as t2 on t2.id = t1.cat_id 
 		left join food_product_cat_material_cat_rcrt as t3 on t3.material_cat_id = t2.id
-		where t2.`status` = 1 and t1.`status` = 1 and t3.product_cat_id = 6;
+		where t2.`status` = 1 and t1.`status` = 1 and t3.product_cat_id = #{productCatId};
 	</select>
 </mapper>

@@ -49,10 +49,45 @@
         where f.mac_id=#{macId}
     </select>
     
-    <select id="findProductByMacIdAndProductCatId" resultType="java.util.Map">
+    <resultMap type="java.util.Map" id="foodMacAisleMap">
+        <result property="id" column="id"/>
+        <result property="aisleId" column="aisleId"/>
+        <result property="stock" column="stock"/>
+        <result property="price" column="price"/>
+        <result property="productCatId" column="productCatId"/>
+        <result property="productId" column="productId"/>
+        <result property="name" column="name"/>
+        <result property="pMaterials" column="pMaterials"/>
+        <result property="showPrice" column="showPrice"/>
+        <result property="picture" column="picture"/>
+        <result property="unit" column="unit"/>
+        <result property="zsWeight" column="zsWeight"/>
+        <result property="cpWeight" column="cpWeight"/>
+        <result property="warmFlag" column="warmFlag"/>
+        <result property="warmTime" column="warmTime"/>
+        <result property="hotNum" column="hotNum"/>
+        <result property="label" column="label"/>
+        <result property="status" column="status"/>
+        <result property="upTime" column="upTime"/>
+        <result property="downTime" column="downTime"/>
+        <result property="keyword" column="keyword"/>
+        <result property="descr" column="descr"/>
+        <result property="type" column="type"/>
+        <result property="createTime" column="createTime"/>
+        <collection property="materials" resultMap="foodMacMaterialsMap" ofType="java.util.Map" javaType="java.util.ArrayList"></collection>
+        <collection property="activitys" ofType="java.lang.String" javaType="java.util.ArrayList" column="activity"></collection>
+    </resultMap>
+    
+    <resultMap type="java.util.Map" id="foodMacMaterialsMap">
+        <result property="name" column="materialName"/>
+        <result property="picture" column="materialPicture"/>
+        <result property="spec" column="materialSpec"/>
+    </resultMap>
+    
+    <select id="findProductByMacIdAndProductCatId" resultMap="foodMacAisleMap" >
 		select 
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
-			product.id as productId,product.name as name,product.materials as materials,
+			product.id as productId,product.name as name,product.materials as pMaterials,
 			product.show_price as showPrice, product.picture as picture,
 			product.unit as unit, product.zs_weight as zsWeight,
 			product.cp_weight as cpWeight, product.warm_flag as warmFlag,
@@ -66,8 +101,7 @@
 		from food_machine_aisle as aisle
 		left join food_product as product on product.id = aisle.product_id
 		left join food_machine_pro_activity_ref as pro_activity on
-		pro_activity.mac_id = aisle.mac_id and pro_activity.product_id =
-		aisle.product_id
+		pro_activity.mac_id = aisle.mac_id and pro_activity.aisle_id = aisle.id
 		left join food_product_material_rcrt as mr on mr.product_id = aisle.product_id
 		left join food_material as material on material.id = mr.material_id
 		where aisle.mac_id = #{macId}
@@ -78,11 +112,11 @@
 		and date_add(product.up_time, interval period day) > now();
     </select>
     
-    <select id="findProductByMacIdAndWeek" resultType="java.util.Map">
+    <select id="findProductByMacIdAndWeek" resultMap="foodMacAisleMap">
 		select 
 			t1.id,
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
-			product.id as productId,product.name as name,product.materials as materials,
+			product.id as productId,product.name as name,product.materials as pMaterials,
 			product.show_price as showPrice, product.picture as picture,
 			product.unit as unit, product.zs_weight as zsWeight,
 			product.cp_weight as cpWeight, product.warm_flag as warmFlag,
@@ -96,7 +130,7 @@
 		from food_week_menu as t1 
 		left join food_product as product on product.id = t1.product_id
 		left join food_machine_aisle as aisle on aisle.product_id = t1.product_id
-		left join food_machine_pro_activity_ref as pro_activity on pro_activity.mac_id = aisle.mac_id and pro_activity.product_id = aisle.product_id
+		left join food_machine_pro_activity_ref as pro_activity on pro_activity.mac_id = aisle.mac_id and pro_activity.aisle_id = aisle.id
 		left join food_product_material_rcrt as mr on mr.product_id = t1.product_id
 		left join food_material as material on material.id = mr.material_id
 		where 
@@ -106,10 +140,10 @@
 		and date_add(product.up_time, interval period day) > now();
     </select>
     
-    <select id="findProductByAisle" resultType="java.util.Map">
+    <select id="findProductByAisle" resultMap="foodMacAisleMap">
         select 
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
-			product.id as productId,product.name as name,product.materials as materials,
+			product.id as productId,product.name as name,product.materials as pMaterials,
 			product.show_price as showPrice, product.picture as picture,
 			product.unit as unit, product.zs_weight as zsWeight,
 			product.cp_weight as cpWeight, product.warm_flag as warmFlag,
@@ -123,8 +157,7 @@
 		from food_machine_aisle as aisle
 		left join food_product as product on product.id = aisle.product_id
 		left join food_machine_pro_activity_ref as pro_activity on
-		pro_activity.mac_id = aisle.mac_id and pro_activity.product_id =
-		aisle.product_id
+		pro_activity.mac_id = aisle.mac_id and pro_activity.aisle_id = aisle.id
 		left join food_product_material_rcrt as mr on mr.product_id = aisle.product_id
 		left join food_material as material on material.id = mr.material_id
 		where 
