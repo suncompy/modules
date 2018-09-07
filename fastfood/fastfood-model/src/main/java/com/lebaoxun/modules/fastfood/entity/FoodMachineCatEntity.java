@@ -22,7 +22,7 @@ public class FoodMachineCatEntity implements Serializable {
 	 * 
 	 */
 @TableId
-	private long id;
+	private long id = 0l;
 	/**
 	 * 分类名称
 	 */

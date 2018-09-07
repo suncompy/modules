@@ -21,8 +21,8 @@ public class OperateCouponRecordEntity implements Serializable {
 	/**
 	 * 
 	 */
-@TableId
-	private Integer id;
+	@TableId
+	private Integer id = 0;
 	/**
 	 * 优惠券ID
 	 */

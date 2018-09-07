@@ -21,7 +21,7 @@ public class OperateCouponMacRcrtEntity implements Serializable {
 	 * 
 	 */
 @TableId
-	private Integer id;
+	private Integer id = 0;
 	/**
 	 * 优惠券ID
 	 */

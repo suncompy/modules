@@ -21,7 +21,7 @@ public class OperateRedPackedEntity implements Serializable {
 	 * 
 	 */
 @TableId
-	private Integer id;
+	private Integer id = 0;
 	/**
 	 * 红包名称
 	 */
