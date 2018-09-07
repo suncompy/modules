@@ -3,6 +3,10 @@ package com.lebaoxun.modules.fastfood.dao;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
 import org.apache.ibatis.annotations.Mapper;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 取餐机分类通道
@@ -13,5 +17,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 @Mapper
 public interface FoodMachineCatAisleDao extends BaseMapper<FoodMachineCatAisleEntity> {
-	
+    public List<Map<String,Object>> findAisleInfoByCatId(@Param("catId")Integer catId);
 }
