@@ -28,8 +28,13 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 	 */
 	private Integer macId;
 	/**
+	 * 货道id
+	 */
+	private Integer aisleId;
+	/**
 	 * 产品id
 	 */
+	@TableField(exist = false)
 	private Integer productId;
 
 	/**
@@ -60,6 +65,14 @@ public class FoodMachineProActivityRefEntity implements Serializable {
 
 	@TableField(exist = false)
 	private Integer rowId;
+
+	public Integer getAisleId() {
+		return aisleId;
+	}
+
+	public void setAisleId(Integer aisleId) {
+		this.aisleId = aisleId;
+	}
 
 	public Integer getRowId() {
 		return rowId;
