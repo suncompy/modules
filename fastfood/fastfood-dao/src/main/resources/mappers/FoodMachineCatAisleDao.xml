@@ -14,6 +14,18 @@
         <result property="createTime" column="create_time"/>
         <result property="createBy" column="create_by"/>
     </resultMap>
-
-
+    <select id="findAisleInfoByCatId" resultType="java.util.Map">
+        SELECT
+            aisle.id,
+          aisle.cat_id as catId,
+            CONCAT(aisle.x, '-', aisle.y) AS xy,
+          aisle.x,
+          aisle.y,
+          aisle.z,
+          aisle.size
+        FROM
+            food_machine_cat_aisle aisle
+        WHERE
+            aisle.cat_id = #{catId}
+    </select>
 </mapper>
