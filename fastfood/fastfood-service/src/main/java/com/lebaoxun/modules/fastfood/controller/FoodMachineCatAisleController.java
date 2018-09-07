@@ -1,6 +1,8 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -37,6 +39,38 @@ public class FoodMachineCatAisleController {
     ResponseMessage list(@RequestParam Map<String, Object> params){
         PageUtils page = foodMachineCatAisleService.queryPage(params);
         return ResponseMessage.ok(page);
+    }
+
+    @RequestMapping("/fastfood/foodmachinecataisle/findAisleInfoByCatId")
+    ResponseMessage findAisleInfoByCatId(@RequestParam("catId")Integer catId){
+        List<Map<String,Object>> aisleList=foodMachineCatAisleService.findAisleInfoByCatId(catId);
+        int totalCount=aisleList.size();
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(aisleList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
+    }
+    /**
+     * 保存
+     */
+    @RequestMapping("/fastfood/foodmachinecataisle/refMacCatByAisle")
+    @RedisLock(value="fastfood:refMacCatByAisle:save:lock:#arg0")
+    ResponseMessage refMacCatByAisle(@RequestParam("adminId")Long adminId,
+                                     @RequestBody List<FoodMachineCatAisleEntity> catAisleEntityList){
+        if (catAisleEntityList==null||catAisleEntityList.size()==0)
+            return ResponseMessage.error("60001","货道数据不能为空！");
+        catAisleEntityList.forEach(e->{
+            if (e.getId()!=null&&e.getId()>0){//修改
+                foodMachineCatAisleService.updateById(e);
+            }else {
+                if (e.getId()==null)
+                    e.setId(0);
+                e.setCreateBy(adminId);
+                e.setCreateTime(new Date());
+                foodMachineCatAisleService.saveFoodMachineCatAisle(e);
+            }
+        });
+        return ResponseMessage.ok();
     }
 
 
