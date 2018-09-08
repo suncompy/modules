@@ -74,6 +74,13 @@ public class FoodShoppingCartServiceImpl extends ServiceImpl<FoodShoppingCartDao
 		// TODO Auto-generated method stub
 		this.delete(new EntityWrapper<FoodShoppingCartEntity>().eq("cart_id", cartId).eq("user_id", userId));
 	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void clear(Long userId) {
+		// TODO Auto-generated method stub
+		this.delete(new EntityWrapper<FoodShoppingCartEntity>().eq("user_id", userId));
+	}
 
 	@Override
 	public List<Map<String,Object>> findByUser(Long userId) {

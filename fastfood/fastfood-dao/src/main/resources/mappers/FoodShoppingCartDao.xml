@@ -17,7 +17,7 @@
 
     <select id="findByUser" resultType="java.util.HashMap">
         SELECT
-			cart.check_status as checkStatus,cart.buy_number as buyNumber,cart.mac_id as macId,
+			cart.cart_id as cartId,cart.check_status as checkStatus,cart.buy_number as buyNumber,cart.mac_id as macId,
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
 			product.id as productId,product.name as name,product.materials as materials,
 			product.show_price as showPrice, product.picture as picture,
@@ -36,7 +36,7 @@
 		WHERE
 			cart.aisle_id = aisle.id
 		AND cart.mac_id = aisle.mac_id
-		AND cart.product_id = aisle.product_cat_id
+		AND cart.product_id = aisle.product_id
 		AND cart.user_id = #{userId}
     </select>
 

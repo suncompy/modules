@@ -62,7 +62,7 @@ public class UserScoreAchievementAwardServiceImpl extends ServiceImpl<UserScoreA
 			//按任务设定，检查是否完成
 			if(uaa.getCat() == 1){ // 新手任务
 				// 用userId获取积分奖励日志，为空则奖励积分并加日志
-				List<UserLogEntity> elogs = userLogDao.selectList(new EntityWrapper<UserLogEntity>().eq("user_id", userId).eq("adjunctInfo", action));
+				List<UserLogEntity> elogs = userLogDao.selectList(new EntityWrapper<UserLogEntity>().eq("user_id", userId).eq("adjunct_info", action));
 				if(elogs == null || elogs.size() == 0){
 					rewardSocreAndLog(userId, action, logId, uaa.getBonus());
 				}

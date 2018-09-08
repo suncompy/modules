@@ -24,6 +24,8 @@ public interface FoodShoppingCartService extends IService<FoodShoppingCartEntity
     
     void remove(Long userId,Long cartId);
     
+    void clear(Long userId);
+    
     List<Map<String,Object>> findByUser(Long userId);
 }
 

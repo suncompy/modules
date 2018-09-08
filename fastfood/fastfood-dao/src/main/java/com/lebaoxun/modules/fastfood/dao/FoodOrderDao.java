@@ -25,7 +25,7 @@ public interface FoodOrderDao extends BaseMapper<FoodOrderEntity> {
 	List<Map<String, Object>> findOrderInfoByMacIMEI(@Param("imei") String  imei);
 
 	List<FoodOrderEntity> findOrderByUser(@Param("userId") Long userId,
-			@Param("status") Integer status, 
+			@Param("status") List<Integer> status, 
 			@Param("size") Integer size, 
 			@Param("offset") Integer offset);
 	

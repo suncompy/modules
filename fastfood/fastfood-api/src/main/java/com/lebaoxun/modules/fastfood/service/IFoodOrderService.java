@@ -173,7 +173,7 @@ public interface IFoodOrderService {
     @RequestMapping("/fastfood/foodorder/findOrderByUser")
     ResponseMessage findOrderByUser(
     		@RequestParam("userId")Long userId,
-    		@RequestParam("status")Integer status, 
+    		@RequestParam(value="status",required=false)Integer status, 
     		@RequestParam(value="size",required=false)Integer size,
     		@RequestParam(value="offset",required=false)Integer offset);
     

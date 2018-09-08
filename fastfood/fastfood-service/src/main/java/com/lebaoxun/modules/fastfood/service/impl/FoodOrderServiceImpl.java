@@ -75,6 +75,9 @@ public class FoodOrderServiceImpl extends
 
 	@Resource(name="functionDomainRedisTemplate")
 	private RedisTemplate<String, Object> redisTemplate;
+	
+	@Resource(name="redisTemplate")
+	private RedisTemplate<String, Object> redisTemplate2;
 
 	@Resource
 	private IRedisHash redisHash;
@@ -214,13 +217,17 @@ public class FoodOrderServiceImpl extends
 			query.setUserId(userId);
 			FoodShoppingCartEntity foodCart = foodShoppingCartDao
 					.selectOne(query);
+			
+			if(foodCart == null){
+				throw new I18nMessageException("60016", "购物车不存在");
+			}
 			if (macId != null && !foodCart.getMacId().equals(macId)) {
 				throw new I18nMessageException("60008", "商品不在同一个机器中，无法下单");
 			}
 			Integer buyNumber = cart.getBuyNumber() == null ? foodCart
 					.getBuyNumber() : cart.getBuyNumber();
 			FoodOrderChildsEntity orderChild = new FoodOrderChildsEntity();
-			orderChild.setAisleId(cart.getAisleId());
+			orderChild.setAisleId(foodCart.getAisleId());
 			orderChild.setBuyNumber(buyNumber);
 			orderChild.setMacId(macId);
 			orderChild.setProductId(foodCart.getProductId());
@@ -228,6 +235,7 @@ public class FoodOrderServiceImpl extends
 			macId = foodCart.getMacId();
 		}
 		order.setMacId(macId);
+		order.setChilds(childs);
 		order = createOrder(userId, dis, order);
 
 		for (FoodShoppingCartEntity cart : carts) {
@@ -249,14 +257,14 @@ public class FoodOrderServiceImpl extends
 
 	private synchronized String getOrder(Date now) {
 		String date = DateFormatUtils.format(now, "yyyyMMdd");
-		String key = "mall:orderNo:" + date;
-		Integer inr = (Integer) redisTemplate.opsForValue().get(key);
+		String key = "fastfood:orderNo:" + date;
+		Integer inr = (Integer) redisTemplate2.opsForValue().get(key);
 		if (inr == null) {
 			inr = RandomUtils.nextInt(10000);
-			redisTemplate.opsForValue().set(key, inr, 25l,
+			redisTemplate2.opsForValue().set(key, inr.intValue(), 25l,
 					TimeUnit.valueOf("HOURS"));
 		} else {
-			inr = redisTemplate.opsForValue().increment(key, 1).intValue();
+			inr = redisTemplate2.opsForValue().increment(key, 1).intValue();
 		}
 		String orderNo = "FD" + date + format1(inr, 5);
 		return orderNo;
@@ -743,56 +751,53 @@ public class FoodOrderServiceImpl extends
 		if(StringUtils.isBlank(order.getActivityType())){
 			//产品是否有活动
 			List<FoodOrderChildsEntity> childs = foodOrderChildsDao
-					.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq(
-							"user_id", userId).eq("order_id", order.getId()));
+					.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", order.getId()));
 			for(FoodOrderChildsEntity child : childs){
-				if("3".equals(order.getActivityType())){
-					String logType = "ACTIVITY_ORDER_BACK_MONEY";
-					Map<String,String> pmessage = new HashMap<String,String>();
-					
-					String unq = order.getOrderNo()+"_"+child.getActivity()+"_mac_"+order.getMacId()+"product_"+child.getProductId();
-					pmessage.put("out_trade_no", order.getOrderNo());
-					pmessage.put("recharge_fee", child.getActivityFee().toString());
-					pmessage.put("log_type", logType);
-					pmessage.put("descr", "活动返现");
-					pmessage.put("adjunctInfo", unq);
-					pmessage.put("user_id", order.getUserId()+"");
-					pmessage.put("buy_time", buyTime);
-					pmessage.put("token", MD5.md5(logType.toString()+"_"+unq));
-					
-					rabbitmqSender.sendContractDirect("account.balance.queue.award",
-	    					new Gson().toJson(pmessage));
+				if(StringUtils.isNotBlank(child.getActivity())){
+					putActivityFor(order.getOrderNo(), child.getActivity(), order.getActivityId(), 
+							child.getActivityFee(), macId, child.getProductId(), userId, buyTime);
 				}
-				putActivityFor(child.getActivity(), order.getActivityId(), macId, child.getProductId(), userId);
 			}
 		}else{
 			//处理机器活动
 			if(StringUtils.isNotBlank(order.getActivityType())){
-				if("3".equals(order.getActivityType())){//通知返现队列
-					String logType = "ACTIVITY_ORDER_BACK_MONEY";
-					Map<String,String> pmessage = new HashMap<String,String>();
-					String unq = order.getOrderNo()+"_"+activity+"_mac_"+order.getMacId();
-					pmessage.put("out_trade_no", order.getOrderNo());
-					pmessage.put("recharge_fee", order.getActivityFee().toString());
-					pmessage.put("log_type", logType);
-					pmessage.put("descr", "活动返现");
-					pmessage.put("adjunctInfo", unq);
-					pmessage.put("user_id", order.getUserId()+"");
-					pmessage.put("buy_time", buyTime);
-					pmessage.put("token", MD5.md5(logType.toString()+"_"+unq));
-					
-					rabbitmqSender.sendContractDirect("account.balance.queue.award",
-	    					new Gson().toJson(pmessage));
-				}
-				putActivityFor(activity, order.getActivityId(), macId, null, userId);
+				putActivityFor(order.getOrderNo(),activity, order.getActivityId(), 
+						order.getActivityFee(), macId, null, userId, buyTime);
 			}
 		}
 	}
 	
-	private Integer putActivityFor(String activity,Integer activityId,Integer macId,Integer productId,Long userId){
-		HashOperations<String, String, Integer> operations = redisTemplate
+	private Integer putActivityFor(String orderNo,String activity,Integer activityId,
+			BigDecimal backFee, Integer macId,Integer productId,Long userId,String buyTime){
+		if(StringUtils.isBlank(activity)){
+			return null;
+		}
+		if("1".equals(activity)){
+			OperateActivityFirstOrderEntity firstOrderActivity = operateActivityFirstOrderDao.selectById(activityId);
+			if(firstOrderActivity == null){
+				logger.info("firstOrderActivity is NULL");
+				return null;
+			}
+		}
+		if("2".equals(activity)){
+			OperateActivityKeepDiscountEntity keepDiscountActivity = operateActivityKeepDiscountDao
+					.selectById(activityId);
+			if(keepDiscountActivity == null){
+				logger.info("keepDiscountActivity is NULL");
+				return null;
+			}
+		}
+		if("3".equals(activity)){
+			OperateActivityPayCashBackEntity payCashBackEntity = operateActivityPayCashBackDao
+					.selectById(activityId);
+			if(payCashBackEntity == null){
+				logger.info("payCashBackEntity is NULL");
+				return null;
+			}
+		}
+		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
-		String hashKey = Long.toString(userId);
+		String hashKey = "u_"+Long.toString(userId);
 		
 		if("2".equals(activity)){//累计折扣活动，每人每天只能参加一次
 			hashKey += "_"+DateFormatUtils.format(new Date(), "yyyyMMdd");
@@ -804,13 +809,33 @@ public class FoodOrderServiceImpl extends
 		if(operations.hasKey(key, hashKey)){
 			operations.increment(key, hashKey, 1);
 		}else{
-			operations.put(key, hashKey, 1);
+			operations.put(key, hashKey, 1+"");
 		}
-		List<Integer> values = operations.values(key);
+		List<String> values = operations.values(key);
 		Integer total = 0;
-		for(Integer item : values){
-			total += item;
+		for(String item : values){
+			total += Integer.parseInt(item);
 		}
+		
+		if("3".equals(activity)){//通知返现队列
+			String logType = "ACTIVITY_ORDER_BACK_MONEY";
+			Map<String,String> pmessage = new HashMap<String,String>();
+			String unq = orderNo+"_"+activity+"_mac_"+macId;
+			if(productId != null){
+				unq += "product_" + productId;
+			}
+			pmessage.put("out_trade_no", orderNo);
+			pmessage.put("recharge_fee", backFee.toString());
+			pmessage.put("log_type", logType);
+			pmessage.put("descr", "活动返现");
+			pmessage.put("adjunctInfo", unq);
+			pmessage.put("user_id", userId+"");
+			pmessage.put("buy_time", buyTime);
+			pmessage.put("token", MD5.md5(logType.toString()+"_"+unq));
+			rabbitmqSender.sendContractDirect("account.balance.queue.award",
+					new Gson().toJson(pmessage));
+		}
+		
 		return total;
 	}
 	
@@ -829,7 +854,7 @@ public class FoodOrderServiceImpl extends
 				total += item;
 			}
 		}else{
-			String hashKey = Long.toString(userId);
+			String hashKey = "u_"+Long.toString(userId);
 			if("2".equals(flag)){//累计折扣活动，每人每天只能参加一次
 				hashKey += "_"+DateFormatUtils.format(new Date(), "yyyyMMdd");
 			}
@@ -923,7 +948,17 @@ public class FoodOrderServiceImpl extends
 	public List<FoodOrderEntity> findOrderByUser(Long userId, Integer status,
 			Integer size, Integer offset) {
 		// TODO Auto-generated method stub
-		List<FoodOrderEntity> list = this.baseMapper.findOrderByUser(userId, status, size, offset);
+		List<Integer> statusList = new ArrayList<Integer>();
+		if(status == null){
+			statusList.add(-1);
+			statusList.add(0);
+			statusList.add(1);
+			statusList.add(2);
+			statusList.add(3);
+		}else{
+			statusList.add(status);
+		}
+		List<FoodOrderEntity> list = this.baseMapper.findOrderByUser(userId, statusList, size, offset);
 		
 		if(list != null && !list.isEmpty()){
 			for(FoodOrderEntity order: list){
@@ -979,7 +1014,7 @@ public class FoodOrderServiceImpl extends
 				String  takeFoodStr = entries.get(code);
 				TakeFoodCodeEntity tfc = JSONObject.parseObject(takeFoodStr, TakeFoodCodeEntity.class);
 				if(orderNo.equals(tfc.getOrderNo())){
-					return Integer.parseInt(takeFoodStr);
+					return Integer.parseInt(code);
 				}
 			}
 		}

@@ -33,9 +33,7 @@
 		<result property="createBy" column="create_by" />
 		<result property="updateBy" column="update_by" />
 		<result property="updateTime" column="update_time" />
-		<collection property="activitys" ofType="java.lang.String">
-			<result property="activityType" column="activity_type" />
-		</collection>
+		<collection property="activitys" ofType="java.lang.String" javaType="java.util.ArrayList" column="activity"></collection>
 
 		<collection property="productCats" resultMap="foodMachineProductCatMap"
 			ofType="com.lebaoxun.modules.fastfood.entity.FoodMachineProductCatEntity">
@@ -73,7 +71,7 @@
 		mac.area_code,mac.IMEI,mac.pos,
 		mac.`status`,mac.id,
 		mac.address,
-		mac_activity.activity_type
+		mac_activity.activity_type as activity
 		from food_machine as mac
 		left join food_machine_activity_ref as
 		mac_activity on
@@ -92,16 +90,16 @@
 		mac.`status`,
 		mac.id,
 		mac.address,
-		mac_activity.activity_type,
-		product_cat.icon,
+		mac_activity.activity_type as activity
+		<!-- ,product_cat.icon,
 		product_cat.id as cat_id,
-		product_cat.`name` as cat_name
+		product_cat.`name` as cat_name -->
 		FROM
 		food_machine AS mac
 		LEFT JOIN food_machine_activity_ref AS mac_activity ON
 		mac_activity.mac_id = mac.id
-		LEFT JOIN food_machine_product_cat as
-		product_cat on product_cat.mac_id = mac.id
+		<!-- LEFT JOIN food_machine_product_cat as
+		product_cat on product_cat.mac_id = mac.id -->
 		WHERE
 		mac.id = #{macId}
 	</select>

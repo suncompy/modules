@@ -123,11 +123,25 @@ public class FoodShoppingCartController {
      * @return
      */
     @RequestMapping("/fastfood/foodshoppingcart/remove")
-    @RedisLock(value="fastfood:foodshoppingcart:lock:#arg0")
+    @RedisLock(value="fastfood:foodshoppingcart:remove:lock:#arg0")
     ResponseMessage remove(
     		@RequestParam("userId")Long userId,
     		@RequestParam("cartId")Long cartId){
     	foodShoppingCartService.remove(userId, cartId);
+    	return ResponseMessage.ok();
+    }
+    
+    /**
+     * 清空购物车
+     * @param userId
+     * @param macId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodshoppingcart/clear")
+    @RedisLock(value="fastfood:foodshoppingcart:clear:lock:#arg0")
+    ResponseMessage clear(@RequestParam("userId")Long userId){
+    	foodShoppingCartService.clear(userId);
     	return ResponseMessage.ok();
     }
     

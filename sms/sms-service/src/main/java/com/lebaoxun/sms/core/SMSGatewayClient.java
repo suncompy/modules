@@ -42,7 +42,7 @@ public class SMSGatewayClient extends AbstractSMSGatewayClient implements Applic
 		Assert.notEmpty(content, "10401" , "为没有找到短信模板");
 		
 		content = content.replace("#signature#", "【"+config.getSignature()+"】");
-		if(content.indexOf("#vfcode#") > 0){
+		if(content.indexOf("#vfcode#") > -1){
 			String vfCode = refreshVfCode(mobile);
 			content =  content.replace("#vfcode#", vfCode);
 		}
@@ -167,5 +167,6 @@ public class SMSGatewayClient extends AbstractSMSGatewayClient implements Applic
             throws BeansException {  
 		context = applicationContext;  
     }  
+	
 	
 }

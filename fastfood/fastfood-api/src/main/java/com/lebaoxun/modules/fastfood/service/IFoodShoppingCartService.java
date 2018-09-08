@@ -97,6 +97,16 @@ public interface IFoodShoppingCartService {
     		@RequestParam("cartId")Long cartId);
     
     /**
+     * 清空购物车
+     * @param userId
+     * @param macId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodshoppingcart/clear")
+    ResponseMessage clear(@RequestParam("userId")Long userId);
+    
+    /**
      * 购物车列表
      * @param userId
      * @param macId

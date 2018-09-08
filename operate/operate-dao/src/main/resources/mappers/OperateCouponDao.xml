@@ -43,7 +43,8 @@
 	<select id="findById" resultMap="operateCouponMap">
 	    select 
 			t2.id, t2.name, t2.total, t2.peo_num_restrict,
-			t2.type, t2.amount, t2.amount, t2.use_restrict
+			t2.type, t2.amount, t2.start_time , t2.period, 
+			t2.use_restrict
 		from food_machine_coupon_ref as t1
 		left join operate_coupon t2 on t2.id = t1.coupon_id
 		where t1.mac_id = #{macId}
