@@ -83,7 +83,7 @@ public class UserBalacenAwardListener {
 				msg.put("token", token);
 				
 				rabbitmqSender.sendContractDirect("account.log.queue",
-						new Gson().toJson(message));
+						new Gson().toJson(msg));
 			}
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);

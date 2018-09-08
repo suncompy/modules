@@ -93,7 +93,7 @@ public class PayListener {
 					msg.put("token", MD5.md5(logType.toString()+"_"+out_trade_no));
 					
 					rabbitmqSender.sendContractDirect("account.log.queue",
-							new Gson().toJson(message));
+							new Gson().toJson(msg));
 				}
 			}
 		}  catch (Exception e) {

@@ -725,6 +725,7 @@ public class FoodOrderServiceImpl extends
 		if (order == null || order.getOrderStatus() != 0) {
 			throw new I18nMessageException("60007", "订单不存在");
 		}
+		putActivity(order,buyTime);
 		Map<String,String> map = qrcodeUploadService.createAndUpload("aliyunCloud", "fastfood", orderNo);
 		String qrCode = map.get("uri");
 		logger.debug("qrCode={}",qrCode);
@@ -735,7 +736,6 @@ public class FoodOrderServiceImpl extends
 		logger.debug("payFoodOrder|order={}",new Gson().toJson(order));
 		this.baseMapper.updateById(order);
 		
-		putActivity(order,buyTime);
 		
 		return order;
 	}
