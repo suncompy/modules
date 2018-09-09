@@ -1,9 +1,11 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +31,6 @@ import com.lebaoxun.soa.core.redis.lock.RedisLock;
 public class FoodMachineAdvanceTimeController {
     @Autowired
     private FoodMachineAdvanceTimeService foodMachineAdvanceTimeService;
-
     /**
      * 列表
      */
@@ -39,6 +40,23 @@ public class FoodMachineAdvanceTimeController {
         return ResponseMessage.ok(page);
     }
 
+    /**
+     * 查询机器 预订单产品列表
+     */
+    @RequestMapping("/fastfood/foodmachineadvancetime/findPreOrderAndProByMacId")
+    ResponseMessage findPreOrderAndProByMacId(@RequestParam("macId")Integer macId){
+        List<FoodMachineAdvanceTimeEntity> preOderProList=foodMachineAdvanceTimeService.findPreOrderAndProByMacId(macId);
+        int totalCount=preOderProList.size();
+        if (totalCount>0){
+            for (int i=0;i<totalCount;i++){
+                preOderProList.get(i).setRowId(i+1);
+            }
+        }
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(preOderProList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
+    }
 
     /**
      * 信息
@@ -58,7 +76,15 @@ public class FoodMachineAdvanceTimeController {
 		foodMachineAdvanceTimeService.insert(foodMachineAdvanceTime);
         return ResponseMessage.ok();
     }
-
+    @RequestMapping("/fastfood/foodmachineadvancetime/batchSave")
+    ResponseMessage batchSave(@RequestParam("adminId")Long adminId,@RequestBody List<FoodMachineAdvanceTimeEntity> advanceTimeList){
+        advanceTimeList.forEach(e->{
+            e.setCreateBy(adminId);
+            e.setCreateTime(new Date());
+            foodMachineAdvanceTimeService.insert(e);
+        });
+        return ResponseMessage.ok();
+    }
     /**
      * 修改
      */
