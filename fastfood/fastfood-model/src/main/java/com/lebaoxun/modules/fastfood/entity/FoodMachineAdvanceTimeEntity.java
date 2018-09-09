@@ -44,13 +44,16 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 	 * 产品ID
 	 */
 	@TableField(exist = false)
-	private Float productId;
+	private Integer productId;
 
 	/**
 	 * 产品名称
 	 */
 	@TableField(exist = false)
-	private Float productName;
+	private String productName;
+
+	@TableField(exist = false)
+	private Integer rowId;
 	/**
 	 * 创建时间
 	 */
@@ -68,19 +71,27 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 		this.aisleId = aisleId;
 	}
 
-	public Float getProductId() {
+	public Integer getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(Integer rowId) {
+		this.rowId = rowId;
+	}
+
+	public Integer getProductId() {
 		return productId;
 	}
 
-	public void setProductId(Float productId) {
+	public void setProductId(Integer productId) {
 		this.productId = productId;
 	}
 
-	public Float getProductName() {
+	public String getProductName() {
 		return productName;
 	}
 
-	public void setProductName(Float productName) {
+	public void setProductName(String productName) {
 		this.productName = productName;
 	}
 
