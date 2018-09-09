@@ -180,8 +180,7 @@ public class FoodOrderServiceImpl extends
 			throw new I18nMessageException("60009", "订单不存在或已支付");
 		}
 		List<FoodOrderChildsEntity> childs = foodOrderChildsDao
-				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq(
-						"user_id", userId).eq("order_id", order.getId()));
+				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", order.getId()));
 		order.setChilds(childs);
 
 		this.calCheckTotalFee(userId, dis, order, false, true);
@@ -284,8 +283,7 @@ public class FoodOrderServiceImpl extends
 		}
 		
 		List<FoodOrderChildsEntity> childs = foodOrderChildsDao
-				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq(
-						"user_id", userId).eq("order_id", order.getId()));
+				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", order.getId()));
 		order.setChilds(childs);
 
 		this.calCheckTotalFee(userId, dis, order, false, true);
@@ -550,7 +548,7 @@ public class FoodOrderServiceImpl extends
 			order.setCouponType(null);
 			order.setCouponUseRestrict(null);
 		}
-		if (dis != null) {
+		if (dis != null && dis.compareTo(new BigDecimal("0.00")) > 0) {
 			logger.info("level dis={},payAmount={}", dis, payAmount);
 			BigDecimal redFee = payAmount.subtract(payAmount.multiply(dis));
 			order.setRedPackedAmount(redFee);

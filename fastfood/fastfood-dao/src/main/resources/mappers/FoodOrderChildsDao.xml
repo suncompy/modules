@@ -5,7 +5,7 @@
 
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity" id="foodOrderChildsMap">
-        <result property="orderProductId" column="order_product_id"/>
+        <result property="id" column="id"/>
         <result property="orderId" column="order_id"/>
         <result property="productCatId" column="product_cat_id"/>
         <result property="productId" column="product_id"/>

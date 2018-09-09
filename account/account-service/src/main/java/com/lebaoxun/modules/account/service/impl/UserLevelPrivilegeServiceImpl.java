@@ -47,7 +47,7 @@ public class UserLevelPrivilegeServiceImpl extends ServiceImpl<UserLevelPrivileg
 	public Integer findDisByUserId(Long userId, Integer level, String payLogType) {
 		// TODO Auto-generated method stub
 		Integer dis = 0;
-		UserLevelPrivilegeEntity up = this.selectOne(new EntityWrapper<UserLevelPrivilegeEntity>().eq("level", "level"));
+		UserLevelPrivilegeEntity up = this.selectOne(new EntityWrapper<UserLevelPrivilegeEntity>().eq("level", level));
 		if(up != null){
 			Integer unit = up.getUnit() - 1;
 			Calendar cal = Calendar.getInstance();
