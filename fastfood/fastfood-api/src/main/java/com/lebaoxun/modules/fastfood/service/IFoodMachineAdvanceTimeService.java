@@ -10,6 +10,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineAdvanceTimeEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodMachineAdvanceTimeServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +42,8 @@ public interface IFoodMachineAdvanceTimeService {
     @RequestMapping("/fastfood/foodmachineadvancetime/save")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineAdvanceTimeEntity foodMachineAdvanceTime);
 
+    @RequestMapping("/fastfood/foodmachineadvancetime/batchSave")
+    ResponseMessage batchSave(@RequestParam("adminId")Long adminId,@RequestBody List<FoodMachineAdvanceTimeEntity> advanceTimeList);
     /**
      * 修改
      */
@@ -55,5 +58,8 @@ public interface IFoodMachineAdvanceTimeService {
     
     @RequestMapping("/fastfood/foodmachineadvancetime/findAdvanceTimeByMacId")
     ResponseMessage findAdvanceTimeByMacId(@RequestParam("macId")Integer macId);
+
+    @RequestMapping("/fastfood/foodmachineadvancetime/findPreOrderAndProByMacId")
+    ResponseMessage findPreOrderAndProByMacId(@RequestParam("macId")Integer macId);
 }
 
