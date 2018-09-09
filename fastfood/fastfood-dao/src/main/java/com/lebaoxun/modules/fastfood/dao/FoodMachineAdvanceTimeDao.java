@@ -19,5 +19,6 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineAdvanceTimeEntity;
 public interface FoodMachineAdvanceTimeDao extends BaseMapper<FoodMachineAdvanceTimeEntity> {
 	
 	List<FoodMachineAdvanceTimeEntity> findAdvanceTimeByMacId(@Param("macId")Integer macId);
-	
+
+	List<FoodMachineAdvanceTimeEntity> findPreOrderAndProByMacId(@Param("macId")Integer macId);
 }
