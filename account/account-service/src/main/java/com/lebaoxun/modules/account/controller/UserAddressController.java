@@ -44,7 +44,10 @@ public class UserAddressController {
     	return ResponseMessage.ok(userAddressService.selectOne(new EntityWrapper<UserAddressEntity>().eq("user_id", userId).eq("default_flag",0)));
     }
 
-
+    @RequestMapping("/account/useraddress/findDefaultUse")
+    UserAddressEntity findDefaultUse(@RequestParam(value="userId")Long userId){
+    	return userAddressService.selectOne(new EntityWrapper<UserAddressEntity>().eq("user_id", userId).eq("default_flag",0));
+    }
     /**
      * 信息
      */

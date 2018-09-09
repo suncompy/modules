@@ -48,6 +48,11 @@ public class UserAddressServiceHystrix implements IUserAddressService {
 	public ResponseMessage delete(Long adminId,Long[] ids) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+
+	@Override
+	public UserAddressEntity findDefaultUse(Long userId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
     
 }
 

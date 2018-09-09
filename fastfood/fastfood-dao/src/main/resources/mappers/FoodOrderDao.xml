@@ -31,7 +31,7 @@
     </resultMap>
     
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity" id="foodOrderChildsMap">
-        <result property="orderProductId" column="order_product_id"/>
+        <result property="id" column="child_order_id"/>
         <result property="orderId" column="order_id"/>
         <result property="productCatId" column="product_cat_id"/>
         <result property="productId" column="product_id"/>
@@ -40,7 +40,12 @@
         <result property="buyNumber" column="buy_number"/>
         <result property="productScore" column="product_score"/>
         <result property="productAmount" column="product_amount"/>
-        <result property="status" column="status"/>
+        <result property="status" column="child_status"/>
+        <result property="productName" column="product_name"/>
+        <result property="activityFee" column="activity_fee"/>
+        <result property="activityId" column="activity_id"/>
+        <result property="activity" column="activity"/>
+        <result property="costPrice" column="cost_price"/>
     </resultMap>
     
     <insert id="insert" parameterType="com.lebaoxun.modules.fastfood.entity.FoodOrderEntity"
@@ -142,7 +147,7 @@
     </select>
     
     <select id="findOrderByUser" resultMap="foodOrderMap" >
-		select * from food_order as t1
+		select *,t2.id as child_order_id,t2.status as child_status from food_order as t1
 		left join food_order_childs as t2 on t2.order_id = t1.id
 		where t1.user_id = #{userId}
 		<if test="status != null">
@@ -162,7 +167,7 @@
     </select>
     
     <select id="findOrderInfoByUser" resultMap="foodOrderMap">
-        select * from food_order as t1
+        select *,t2.id as child_order_id,t2.status as child_status from food_order as t1
 		left join food_order_childs as t2 on t2.order_id = t1.id
 		where t1.user_id = #{userId} and order_no = #{orderNo}
     </select>

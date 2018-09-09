@@ -30,6 +30,9 @@ public interface IUserAddressService {
 
     @RequestMapping("/account/useraddress/defaultUse")
     ResponseMessage defaultUse(@RequestParam(value="userId")Long userId);
+    
+    @RequestMapping("/account/useraddress/findDefaultUse")
+    UserAddressEntity findDefaultUse(@RequestParam(value="userId")Long userId);
     /**
      * 信息
      */
