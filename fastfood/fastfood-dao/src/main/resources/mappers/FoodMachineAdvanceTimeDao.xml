@@ -16,7 +16,14 @@
 	<select id="findAdvanceTimeByMacId" resultMap="foodMachineAdvanceTimeMap">
 	    select time from food_machine_advance_time where mac_id = #{macId}
 	</select>
-    <select id="findPreOrderAndProByMacId"  resultType="java.util.Map">
+
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineAdvanceTimeEntity" id="preOrderAndProMap">
+        <result property="aisleId" column="aisleId"/>
+        <result property="macId" column="macId"/>
+        <result property="productId" column="productId"/>
+        <result property="productName" column="productName"/>
+    </resultMap>
+    <select id="findPreOrderAndProByMacId"  resultMap="preOrderAndProMap">
         SELECT
           aisle.id as aisleId,
           aisle.mac_id as macId,
