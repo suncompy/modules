@@ -27,6 +27,10 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 	 */
 	private Integer macId;
 	/**
+	 * 货道ID
+	 */
+	private Integer aisleId;
+	/**
 	 * 预定时间yyyy-MM-dd
 	 */
 	private String time;
@@ -42,6 +46,14 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 	 * 创建人
 	 */
 	private Long createBy;
+
+	public Integer getAisleId() {
+		return aisleId;
+	}
+
+	public void setAisleId(Integer aisleId) {
+		this.aisleId = aisleId;
+	}
 
 	/**
 	 * 设置：
