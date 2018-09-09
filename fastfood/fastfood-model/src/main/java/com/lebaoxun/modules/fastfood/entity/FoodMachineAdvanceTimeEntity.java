@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -38,6 +39,18 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 	 * 预定折扣比例
 	 */
 	private Float discount;
+
+	/**
+	 * 产品ID
+	 */
+	@TableField(exist = false)
+	private Float productId;
+
+	/**
+	 * 产品名称
+	 */
+	@TableField(exist = false)
+	private Float productName;
 	/**
 	 * 创建时间
 	 */
@@ -53,6 +66,22 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 
 	public void setAisleId(Integer aisleId) {
 		this.aisleId = aisleId;
+	}
+
+	public Float getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Float productId) {
+		this.productId = productId;
+	}
+
+	public Float getProductName() {
+		return productName;
+	}
+
+	public void setProductName(Float productName) {
+		this.productName = productName;
 	}
 
 	/**
