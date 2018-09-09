@@ -6,6 +6,7 @@ import java.util.Map;
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAdvanceTimeEntity;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 取餐机预定时间配置
@@ -19,5 +20,7 @@ public interface FoodMachineAdvanceTimeService extends IService<FoodMachineAdvan
     PageUtils queryPage(Map<String, Object> params);
     
     List<FoodMachineAdvanceTimeEntity> findAdvanceTimeByMacId(Integer macId);
+
+    List<FoodMachineAdvanceTimeEntity> findPreOrderAndProByMacId(Integer macId);
 }
 

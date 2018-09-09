@@ -33,4 +33,8 @@ public class FoodMachineAdvanceTimeServiceImpl extends ServiceImpl<FoodMachineAd
     		Integer macId) {
     	return this.baseMapper.findAdvanceTimeByMacId(macId);
     }
+    @Override
+    public List<FoodMachineAdvanceTimeEntity> findPreOrderAndProByMacId(Integer macId){
+        return this.baseMapper.findPreOrderAndProByMacId(macId);
+    }
 }
