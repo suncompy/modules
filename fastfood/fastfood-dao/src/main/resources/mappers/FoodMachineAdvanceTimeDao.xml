@@ -16,4 +16,16 @@
 	<select id="findAdvanceTimeByMacId" resultMap="foodMachineAdvanceTimeMap">
 	    select time from food_machine_advance_time where mac_id = #{macId}
 	</select>
+    <select id="findPreOrderAndProByMacId"  resultType="java.util.Map">
+        SELECT
+          aisle.id as aisleId,
+          aisle.mac_id as macId,
+          aisle.product_id as productId,
+          product.`name` as productName
+        FROM
+            food_machine_aisle aisle
+        LEFT JOIN food_product product ON aisle.product_id = product.id
+        WHERE
+            aisle.mac_id =#{macId}
+    </select>
 </mapper>
