@@ -949,6 +949,19 @@ public class FoodOrderServiceImpl extends
 				Map<String, Object> resultData = Maps.newHashMap();
 				resultData.put("orderId", orderId);
 				resultData.put("orderNo", foodOrder.getOrderNo());
+				//取餐成功发送MQ日志
+				Date now = new Date();
+				Map<String,String> message = new HashMap<String,String>();
+				String timestamp = now.getTime()+"";
+				message.put("mehtod", "takeFoodCallback");
+				message.put("orderId", orderId+"");
+				message.put("userId", foodOrder.getUserId()+"");
+				message.put("timestamp", timestamp);
+				message.put("rows", ret+"");//影响行数
+				message.put("descr", "取餐成功，更新订单为已取餐状态");
+				message.put("token", MD5.md5(orderId+"_"+timestamp));
+				rabbitmqSender.sendContractDirect("account.log.queue",
+						new Gson().toJson(message));
 				return ResponseMessage.ok(resultData);
 			}
 		}
