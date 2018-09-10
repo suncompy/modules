@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -120,9 +119,21 @@ public class FoodOrderServiceImpl extends
 	
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
+		String userId = (String)params.get("userId"),
+				orderNo = (String)params.get("orderNo"),
+					macId = (String)params.get("macId"),
+						orderStatus = (String)params.get("orderStatus"),
+    						createTime = (String)params.get("createTime");
 		Page<FoodOrderEntity> page = this.selectPage(
-				new Query<FoodOrderEntity>(params).getPage(),
-				new EntityWrapper<FoodOrderEntity>());
+			new Query<FoodOrderEntity>(params).getPage(),
+			new EntityWrapper<FoodOrderEntity>()
+			.eq(StringUtils.isNotBlank(userId) && StringUtils.isInteger(userId), "user_id", userId)
+			.eq(StringUtils.isNotBlank(orderNo), "order_no", orderNo)
+			.eq(StringUtils.isNotBlank(macId) && StringUtils.isInteger(macId), "mac_id", macId)
+			.in(StringUtils.isNotBlank(orderStatus) && StringUtils.isInteger(orderStatus) && "1".equals(orderStatus), "order_status", new Integer[]{1,2,3})
+			.eq(StringUtils.isNotBlank(orderStatus) && StringUtils.isInteger(orderStatus) && !"1".equals(orderStatus), "order_status", orderStatus)
+			.eq(StringUtils.isNotBlank(createTime), "date_format(create_time,'%Y-%m-%d')", createTime)
+		);
 
 		return new PageUtils(page);
 	}
@@ -233,6 +244,7 @@ public class FoodOrderServiceImpl extends
 			childs.add(orderChild);
 			macId = foodCart.getMacId();
 		}
+		order.setSource("WX_APP");
 		order.setMacId(macId);
 		order.setChilds(childs);
 		order = createOrder(userId, dis, order);
@@ -347,7 +359,8 @@ public class FoodOrderServiceImpl extends
 					.get("productId"), productCatId = (Integer) aisle
 					.get("productCatId");
 
-			String productName = (String) aisle.get("productName");
+			String productName = (String) aisle.get("productName"),
+					picture = (String) aisle.get("picture");
 			Integer stock = (Integer) aisle.get("stock");
 			if (isCheckStock && (stock == null || stock < orderChild.getBuyNumber())) {
 				throw new I18nMessageException("60005", "‘" + productName
@@ -363,6 +376,7 @@ public class FoodOrderServiceImpl extends
 			orderChild.setProductCatId(productCatId);
 			orderChild.setProductId(productId);
 			orderChild.setProductName(productName);
+			orderChild.setProductPic(picture);
 			orderChild.setPrice(price);
 			orderChild.setStatus(0);
 			orderChild.setActivity(null);
@@ -674,7 +688,6 @@ public class FoodOrderServiceImpl extends
 		if(order.getTakeFoodTime() == null){
 			order.setTakeFoodTime(now);
 		}
-		order.setSource("NORMAL");
 		order.setUserId(userId);
 		order.setOrderStatus(0);
 		order.setOrderNo(orderNo);
@@ -720,7 +733,7 @@ public class FoodOrderServiceImpl extends
 		FoodOrderEntity order = this
 				.selectOne(new EntityWrapper<FoodOrderEntity>().eq("order_no",
 						orderNo));
-		if (order == null || order.getOrderStatus() != 0) {
+		if (order == null || order.getOrderStatus() > 0) {
 			throw new I18nMessageException("60007", "订单不存在");
 		}
 		putActivity(order,buyTime);
@@ -996,7 +1009,7 @@ public class FoodOrderServiceImpl extends
 				.opsForHash();
 		logger.debug("operations.get({},{})={}",key,takeFoodCodeStr,operations.get(key,takeFoodCodeStr));
 		String takeFoodJson = operations.get(key, takeFoodCodeStr);
-		TakeFoodCodeEntity takeFoodCodeEntity =JSON.parseObject(takeFoodJson,TakeFoodCodeEntity.class);
+		TakeFoodCodeEntity takeFoodCodeEntity = JSONObject.parseObject(takeFoodJson,TakeFoodCodeEntity.class);
 		if (takeFoodCodeEntity == null
 				|| takeFoodCodeEntity.getOrderNo() == null)
 			return ResponseMessage.error("600004", "数据异常");
@@ -1008,12 +1021,17 @@ public class FoodOrderServiceImpl extends
 
 	private Integer getTakeFoodCode(Map<String,String> entries,String orderNo){
 		if(entries != null){
-			for(String code : entries.keySet()){
-				String  takeFoodStr = entries.get(code);
-				TakeFoodCodeEntity tfc = JSONObject.parseObject(takeFoodStr, TakeFoodCodeEntity.class);
-				if(orderNo.equals(tfc.getOrderNo())){
-					return Integer.parseInt(code);
+			try{
+				for(String code : entries.keySet()){
+					String  takeFoodStr = entries.get(code);
+					logger.debug("takeFoodStr={}",takeFoodStr);
+					TakeFoodCodeEntity tfc = JSONObject.parseObject(takeFoodStr, TakeFoodCodeEntity.class);
+					if(orderNo.equals(tfc.getOrderNo())){
+						return Integer.parseInt(code);
+					}
 				}
+			}catch(Exception e){
+				e.printStackTrace();
 			}
 		}
 		return null;
@@ -1033,7 +1051,8 @@ public class FoodOrderServiceImpl extends
 			throw new I18nMessageException("600002", "订单不存在！");
 		TakeFoodCodeEntity takeFoodCode = new TakeFoodCodeEntity(foodOrderEntity.getId(),orderNo,
 				new Date().getTime());
-		String  takeFoodStr=JSON.toJSONString(takeFoodCode);
+		String  takeFoodStr= new Gson().toJson(takeFoodCode);
+		logger.debug("takeFoodStr={}",takeFoodStr);
 		// 创建随机码
 		int i = 0;
 		boolean isOk = false;

@@ -64,7 +64,8 @@ public class PayOrderServiceImpl extends ServiceImpl<PayOrderDao, PayOrderEntity
 			throw new I18nMessageException("-1","交易失败，订单号不存在-out_trade_no="+out_trade_no);
 		}
 		
-		if (order.getTotalFee().equals(total_fee)) {
+		if (order.getTotalFee().compareTo(total_fee) != 0) {
+			logger.error("订单金额不一致！-out_trade_no={},order.getTotalFee={},total_fee={}",out_trade_no,order.getTotalFee(),total_fee);
 			throw new I18nMessageException("-1","订单金额不一致！-out_trade_no="+out_trade_no);
 		}
 		
@@ -80,29 +81,33 @@ public class PayOrderServiceImpl extends ServiceImpl<PayOrderDao, PayOrderEntity
 		order.setPayTime(buyTime);
 		order.setQueueKey(queue);
 		this.baseMapper.updateById(order);
-		sendNotify(order.getCreateUser().toString(), queue, order.getOrderNo(), out_trade_no, order
-				.getRechargeFee().toString(), total_fee.toString(), tradeNo,
+		sendNotify(order.getCreateUser(), queue, order.getOrderNo(), out_trade_no, order
+				.getRechargeFee(), total_fee.toString(), tradeNo,
 				buyTime + "", order.getTradeType(), order.getMchId(), platform,
 				order.getGroup(),order.getScene());
 		return "sucess";
 	}
 	
-	private void sendNotify(String userId,String queueKey,String orderNo,String out_trade_no,String rechargeFee,String total_fee,String rransaction_id,
+	private void sendNotify(Long userId,String queueKey,String orderNo,String out_trade_no,BigDecimal rechargeFee,String total_fee,String rransaction_id,
 			String buyTime,String trade_type,String merc_no,String platform,String group,String scene){
 		Map<String,String> message = new HashMap<String,String>();
 		message.put("scene", scene);
 		message.put("group", group);
-		message.put("user_id", userId);
-		message.put("order_no", out_trade_no);
+		if(userId != null){
+			message.put("user_id", userId.toString());
+		}
+		message.put("order_no", orderNo);
 		message.put("out_trade_no", out_trade_no);
-		message.put("recharge_fee", rechargeFee);
+		if(rechargeFee != null){
+			message.put("recharge_fee", rechargeFee.toString());
+		}
 		message.put("total_fee", total_fee);
 		message.put("trade_no", rransaction_id);
 		message.put("buy_time", ""+buyTime);
 		message.put("platform", platform);
 		message.put("trade_type", trade_type);
 		message.put("merc_no", merc_no);
-		logger.info("rabbit|sendContractDirect|message={}",message);
+		logger.info("rabbit|sendContractDirect|queueKey={},message={}",queueKey,message);
 		rabbitmqSender.sendContractTopic(queueKey, new Gson().toJson(message));
 	}
 

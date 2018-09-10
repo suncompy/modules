@@ -7,12 +7,12 @@
     <resultMap type="com.lebaoxun.modules.account.entity.UserLevelPrivilegeEntity" id="userLevelPrivilegeMap">
         <result property="id" column="id"/>
         <result property="level" column="level"/>
-        <result property="payAmount" column="pay_amount"/>
-        <result property="unit" column="unit"/>
+        <result property="exp" column="exp"/>
+        <result property="restMonthUnit" column="rest_month_unit"/>
         <result property="dis" column="dis"/>
         <result property="createTime" column="create_time"/>
         <result property="createBy" column="create_by"/>
-        <result property="delFlag" column="del_flag"/>
+        <result property="levelName" column="level_name"/>
     </resultMap>
 
 

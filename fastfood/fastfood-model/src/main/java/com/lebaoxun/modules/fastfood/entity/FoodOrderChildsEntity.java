@@ -87,6 +87,7 @@ public class FoodOrderChildsEntity implements Serializable {
 	 * 产品名称
 	 */
 	private String productName;
+	private String productPic;
 	/**
 	 * 设置：订单商品ID
 	 */
@@ -248,5 +249,11 @@ public class FoodOrderChildsEntity implements Serializable {
 	}
 	public void setActivityId(Integer activityId) {
 		this.activityId = activityId;
+	}
+	public String getProductPic() {
+		return productPic;
+	}
+	public void setProductPic(String productPic) {
+		this.productPic = productPic;
 	}
 }

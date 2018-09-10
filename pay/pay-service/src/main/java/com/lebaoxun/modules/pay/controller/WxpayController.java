@@ -644,7 +644,8 @@ public class WxpayController {
 		return new ResponseMessage(ret);
 	}
 	
-	String notify(String body) {
+	@RequestMapping(value="/wxpay/notify")
+	String notify(@RequestBody String body) {
 		PayOrderEntity order = null;
 		try{
 			// 微信异步通知 信息为空
@@ -674,7 +675,7 @@ public class WxpayController {
 				BigDecimal total_fee = new BigDecimal((String)wxPayResult.get("total_fee")).divide(new BigDecimal("100"));
 				String tradeNo = (String)wxPayResult.get("transaction_id");
 				
-				order = payOrderService.selectOne(new EntityWrapper<PayOrderEntity>().eq("out_trade_no", out_trade_no));
+				order = payOrderService.selectOne(new EntityWrapper<PayOrderEntity>().eq("out_order_no", out_trade_no));
 				
 				String queue = null;
 				if(StringUtils.isNotBlank(config.getQueueName())){
@@ -686,12 +687,14 @@ public class WxpayController {
 			query(out_trade_no, account, "1");
 			return "success";
 		}catch(I18nMessageException e){
+			e.printStackTrace();
 			if(order == null){
 				logger.error("[wxpay] notify.error {}",e.getInfo());
 			}else{
 				logger.error("[wxpay] notify.error {} order={}",e.getInfo(),new Gson().toJson(order));
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			if(order == null){
 				logger.error("[wxpay] notify.error {}",e.getMessage());
 			}else{

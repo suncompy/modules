@@ -1,23 +1,24 @@
 package com.lebaoxun.modules.account.service;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.account.entity.UserLevelPrivilegeEntity;
 import com.lebaoxun.modules.account.service.hystrix.UserLevelPrivilegeServiceHystrix;
-import com.lebaoxun.commons.exception.ResponseMessage;
-
-import java.util.Map;
 
 /**
  * 等级特权表
  *
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-07 15:31:12
+ * @date 2018-09-10 15:54:53
  */
 
 @FeignClient(value="account-service",fallback=UserLevelPrivilegeServiceHystrix.class)
@@ -53,9 +54,8 @@ public interface IUserLevelPrivilegeService {
     @RequestMapping("/account/userlevelprivilege/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
-    @RequestMapping("/account/userlevelprivilege/findDisByUserId")
-    Integer findDisByUserId(@RequestParam("userId")Long userId,
-    		@RequestParam("level")Integer level,
+    @RequestMapping("/account/userlevelprivilege/findLevelByUserId")
+    UserLevelPrivilegeEntity findLevelByUserId(@RequestParam("userId")Long userId,
     		@RequestParam("payLogType")String payLogType);
     
 }

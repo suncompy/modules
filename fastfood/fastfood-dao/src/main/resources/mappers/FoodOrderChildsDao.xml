@@ -16,6 +16,7 @@
         <result property="productAmount" column="product_amount"/>
         <result property="status" column="status"/>
         <result property="productName" column="product_name"/>
+        <result property="productPic" column="product_pic"/>
         <result property="activityFee" column="activity_fee"/>
         <result property="activityId" column="activity_id"/>
         <result property="activity" column="activity"/>
@@ -27,6 +28,7 @@
          SELECT
             cat.name as catName,
             childs.product_name as productName,
+            childs.product_pic as productPic,
             childs.price,
             childs.cost_price AS costPrice,
             childs.buy_number AS buyNumber,

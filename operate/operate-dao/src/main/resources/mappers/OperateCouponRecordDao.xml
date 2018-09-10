@@ -30,7 +30,7 @@
 			and date_add(start_time, interval period day) <![CDATA[>]]> now()
 		</if>
 		<if test="flag == 0">
-			and date_add(start_time, interval period day) <![CDATA[<=]]> now()
+			and date_add(start_time, interval period day) <![CDATA[>=]]> now()
 		</if>
 		<if test="use != null">
 		    and `use` = #{use}

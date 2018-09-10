@@ -56,7 +56,7 @@
         <result property="price" column="price"/>
         <result property="productCatId" column="productCatId"/>
         <result property="productId" column="productId"/>
-        <result property="name" column="name"/>
+        <result property="productName" column="productName"/>
         <result property="pMaterials" column="pMaterials"/>
         <result property="showPrice" column="showPrice"/>
         <result property="picture" column="picture"/>
@@ -87,7 +87,7 @@
     <select id="findProductByMacIdAndProductCatId" resultMap="foodMacAisleMap" >
 		select 
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
-			product.id as productId,product.name as name,product.materials as pMaterials,
+			product.id as productId,product.name as productName,product.materials as pMaterials,
 			product.show_price as showPrice, product.picture as picture,
 			product.unit as unit, product.zs_weight as zsWeight,
 			product.cp_weight as cpWeight, product.warm_flag as warmFlag,
@@ -116,7 +116,7 @@
 		select 
 			t1.id,
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
-			product.id as productId,product.name as name,product.materials as pMaterials,
+			product.id as productId,product.name as productName,product.materials as pMaterials,
 			product.show_price as showPrice, product.picture as picture,
 			product.unit as unit, product.zs_weight as zsWeight,
 			product.cp_weight as cpWeight, product.warm_flag as warmFlag,
@@ -143,7 +143,7 @@
     <select id="findProductByAisle" resultMap="foodMacAisleMap">
         select 
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
-			product.id as productId,product.name as name,product.materials as pMaterials,
+			product.id as productId,product.name as productName,product.materials as pMaterials,
 			product.show_price as showPrice, product.picture as picture,
 			product.unit as unit, product.zs_weight as zsWeight,
 			product.cp_weight as cpWeight, product.warm_flag as warmFlag,

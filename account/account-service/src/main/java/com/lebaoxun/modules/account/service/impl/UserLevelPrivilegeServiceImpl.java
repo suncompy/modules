@@ -2,6 +2,7 @@ package com.lebaoxun.modules.account.service.impl;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -44,12 +45,14 @@ public class UserLevelPrivilegeServiceImpl extends ServiceImpl<UserLevelPrivileg
     }
 
 	@Override
-	public Integer findDisByUserId(Long userId, Integer level, String payLogType) {
+	public UserLevelPrivilegeEntity findLevelByUserId(Long userId, String payLogType) {
 		// TODO Auto-generated method stub
-		Integer dis = 0;
-		UserLevelPrivilegeEntity up = this.selectOne(new EntityWrapper<UserLevelPrivilegeEntity>().eq("level", level));
-		if(up != null){
-			Integer unit = up.getUnit() - 1;
+		UserLevelPrivilegeEntity level = null;
+		List<UserLevelPrivilegeEntity> levels = this.selectList(new EntityWrapper<UserLevelPrivilegeEntity>());
+		if(levels != null && !levels.isEmpty()){
+			UserLevelPrivilegeEntity up0 = levels.get(0);
+			
+			Integer unit = up0.getResetMonthUnit() - 1;
 			Calendar cal = Calendar.getInstance();
 			Integer maxDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 			cal.set(Calendar.DAY_OF_MONTH, maxDayOfMonth);
@@ -60,11 +63,14 @@ public class UserLevelPrivilegeServiceImpl extends ServiceImpl<UserLevelPrivileg
 			
 			logger.debug("start={},end={}",start,end);
 			BigDecimal totalFee = userLogDao.sumTradeMoneyByUserIdAndLogTypeAndTime(userId, payLogType, start, end);
-			if(totalFee.compareTo(new BigDecimal(up.getPayAmount())) >= 0){
-				dis = up.getDis();
+			
+			for(UserLevelPrivilegeEntity up : levels){
+				if(totalFee.compareTo(up.getExp()) >= 0){
+					level = up;
+				}
 			}
 		}
-		return dis;
+		return level;
 	}
 
 }

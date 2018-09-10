@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +33,11 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
 	
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+    	String name = (String)params.get("name");
         Page<FoodProductEntity> page = this.selectPage(
                 new Query<FoodProductEntity>(params).getPage(),
                 new EntityWrapper<FoodProductEntity>()
+                .like(StringUtils.isNotBlank(name), "name", name)
         );
 
         return new PageUtils(page);

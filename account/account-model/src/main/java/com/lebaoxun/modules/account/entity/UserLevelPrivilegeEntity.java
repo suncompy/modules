@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.account.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -26,17 +27,21 @@ public class UserLevelPrivilegeEntity implements Serializable {
 	 */
 	private Integer level;
 	/**
+	 * 等级名称
+	 */
+	private String levelName;
+	/**
 	 * 累计充值金额
 	 */
-	private Integer payAmount;
+	private BigDecimal exp;
 	/**
 	 * 计算单位1=1月，2=2月以此类推
 	 */
-	private Integer unit;
+	private Integer resetMonthUnit;
 	/**
 	 * 特权折扣率%
 	 */
-	private Integer dis;
+	private BigDecimal dis;
 	/**
 	 * 创建时间
 	 */
@@ -44,11 +49,7 @@ public class UserLevelPrivilegeEntity implements Serializable {
 	/**
 	 * 创建人
 	 */
-	private Integer createBy;
-	/**
-	 * 是否删除 -1：已删除 0：正常
-	 */
-	private Integer delFlag;
+	private Long createBy;
 	public long getId() {
 		return id;
 	}
@@ -61,22 +62,10 @@ public class UserLevelPrivilegeEntity implements Serializable {
 	public void setLevel(Integer level) {
 		this.level = level;
 	}
-	public Integer getPayAmount() {
-		return payAmount;
-	}
-	public void setPayAmount(Integer payAmount) {
-		this.payAmount = payAmount;
-	}
-	public Integer getUnit() {
-		return unit;
-	}
-	public void setUnit(Integer unit) {
-		this.unit = unit;
-	}
-	public Integer getDis() {
+	public BigDecimal getDis() {
 		return dis;
 	}
-	public void setDis(Integer dis) {
+	public void setDis(BigDecimal dis) {
 		this.dis = dis;
 	}
 	public Date getCreateTime() {
@@ -85,16 +74,28 @@ public class UserLevelPrivilegeEntity implements Serializable {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public Integer getCreateBy() {
+	public Long getCreateBy() {
 		return createBy;
 	}
-	public void setCreateBy(Integer createBy) {
+	public void setCreateBy(Long createBy) {
 		this.createBy = createBy;
 	}
-	public Integer getDelFlag() {
-		return delFlag;
+	public BigDecimal getExp() {
+		return exp;
 	}
-	public void setDelFlag(Integer delFlag) {
-		this.delFlag = delFlag;
+	public void setExp(BigDecimal exp) {
+		this.exp = exp;
+	}
+	public Integer getResetMonthUnit() {
+		return resetMonthUnit;
+	}
+	public void setResetMonthUnit(Integer resetMonthUnit) {
+		this.resetMonthUnit = resetMonthUnit;
+	}
+	public String getLevelName() {
+		return levelName;
+	}
+	public void setLevelName(String levelName) {
+		this.levelName = levelName;
 	}
 }

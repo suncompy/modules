@@ -1,10 +1,10 @@
 package com.lebaoxun.modules.account.service;
 
+import java.util.Map;
+
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.account.entity.UserLevelPrivilegeEntity;
-
-import java.util.Map;
 
 /**
  * 等级特权表
@@ -17,6 +17,6 @@ public interface UserLevelPrivilegeService extends IService<UserLevelPrivilegeEn
 
     PageUtils queryPage(Map<String, Object> params);
     
-    Integer findDisByUserId(Long userId,Integer level,String payLogType);
+    UserLevelPrivilegeEntity findLevelByUserId(Long userId,String payLogType);
 }
 

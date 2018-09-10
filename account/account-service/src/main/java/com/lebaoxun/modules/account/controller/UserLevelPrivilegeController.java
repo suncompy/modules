@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.account.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.account.entity.UserLevelPrivilegeEntity;
 import com.lebaoxun.modules.account.service.UserLevelPrivilegeService;
-import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
@@ -54,6 +55,8 @@ public class UserLevelPrivilegeController {
     @RequestMapping("/account/userlevelprivilege/save")
     @RedisLock(value="account:userlevelprivilege:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody UserLevelPrivilegeEntity userLevelPrivilege){
+    	userLevelPrivilege.setCreateBy(adminId);
+    	userLevelPrivilege.setCreateTime(new Date());
 		userLevelPrivilegeService.insert(userLevelPrivilege);
         return ResponseMessage.ok();
     }
@@ -78,11 +81,10 @@ public class UserLevelPrivilegeController {
         return ResponseMessage.ok();
     }
     
-    @RequestMapping("/account/userlevelprivilege/findDisByUserId")
-    Integer findDisByUserId(@RequestParam("userId")Long userId,
-    		@RequestParam("level")Integer level,
+    @RequestMapping("/account/userlevelprivilege/findLevelByUserId")
+    UserLevelPrivilegeEntity findLevelByUserId(@RequestParam("userId")Long userId,
     		@RequestParam("payLogType")String payLogType){
-    	return userLevelPrivilegeService.findDisByUserId(userId, level, payLogType);
+    	return userLevelPrivilegeService.findLevelByUserId(userId, payLogType);
     }
 
 }

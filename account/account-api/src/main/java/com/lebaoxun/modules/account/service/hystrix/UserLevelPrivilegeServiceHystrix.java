@@ -1,19 +1,20 @@
 package com.lebaoxun.modules.account.service.hystrix;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.lebaoxun.modules.account.entity.UserLevelPrivilegeEntity;
-import com.lebaoxun.modules.account.service.IUserLevelPrivilegeService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.modules.account.entity.UserLevelPrivilegeEntity;
+import com.lebaoxun.modules.account.service.IUserLevelPrivilegeService;
 
 /**
  * 等级特权表
  *
  * @author caiqianyi
  * @email 270852221@qq.com
- * @date 2018-08-07 15:31:12
+ * @date 2018-09-10 15:54:53
  */
 
 @Component
@@ -45,8 +46,9 @@ public class UserLevelPrivilegeServiceHystrix implements IUserLevelPrivilegeServ
 	}
 
 	@Override
-	public Integer findDisByUserId(Long userId, Integer level, String payLogType) {
+	public UserLevelPrivilegeEntity findLevelByUserId(Long userId, String payLogType) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+    
 }
 
