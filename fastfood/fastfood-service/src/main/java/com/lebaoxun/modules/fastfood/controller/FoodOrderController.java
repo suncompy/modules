@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 import com.lebaoxun.commons.utils.StringUtils;
 
+import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -174,8 +175,7 @@ public class FoodOrderController {
     /**
 	 * 抽奖兑换
 	 * @param userId
-	 * @param dis
-	 * @param orderNo
+	 * @param prizeLogId
 	 * @return
 	 */
     @RequestMapping("/fastfood/foodorder/prizeExchangeForOrder")
@@ -270,10 +270,28 @@ public class FoodOrderController {
             @RequestParam("macId") String macId,
             @RequestParam("productId") String productId){
         long ret=foodOrderChildsService.updateTakeNum(orderId, macId, productId);
-        if (ret>0)
+        if (ret>0) {
+            FoodOrderEntity foodOrderEntity=foodOrderService.selectById(orderId);
+            //取餐成功发送MQ日志
+            Date now = new Date();
+            Map<String,String> message = new HashMap<String,String>();
+            String timestamp = now.getTime()+"";
+            message.put("mehtod", "updateTakeNum");
+            message.put("orderId", orderId+"");
+            message.put("userId", foodOrderEntity.getUserId()+"");
+            message.put("timestamp", timestamp);
+            message.put("macId", macId);
+            message.put("productId", productId);
+            message.put("rows", ret+"");//影响行数
+            message.put("descr", "取餐成功，更新已取餐餐品数量");
+            message.put("token", MD5.md5(orderId+"_"+timestamp));
+            rabbitmqSender.sendContractDirect("account.log.queue",
+                    new Gson().toJson(message));
             return ResponseMessage.ok();
-        else
-            return ResponseMessage.error("60001","更新失败");
+        }
+        else {
+            return ResponseMessage.error("60001", "更新失败");
+        }
 
     }
     
