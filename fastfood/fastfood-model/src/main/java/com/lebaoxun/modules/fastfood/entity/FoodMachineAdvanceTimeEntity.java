@@ -52,6 +52,12 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 	@TableField(exist = false)
 	private String productName;
 
+	/**
+	 * 日期是否预定 1.是 2.否
+	 */
+	@TableField(exist = false)
+	private Integer isPre;
+
 	@TableField(exist = false)
 	private Integer rowId;
 	/**
@@ -93,6 +99,14 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+
+	public Integer getIsPre() {
+		return isPre;
+	}
+
+	public void setIsPre(Integer isPre) {
+		this.isPre = isPre;
 	}
 
 	/**

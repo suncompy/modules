@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -49,6 +50,11 @@ public class FoodMachineProductCatEntity implements Serializable {
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
+
+	@TableField(exist = false)
+	private String createTimeStr;
+	@TableField(exist = false)
+	private String updateTimeStr;
 	/**
 	 * 机器ID
 	 */
@@ -90,6 +96,23 @@ public class FoodMachineProductCatEntity implements Serializable {
 	public String getIcon() {
 		return icon;
 	}
+
+	public String getCreateTimeStr() {
+		return createTimeStr;
+	}
+
+	public void setCreateTimeStr(String createTimeStr) {
+		this.createTimeStr = createTimeStr;
+	}
+
+	public String getUpdateTimeStr() {
+		return updateTimeStr;
+	}
+
+	public void setUpdateTimeStr(String updateTimeStr) {
+		this.updateTimeStr = updateTimeStr;
+	}
+
 	/**
 	 * 设置：创建时间
 	 */
