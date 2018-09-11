@@ -28,6 +28,11 @@ public class FoodMachineAdvanceTimeServiceHystrix implements IFoodMachineAdvance
 	}
 
 	@Override
+	public List<FoodMachineAdvanceTimeEntity> findPreDatesByMacIdOrAisleId(@RequestParam("macId") Integer macId, @RequestParam("aisleId") Integer aisleId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
 	public ResponseMessage info(Integer id) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}

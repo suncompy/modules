@@ -29,7 +29,12 @@ public interface IFoodMachineAdvanceTimeService {
     @RequestMapping("/fastfood/foodmachineadvancetime/list")
     ResponseMessage list(@RequestParam Map<String, Object> params);
 
-
+    /**
+     * 根据机器id、货道Id查询预定日期
+     */
+    @RequestMapping("/fastfood/foodmachineadvancetime/findPreDatesByMacIdOrAisleId")
+    List<FoodMachineAdvanceTimeEntity> findPreDatesByMacIdOrAisleId(@RequestParam("macId")Integer macId,
+                                                                    @RequestParam("aisleId")Integer aisleId);
     /**
      * 信息
      */
