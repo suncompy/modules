@@ -37,7 +37,7 @@ public class FoodMachineCatAisleEntity implements Serializable {
 	/**
 	 * Z坐标
 	 */
-	private Integer z;
+	private Integer z=0;
 	/**
 	 * 总容量
 	 */
