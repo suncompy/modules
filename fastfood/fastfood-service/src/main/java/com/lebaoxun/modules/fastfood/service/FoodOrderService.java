@@ -31,7 +31,7 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 * @return
 	 */
 	ResponseMessage wxAppPayForOrder(Long userId,BigDecimal dis, String spbill_create_ip, String payGroup, 
-			String openid, String orderNo);
+			String openid, String orderNo, Integer couponId);
 	
 	/**
 	 * 机器创建扫码支付
@@ -89,6 +89,17 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 			FoodOrderEntity order,boolean isCheckStock,boolean isCheckActivity);
 	
 	/**
+	 * 计算订单金额，并验证产品是否有效
+	 * @param userId
+	 * @param dis
+	 * @param order
+	 * @param isCheckStock 是否校验库存
+	 * @param isCheckActivity 是否校验活动
+	 * @return
+	 */
+	FoodOrderEntity calCheckTotalFee(Long userId, String orderNo,BigDecimal dis);
+	
+	/**
 	 * 余额支付
 	 * @param userId
 	 * @param dis
@@ -96,7 +107,7 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 * @return
 	 */
 	ResponseMessage balancePayForOrder(Long userId, BigDecimal dis,
-			String orderNo);
+			String orderNo,Integer couponId);
 	
 	/**
 	 * 抽奖兑换

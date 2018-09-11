@@ -18,8 +18,7 @@ public interface FoodOrderCommentService extends IService<FoodOrderCommentEntity
 
     PageUtils queryPage(Map<String, Object> params);
     
-    void publish(Long userId, Long childId,
-    		FoodOrderCommentEntity comment);
+    void publish(Long userId, FoodOrderCommentEntity comment);
 	
 	List<FoodOrderCommentEntity> selectByMacId(Integer macId);
 	

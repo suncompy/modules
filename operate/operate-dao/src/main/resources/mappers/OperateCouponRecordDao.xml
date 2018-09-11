@@ -26,6 +26,9 @@
 	<select id="findByUserId" resultMap="operateCouponRecordMap">
 		select * from operate_coupon_record where 
 		user_id = #{userId}
+		<if test="macId != null">
+		    and mac_id = #{macId} 
+		</if>
 		<if test="flag == 1">
 			and date_add(start_time, interval period day) <![CDATA[>]]> now()
 		</if>

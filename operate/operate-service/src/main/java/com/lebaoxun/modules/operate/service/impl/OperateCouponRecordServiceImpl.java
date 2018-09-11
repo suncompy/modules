@@ -41,10 +41,11 @@ public class OperateCouponRecordServiceImpl extends ServiceImpl<OperateCouponRec
     
     @Override
     public List<OperateCouponRecordEntity> findByUserId(Long userId,
+    		Integer macId,
     		Integer use,Integer flag,
     		Integer size, Integer offset) {
     	// TODO Auto-generated method stub
-    	return this.baseMapper.findByUserId(userId,use,flag,size,offset);
+    	return this.baseMapper.findByUserId(userId,macId,use,flag,size,offset);
     }
 
     @Override

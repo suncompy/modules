@@ -89,7 +89,7 @@
 	    	and log_type = #{logType} 
 	    </if>
 	    <if test="start != null">
-		    AND log.log_time BETWEEN #{start} and #{end}
+		    AND log_time BETWEEN #{start} and #{end}
 	    </if>
 	</select>
 	

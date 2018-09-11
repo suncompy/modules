@@ -24,7 +24,9 @@ public interface OperateCouponRecordDao extends BaseMapper<OperateCouponRecordEn
 	 * @return
 	 */
 	List<OperateCouponRecordEntity> findByUserId(@Param("userId")Long userId,
-			@Param("use")Integer use,@Param("flag")Integer flag,
+			@Param("macId")Integer macId,
+			@Param("use")Integer use,
+			@Param("flag")Integer flag,
 			@Param("size")Integer size, @Param("offset")Integer offset);
 	
 	OperateCouponRecordEntity findByIdAndUser(

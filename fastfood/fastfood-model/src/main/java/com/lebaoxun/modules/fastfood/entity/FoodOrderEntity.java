@@ -92,7 +92,7 @@ public class FoodOrderEntity implements Serializable {
 	/**
 	 * 优惠券使用条件
 	 */
-	private Integer couponUseRestrict;
+	private BigDecimal couponUseRestrict;
 	/**
 	 * 红包抵扣
 	 */
@@ -355,10 +355,10 @@ public class FoodOrderEntity implements Serializable {
 	public void setCouponFee(BigDecimal couponFee) {
 		this.couponFee = couponFee;
 	}
-	public Integer getCouponUseRestrict() {
+	public BigDecimal getCouponUseRestrict() {
 		return couponUseRestrict;
 	}
-	public void setCouponUseRestrict(Integer couponUseRestrict) {
+	public void setCouponUseRestrict(BigDecimal couponUseRestrict) {
 		this.couponUseRestrict = couponUseRestrict;
 	}
 	public BigDecimal getActivityFee() {

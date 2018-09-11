@@ -25,17 +25,9 @@ public class FoodOrderCommentEntity implements Serializable {
 	@TableId
 	private Long id = 0l;
 	/**
-	 * 货道ID
-	 */
-	private Integer aisleId;
-	/**
 	 * 机器ID
 	 */
 	private Integer macId;
-	/**
-	 * 通道ID
-	 */
-	private Integer productId;
 	/**
 	 * 用户ID
 	 */
@@ -77,16 +69,14 @@ public class FoodOrderCommentEntity implements Serializable {
 	 */
 	private Date createTime;
 	/**
-	 * 子订单ID
+	 * 订单号
 	 */
-	private Long orderChildId;
+	private String orderNo;
+	private String productName;
 	
 	@TableField(exist=false)
 	private List<FoodOrderCommentImageEntity> picImgs;
 	
-	@TableField(exist=false)
-	private FoodOrderChildsEntity child;
-
 	/**
 	 * 设置：评价ID
 	 */
@@ -100,18 +90,6 @@ public class FoodOrderCommentEntity implements Serializable {
 		return id;
 	}
 	/**
-	 * 设置：货道ID
-	 */
-	public void setAisleId(Integer aisleId) {
-		this.aisleId = aisleId;
-	}
-	/**
-	 * 获取：货道ID
-	 */
-	public Integer getAisleId() {
-		return aisleId;
-	}
-	/**
 	 * 设置：机器ID
 	 */
 	public void setMacId(Integer macId) {
@@ -122,18 +100,6 @@ public class FoodOrderCommentEntity implements Serializable {
 	 */
 	public Integer getMacId() {
 		return macId;
-	}
-	/**
-	 * 设置：通道ID
-	 */
-	public void setProductId(Integer productId) {
-		this.productId = productId;
-	}
-	/**
-	 * 获取：通道ID
-	 */
-	public Integer getProductId() {
-		return productId;
 	}
 	/**
 	 * 设置：用户ID
@@ -255,17 +221,11 @@ public class FoodOrderCommentEntity implements Serializable {
 	public Date getCreateTime() {
 		return createTime;
 	}
-	/**
-	 * 设置：子订单ID
-	 */
-	public void setOrderChildId(Long orderChildId) {
-		this.orderChildId = orderChildId;
+	public String getOrderNo() {
+		return orderNo;
 	}
-	/**
-	 * 获取：子订单ID
-	 */
-	public Long getOrderChildId() {
-		return orderChildId;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 	public List<FoodOrderCommentImageEntity> getPicImgs() {
 		return picImgs;
@@ -273,10 +233,10 @@ public class FoodOrderCommentEntity implements Serializable {
 	public void setPicImgs(List<FoodOrderCommentImageEntity> picImgs) {
 		this.picImgs = picImgs;
 	}
-	public FoodOrderChildsEntity getChild() {
-		return child;
+	public String getProductName() {
+		return productName;
 	}
-	public void setChild(FoodOrderChildsEntity child) {
-		this.child = child;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 }

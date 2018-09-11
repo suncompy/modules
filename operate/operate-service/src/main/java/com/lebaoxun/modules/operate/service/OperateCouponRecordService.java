@@ -24,6 +24,7 @@ public interface OperateCouponRecordService extends IService<OperateCouponRecord
 	 * @return
 	 */
 	List<OperateCouponRecordEntity> findByUserId(Long userId,
+			Integer macId,
 			Integer use,Integer flag,
 			Integer size,Integer offset);
 	

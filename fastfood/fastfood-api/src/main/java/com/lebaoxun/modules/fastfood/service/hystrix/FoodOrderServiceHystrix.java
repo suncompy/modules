@@ -73,13 +73,13 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 	@Override
 	public ResponseMessage wxAppPayForOrder(Long userId, BigDecimal dis,
 			String spbill_create_ip, String payGroup, String openid,
-			String orderNo) {
+			String orderNo,Integer couponId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 	
 	@Override
 	public ResponseMessage balancePayForOrder(Long userId, BigDecimal dis,
-			String orderNo) {
+			String orderNo,Integer couponId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
@@ -146,5 +146,10 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
+	@Override
+	public ResponseMessage calCheckTotalFeeByOrderNo(Long userId,
+			String orderNo, BigDecimal dis) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 

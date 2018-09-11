@@ -2,6 +2,7 @@ package com.lebaoxun.modules.operate.service.hystrix;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lebaoxun.modules.operate.entity.OperateCouponRecordEntity;
 import com.lebaoxun.modules.operate.service.IOperateCouponRecordService;
@@ -43,9 +44,8 @@ public class OperateCouponRecordServiceHystrix implements IOperateCouponRecordSe
 	public ResponseMessage delete(Long adminId,Integer[] ids) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
-
 	@Override
-	public ResponseMessage findByUserId(Long userId, Integer use, Integer flag,
+	public ResponseMessage findByUserId(Long userId, Integer macId, Integer use, Integer flag,
 			Integer size, Integer offset) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}

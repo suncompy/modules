@@ -109,7 +109,14 @@ public interface IFoodOrderService {
 			@RequestParam("spbill_create_ip")String spbill_create_ip,
 			@RequestParam("payGroup")String payGroup, 
 			@RequestParam("openid")String openid, 
-			@RequestParam("orderNo")String orderNo);
+			@RequestParam("orderNo")String orderNo,
+			@RequestParam(value="couponId",required=false)Integer couponId);
+    
+    @RequestMapping("/fastfood/foodorder/calCheckTotalFeeByOrderNo")
+	ResponseMessage calCheckTotalFeeByOrderNo(
+			@RequestParam("userId") Long userId, 
+			@RequestParam("orderNo")String orderNo,
+			@RequestParam(value="dis",required=false)BigDecimal dis);
     
     /**
 	 * 余额支付
@@ -122,7 +129,8 @@ public interface IFoodOrderService {
 	ResponseMessage balancePayForOrder(
 			@RequestParam("userId") Long userId, 
 			@RequestParam("dis") BigDecimal dis,
-			@RequestParam("orderNo") String orderNo);
+			@RequestParam("orderNo") String orderNo,
+			@RequestParam(value="couponId",required=false)Integer couponId);
 	
     /**
 	 * 购物车下单

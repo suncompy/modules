@@ -122,7 +122,14 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
     @Override
     public List<FoodMachineEntity> findByAreaCode(String areaCode) {
     	// TODO Auto-generated method stub
-    	return this.baseMapper.findByAreaCode(areaCode);
+    	List<FoodMachineEntity> list = this.baseMapper.findByAreaCode(areaCode);
+    	if(list == null){
+    		list = new ArrayList<FoodMachineEntity>();
+    	}
+    	if(list.isEmpty()){
+    		list.addAll(this.baseMapper.findByRandom(1));
+    	}
+    	return list;
     }
     
     @Override

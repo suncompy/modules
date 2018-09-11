@@ -181,7 +181,7 @@ public class FoodOrderServiceImpl extends
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public ResponseMessage wxAppPayForOrder(Long userId, BigDecimal dis,
 			String spbill_create_ip, String payGroup, String openid,
-			String orderNo) {
+			String orderNo, Integer couponId) {
 		// TODO Auto-generated method stub
 		FoodOrderEntity order = this
 				.selectOne(new EntityWrapper<FoodOrderEntity>()
@@ -193,7 +193,7 @@ public class FoodOrderServiceImpl extends
 		List<FoodOrderChildsEntity> childs = foodOrderChildsDao
 				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", order.getId()));
 		order.setChilds(childs);
-
+		order.setCouponId(couponId);
 		this.calCheckTotalFee(userId, dis, order, false, true);
 
 		order.setPayType(1);// 1=在线支付
@@ -201,6 +201,12 @@ public class FoodOrderServiceImpl extends
 
 		for (FoodOrderChildsEntity child : childs) {
 			foodOrderChildsDao.updateById(child);
+		}
+		
+		if(order.getCouponId() != null){
+			OperateCouponRecordEntity coupon = operateCouponRecordDao.selectById(order.getCouponId());
+			coupon.setUse(1);
+			operateCouponRecordDao.updateById(coupon);
 		}
 
 		BigDecimal payAmount = order.getPayAmount();
@@ -211,6 +217,23 @@ public class FoodOrderServiceImpl extends
 				payAmount.setScale(2, BigDecimal.ROUND_DOWN)
 						.multiply(new BigDecimal("100")).intValue(), "",
 				payGroup, openid, userId, null, "shopping");
+	}
+	
+	@Override
+	public FoodOrderEntity calCheckTotalFee(Long userId, String orderNo, BigDecimal dis) {
+		// TODO Auto-generated method stub
+		FoodOrderEntity order = this
+				.selectOne(new EntityWrapper<FoodOrderEntity>()
+						.eq("user_id", userId).eq("order_no", orderNo)
+						.eq("order_status", 0));
+		if (order == null) {
+			throw new I18nMessageException("60009", "订单不存在或已支付");
+		}
+		List<FoodOrderChildsEntity> childs = foodOrderChildsDao
+				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", order.getId()));
+		order.setChilds(childs);
+		this.calCheckTotalFee(userId, dis, order, false, true);
+		return order;
 	}
 
 	@Override
@@ -284,7 +307,7 @@ public class FoodOrderServiceImpl extends
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public ResponseMessage balancePayForOrder(Long userId, BigDecimal dis,
-			String orderNo) {
+			String orderNo, Integer couponId) {
 		// TODO Auto-generated method stub
 		FoodOrderEntity order = this
 				.selectOne(new EntityWrapper<FoodOrderEntity>()
@@ -297,7 +320,7 @@ public class FoodOrderServiceImpl extends
 		List<FoodOrderChildsEntity> childs = foodOrderChildsDao
 				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", order.getId()));
 		order.setChilds(childs);
-
+		order.setCouponId(couponId);
 		this.calCheckTotalFee(userId, dis, order, false, true);
 
 		order.setPayType(2);// 1=余额支付
@@ -305,6 +328,12 @@ public class FoodOrderServiceImpl extends
 
 		for (FoodOrderChildsEntity child : childs) {
 			foodOrderChildsDao.updateById(child);
+		}
+		
+		if(order.getCouponId() != null){
+			OperateCouponRecordEntity coupon = operateCouponRecordDao.selectById(order.getCouponId());
+			coupon.setUse(1);
+			operateCouponRecordDao.updateById(coupon);
 		}
 
 		BigDecimal payAmount = order.getPayAmount();
@@ -324,15 +353,16 @@ public class FoodOrderServiceImpl extends
 			return order;
 		}
 
-		int noPay = this.selectCount(new EntityWrapper<FoodOrderEntity>().eq(
+		int paycount = this.selectCount(new EntityWrapper<FoodOrderEntity>().eq(
 				"user_id", userId).gt("order_status", 0));
-		boolean isFirstOrder = noPay > 0 ? true : false;
+		boolean isFirstOrder = !(paycount > 0);
 
 		OperateActivityFirstOrderEntity firstOrderActivity = operateActivityFirstOrderDao
 				.findUnderwayActivity();
 		OperateActivityKeepDiscountEntity keepDiscountActivity = operateActivityKeepDiscountDao
 				.findUnderwayActivity();
-		OperateActivityPayCashBackEntity payCashBackEntity = operateActivityPayCashBackDao.findUnderwayActivity();
+		OperateActivityPayCashBackEntity payCashBackEntity = operateActivityPayCashBackDao
+				.findUnderwayActivity();
 
 		BigDecimal totalFee = new BigDecimal("0.00"), payAmount = new BigDecimal(
 				"0.00");
@@ -382,10 +412,11 @@ public class FoodOrderServiceImpl extends
 			orderChild.setActivity(null);
 			orderChild.setActivityFee(null);
 			totalFee = totalFee.add(fee);
-			if (firstOrderActivityType.equals(aisle.get("activity"))
-					&& firstOrderActivity != null) {// 含有首单活动
-				if(isCheckActivity){
-					if (isFirstOrder == true) {// 首单
+			
+			if(isCheckActivity){
+				if (isFirstOrder == true) {// 首单
+					if (firstOrderActivityType.equals(aisle.get("activity"))
+							&& firstOrderActivity != null) {// 含有首单活动
 						fee = fee.subtract(firstOrderActivity.getAmount());
 						orderChild.setActivity(firstOrderActivityType);
 						orderChild.setActivityFee(firstOrderActivity.getAmount());
@@ -393,14 +424,93 @@ public class FoodOrderServiceImpl extends
 						isCalProductActivity = true;
 						isCanUseCoupon = false;
 					}
+				}else{
+					if ("2".equals(aisle.get("activity"))
+							&& keepDiscountActivity != null) {
+						if(keepDiscountActivity.getJoinRestrict().compareTo(fee) >= 0){//满足参加活动状态
+							Integer count = getActivityFor("2", keepDiscountActivity.getId(), macId, productId, userId,"2");
+							if (count == 0) {//当天未参加
+								Date start = keepDiscountActivity.getStartTime(),
+										end = new Date();
+								if(start.after(end)){
+									logger.error("数据库时间与服务器时间不同步start={},end={}",start,end);
+								}else{
+									Calendar aCalendar = Calendar.getInstance();
+							        aCalendar.setTime(start);
+							        int day1 = aCalendar.get(Calendar.DAY_OF_YEAR);
+							        aCalendar.setTime(end);
+							        int day2 = aCalendar.get(Calendar.DAY_OF_YEAR);
+							        int days = day2-day1;
+							        
+									BigDecimal initDis = keepDiscountActivity.getInitDis();
+									BigDecimal keepDis = initDis.add(keepDiscountActivity.getProIncr().multiply(new BigDecimal(days))); 
+									logger.debug("cal before keepDis={},fee={}",keepDis,fee);
+									if(keepDis.compareTo(new BigDecimal("10")) >= 0){
+										keepDis = new BigDecimal("10");
+									}
+									logger.debug("cal after keepDis={},fee={}",keepDis,fee);
+									BigDecimal activityFee = fee.multiply(keepDis.divide(new BigDecimal(10)));
+									fee = fee.subtract(activityFee);
+									logger.debug("activity cal after fee={},activityFee={}",fee,activityFee);
+									orderChild.setActivity("2");
+									orderChild.setActivityFee(activityFee);
+									orderChild.setActivityId(keepDiscountActivity.getId());
+									isCalProductActivity = true;
+									isCanUseCoupon = false;
+								}
+							}
+						}
+					}
+					
+					if(orderChild.getActivityId() == null){
+						if ("3".equals(aisle.get("activity"))
+								&& payCashBackEntity != null) {
+							Integer count = getActivityFor("3", payCashBackEntity.getId(), macId, productId, null, null);
+							logger.debug("activity 3 count={},personTime={}",count,payCashBackEntity.getPersonTime());
+							if(count < payCashBackEntity.getPersonTime()){//人数
+								BigDecimal amount = payCashBackEntity.getAmount();
+								BigDecimal activityFee = amount.subtract(amount.multiply(new BigDecimal(count)));
+								logger.debug("activity cal after fee={}",fee);
+								orderChild.setActivity("3");
+								orderChild.setActivityFee(activityFee);
+								orderChild.setActivityId(payCashBackEntity.getId());
+								isCalProductActivity = true;
+								isCanUseCoupon = false;
+							}
+						}
+					}
 				}
 			}
 			
-			if ("2".equals(aisle.get("activity"))
-					&& keepDiscountActivity != null) {
-				if(isCheckActivity){
-					if(keepDiscountActivity.getJoinRestrict().compareTo(fee) >= 0){//满足参加活动状态
-						Integer count = getActivityFor("2", keepDiscountActivity.getId(), macId, productId, userId,"2");
+			payAmount = payAmount.add(fee);
+			logger.debug("price={},buyNumber={},fee={}", price,
+					orderChild.getBuyNumber(), fee);
+		}
+
+		order.setActivityFee(null);
+		order.setActivityId(null);
+		order.setActivityType(null);
+
+		FoodMachineEntity mac = foodMachineDao.findByMacId(order.getMacId());
+		
+		logger.debug("mac.getActivitys={}",new Gson().toJson(mac.getActivitys()));
+		logger.debug("isCheckActivity={},isCalProductActivity={},isFirstOrder={}",isCheckActivity,isCalProductActivity,isFirstOrder);
+		if (isCheckActivity && isCalProductActivity == false && mac.getActivitys() != null) {
+			if (isFirstOrder == true) {// 首单
+				if(mac.getActivitys().contains(firstOrderActivityType)
+						&& firstOrderActivity != null){
+					isCanUseCoupon = false;
+					order.setActivityFee(firstOrderActivity.getAmount());
+					order.setActivityId(firstOrderActivity.getId());
+					order.setActivityType(firstOrderActivityType);
+					payAmount = payAmount.subtract(firstOrderActivity.getAmount());
+				}
+			}else{
+				logger.debug("payAmount={},keepDiscountActivity={}",payAmount,new Gson().toJson(keepDiscountActivity));
+				if(mac.getActivitys().contains("2") && keepDiscountActivity != null){
+					if(keepDiscountActivity.getJoinRestrict().compareTo(payAmount) >= 0){//满足参加活动状态
+						Integer count = getActivityFor("2", keepDiscountActivity.getId(), order.getMacId(), null, userId, "2");
+						logger.debug("keepDiscountActivity| joincount= {}",count);
 						if (count == 0) {//当天未参加
 							Date start = keepDiscountActivity.getStartTime(),
 									end = new Date();
@@ -416,96 +526,34 @@ public class FoodOrderServiceImpl extends
 						        
 								BigDecimal initDis = keepDiscountActivity.getInitDis();
 								BigDecimal keepDis = initDis.add(keepDiscountActivity.getProIncr().multiply(new BigDecimal(days))); 
-								logger.debug("cal before keepDis={},fee={}",keepDis,fee);
+								logger.debug("mac|cal before keepDis={},payAmount={}",keepDis,payAmount);
 								if(keepDis.compareTo(new BigDecimal("10")) >= 0){
 									keepDis = new BigDecimal("10");
 								}
-								logger.debug("cal after keepDis={},fee={}",keepDis,fee);
-								BigDecimal activityFee = fee.multiply(keepDis.divide(new BigDecimal(10)));
-								fee = fee.subtract(activityFee);
-								logger.debug("activity cal after fee={},activityFee={}",fee,activityFee);
-								orderChild.setActivity("2");
-								orderChild.setActivityFee(activityFee);
-								orderChild.setActivityId(keepDiscountActivity.getId());
-								isCalProductActivity = true;
+								
+								BigDecimal activityFee = payAmount.multiply(keepDis.divide(new BigDecimal(10)));
+								payAmount = payAmount.subtract(activityFee);
+								logger.debug("mac|cal after activityFee={},payAmount={}",activityFee,payAmount);
+								order.setActivityFee(activityFee);
+								order.setActivityId(keepDiscountActivity.getId());
+								order.setActivityType("2");
 								isCanUseCoupon = false;
 							}
 						}
 					}
 				}
-			}
-			
-			if ("3".equals(aisle.get("activity"))
-					&& payCashBackEntity != null) {
-				if(isCheckActivity){
-					Integer count = getActivityFor("3", payCashBackEntity.getId(), macId, productId, null, null);
-					logger.debug("activity 3 count={},personTime={}",count,payCashBackEntity.getPersonTime());
-					if(count < payCashBackEntity.getPersonTime()){//人数
-						BigDecimal amount = payCashBackEntity.getAmount();
-						BigDecimal activityFee = amount.subtract(amount.multiply(new BigDecimal(count)));
-						logger.debug("activity cal after fee={}",fee);
-						orderChild.setActivity("3");
-						orderChild.setActivityFee(activityFee);
-						orderChild.setActivityId(payCashBackEntity.getId());
-						isCalProductActivity = true;
-						isCanUseCoupon = false;
-					}
-				}
-			}
-			payAmount = payAmount.add(fee);
-			logger.debug("price={},buyNumber={},fee={}", price,
-					orderChild.getBuyNumber(), fee);
-		}
-
-		order.setActivityFee(null);
-		order.setActivityId(null);
-		order.setActivityType(null);
-
-		FoodMachineEntity mac = foodMachineDao.findByMacId(order.getMacId());
-		if (isCalProductActivity == false && mac.getActivitys() != null
-				&& mac.getActivitys().contains(firstOrderActivityType)) {
-			if(isCheckActivity){
-				if (firstOrderActivity != null) {
-					isCanUseCoupon = false;
-					order.setActivityFee(firstOrderActivity.getAmount());
-					order.setActivityId(firstOrderActivity.getId());
-					order.setActivityType(firstOrderActivityType);
-					payAmount = payAmount.subtract(firstOrderActivity.getAmount());
-				}
-			}
-		}
-		
-		if (isCalProductActivity == false && mac.getActivitys() != null
-				&& mac.getActivitys().contains("2")) {
-			if(isCheckActivity){
-				if(keepDiscountActivity.getJoinRestrict().compareTo(payAmount) >= 0){//满足参加活动状态
-					Integer count = getActivityFor("2", keepDiscountActivity.getId(), order.getMacId(), null, userId, "2");
-					if (count == 0) {//当天未参加
-						Date start = keepDiscountActivity.getStartTime(),
-								end = new Date();
-						if(start.after(end)){
-							logger.error("数据库时间与服务器时间不同步start={},end={}",start,end);
-						}else{
-							Calendar aCalendar = Calendar.getInstance();
-					        aCalendar.setTime(start);
-					        int day1 = aCalendar.get(Calendar.DAY_OF_YEAR);
-					        aCalendar.setTime(end);
-					        int day2 = aCalendar.get(Calendar.DAY_OF_YEAR);
-					        int days = day2-day1;
-					        
-							BigDecimal initDis = keepDiscountActivity.getInitDis();
-							BigDecimal keepDis = initDis.add(keepDiscountActivity.getProIncr().multiply(new BigDecimal(days))); 
-							logger.debug("mac|cal before keepDis={},payAmount={}",keepDis,payAmount);
-							if(keepDis.compareTo(new BigDecimal("10")) >= 0){
-								keepDis = new BigDecimal("10");
-							}
-							
-							BigDecimal activityFee = payAmount.multiply(keepDis.divide(new BigDecimal(10)));
-							payAmount = payAmount.subtract(activityFee);
-							logger.debug("mac|cal after activityFee={},payAmount={}",activityFee,payAmount);
+				
+				if(order.getActivityId() == null){
+					if(mac.getActivitys().contains("3") && payCashBackEntity != null){
+						Integer count = getActivityFor("3", payCashBackEntity.getId(), order.getMacId(), null, null, null);
+						logger.debug("mac|activity 3 count={},personTime={}",count,payCashBackEntity.getPersonTime());
+						if(count < payCashBackEntity.getPersonTime()){//人数
+							BigDecimal amount = payCashBackEntity.getAmount();
+							BigDecimal activityFee = amount.subtract(amount.multiply(new BigDecimal(count)));
+							logger.debug("mac|activity cal after payAmount={}",payAmount);
 							order.setActivityFee(activityFee);
-							order.setActivityId(keepDiscountActivity.getId());
-							order.setActivityType("2");
+							order.setActivityId(payCashBackEntity.getId());
+							order.setActivityType("3");
 							isCanUseCoupon = false;
 						}
 					}
@@ -513,23 +561,6 @@ public class FoodOrderServiceImpl extends
 			}
 		}
 		
-		if (isCalProductActivity == false && mac.getActivitys() != null
-				&& mac.getActivitys().contains("3")) {
-			if(isCheckActivity){
-				Integer count = getActivityFor("3", payCashBackEntity.getId(), order.getMacId(), null, null, null);
-				logger.debug("mac|activity 3 count={},personTime={}",count,payCashBackEntity.getPersonTime());
-				if(count < payCashBackEntity.getPersonTime()){//人数
-					BigDecimal amount = payCashBackEntity.getAmount();
-					BigDecimal activityFee = amount.subtract(amount.multiply(new BigDecimal(count)));
-					logger.debug("mac|activity cal after payAmount={}",payAmount);
-					order.setActivityFee(activityFee);
-					order.setActivityId(payCashBackEntity.getId());
-					order.setActivityType("3");
-					isCanUseCoupon = false;
-				}
-			}
-		}
-
 		if (order.getCouponId() != null) {
 			if (!isCanUseCoupon) {
 				throw new I18nMessageException("70001", "活动中不能使用优惠券");
@@ -543,7 +574,7 @@ public class FoodOrderServiceImpl extends
 				throw new I18nMessageException("70003", "优惠券已使用");
 			}
 
-			if (payAmount.compareTo(new BigDecimal(coupon.getUseRestrict())) < 0) {// 满足条件
+			if (payAmount.compareTo(coupon.getUseRestrict()) < 0) {// 满足条件
 				throw new I18nMessageException("70004", "不满足优惠券使用条件");
 			}
 			BigDecimal couponFee = null;
@@ -851,7 +882,7 @@ public class FoodOrderServiceImpl extends
 	}
 	
 	private Integer getActivityFor(String activity,Integer activityId,Integer macId,Integer productId,Long userId,String flag){
-		HashOperations<String, String, Integer> operations = redisTemplate
+		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
 		
 		String	key = "activitys:" + activity + ":" + activityId + ":"+macId;
@@ -860,9 +891,9 @@ public class FoodOrderServiceImpl extends
 		}
 		Integer total = 0;
 		if(userId == null){
-			List<Integer> values = operations.values(key);
-			for(Integer item : values){
-				total += item;
+			List<String> values = operations.values(key);
+			for(String item : values){
+				total += Integer.parseInt(item);
 			}
 		}else{
 			String hashKey = "u_"+Long.toString(userId);
@@ -870,7 +901,7 @@ public class FoodOrderServiceImpl extends
 				hashKey += "_"+DateFormatUtils.format(new Date(), "yyyyMMdd");
 			}
 			if(operations.hasKey(key, hashKey)){
-				total = operations.get(key, hashKey);
+				total = Integer.parseInt(operations.get(key, hashKey));
 			}
 		}
 		return total;

@@ -33,7 +33,8 @@
 		<result property="createBy" column="create_by" />
 		<result property="updateBy" column="update_by" />
 		<result property="updateTime" column="update_time" />
-		<collection property="activitys" ofType="java.lang.String" javaType="java.util.ArrayList" column="activity"></collection>
+		<collection property="activitys" ofType="String" column="activity">
+    	</collection>
 
 		<collection property="productCats" resultMap="foodMachineProductCatMap"
 			ofType="com.lebaoxun.modules.fastfood.entity.FoodMachineProductCatEntity">
@@ -64,14 +65,35 @@
 		#{createTime}, #{createBy},
 		#{updateTime}, #{updateBy});
 	</insert>
+	
+	<select id="findByRandom" resultMap="foodMachineMap">
+	    SELECT
+			mac_activity.activity_type as activity,
+			mac.name,
+			mac.area_code,mac.IMEI,mac.pos,
+			mac.`status`,mac.id,
+			mac.address
+		FROM
+		   food_machine as mac
+			left join food_machine_activity_ref as
+				mac_activity on
+				mac_activity.mac_id
+				= mac.id
+		WHERE
+			mac.id >= (
+				(SELECT MAX(id) FROM food_machine) - (SELECT MIN(id) FROM food_machine)
+			) * RAND() + (SELECT MIN(id) FROM food_machine)
+		LIMIT #{size}
+	</select>
 
 	<select id="findByAreaCode" resultMap="foodMachineMap">
 		select
+		mac_activity.activity_type as activity,
 		mac.name,
 		mac.area_code,mac.IMEI,mac.pos,
 		mac.`status`,mac.id,
-		mac.address,
-		mac_activity.activity_type as activity
+		mac.address
+		
 		from food_machine as mac
 		left join food_machine_activity_ref as
 		mac_activity on
@@ -83,14 +105,15 @@
 
 	<select id="findByMacId" resultMap="foodMachineMap">
 		SELECT
+		mac_activity.activity_type as activity,
 		mac.`name`,
 		mac.area_code,
 		mac.IMEI,
 		mac.pos,
 		mac.`status`,
 		mac.id,
-		mac.address,
-		mac_activity.activity_type as activity
+		mac.address
+		
 		<!-- ,product_cat.icon,
 		product_cat.id as cat_id,
 		product_cat.`name` as cat_name -->

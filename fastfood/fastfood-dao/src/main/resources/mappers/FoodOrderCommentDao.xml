@@ -6,9 +6,7 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodOrderCommentEntity" id="foodOrderCommentMap">
         <result property="id" column="id"/>
-        <result property="aisleId" column="aisle_id"/>
         <result property="macId" column="mac_id"/>
-        <result property="productId" column="product_id"/>
         <result property="userId" column="user_id"/>
         <result property="nickname" column="nickname"/>
         <result property="headimgurl" column="headimgurl"/>
@@ -19,10 +17,8 @@
         <result property="status" column="status"/>
         <result property="type" column="type"/>
         <result property="createTime" column="create_time"/>
-        <result property="orderChildId" column="order_child_id"/>
-    	<association property="child"
-			javaType="com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity"
-			resultMap="foodOrderChildsMap"></association>
+        <result property="orderNo" column="order_no"/>
+        <result property="productName" column="product_name"/>
 		<collection property="picImgs"
 			ofType="com.lebaoxun.modules.fastfood.entity.FoodOrderCommentImageEntity"
 			resultMap="foodOrderCommentImageMap"></collection>
@@ -36,40 +32,19 @@
         <result property="status" column="status"/>
     </resultMap>
 
-	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity" id="foodOrderChildsMap">
-        <result property="orderProductId" column="order_product_id"/>
-        <result property="orderId" column="order_id"/>
-        <result property="productCatId" column="product_cat_id"/>
-        <result property="productId" column="product_id"/>
-        <result property="price" column="price"/>
-        <result property="score" column="score"/>
-        <result property="buyNumber" column="buy_number"/>
-        <result property="productScore" column="product_score"/>
-        <result property="productAmount" column="product_amount"/>
-        <result property="status" column="status"/>
-        <result property="productName" column="product_name"/>
-        <result property="activityFee" column="activity_fee"/>
-        <result property="activityId" column="activity_id"/>
-        <result property="activity" column="activity"/>
-        <result property="costPrice" column="cost_price"/>
-    </resultMap>
-
 	<insert id="insert"
 		parameterType="com.lebaoxun.modules.fastfood.entity.FoodOrderCommentEntity"
 		useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO food_order_comment (
-		aisle_id, mac_id,
-		product_id, user_id, nickname,
-		headimgurl, order_id, star,
-		content, praises, status,
-		type, create_time, order_child_id)
+		mac_id, user_id, nickname, headimgurl, order_id, star,
+		content, praises, status, type, create_time, order_no,
+		product_name)
 		VALUES
 		(
-		#{productId}, #{userId}, #{nickname},
-		#{headimgurl}, #{orderId}, #{star},
-		#{content}, #{praises}, #{status},
-		#{type}, #{createTime}, #{orderChildId});
+		#{macId}, #{userId}, #{nickname}, #{headimgurl}, #{orderId}, #{star},
+		#{content}, #{praises}, #{status}, #{type}, #{createTime}, #{orderNo},
+		#{productName}
+		);
 	</insert>
 
 	<select id="selectByMacId" resultMap="foodOrderCommentMap">

@@ -29,6 +29,8 @@ public interface FoodMachineDao extends BaseMapper<FoodMachineEntity> {
     */
    List<FoodMachineEntity> findByAreaCode(@Param("areaCode")String areaCode);
    
+   List<FoodMachineEntity> findByRandom(@Param("size")Integer size);
+   
    /**
     * 查询机器详情
     * @param macId

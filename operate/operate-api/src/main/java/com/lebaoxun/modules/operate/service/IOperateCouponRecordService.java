@@ -60,6 +60,7 @@ public interface IOperateCouponRecordService {
 	 */
     @RequestMapping("/operate/operatecouponrecord/findByUserId")
     ResponseMessage findByUserId(@RequestParam("userId")Long userId,
+    		@RequestParam(value="macId",required=false)Integer macId,
     		@RequestParam(value="use",required=false)Integer use,
     		@RequestParam(value="flag",required=false)Integer flag,
     		@RequestParam(value="size",required=false)Integer size,

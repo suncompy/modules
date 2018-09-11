@@ -81,9 +81,8 @@ public class FoodOrderCommentController {
     @RequestMapping("/fastfood/foodordercomment/publish")
     @RedisLock(value="fastfood:foodordercomment:publish:lock:#arg0")
     ResponseMessage publish(@RequestParam("userId") Long userId, 
-    		@RequestParam("childId") Long childId,
     		@RequestBody FoodOrderCommentEntity comment){
-    	foodOrderCommentService.publish(userId, childId, comment);
+    	foodOrderCommentService.publish(userId, comment);
     	return ResponseMessage.ok();
     }
 	

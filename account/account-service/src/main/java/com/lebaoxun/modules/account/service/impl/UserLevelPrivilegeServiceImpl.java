@@ -64,9 +64,11 @@ public class UserLevelPrivilegeServiceImpl extends ServiceImpl<UserLevelPrivileg
 			logger.debug("start={},end={}",start,end);
 			BigDecimal totalFee = userLogDao.sumTradeMoneyByUserIdAndLogTypeAndTime(userId, payLogType, start, end);
 			
-			for(UserLevelPrivilegeEntity up : levels){
-				if(totalFee.compareTo(up.getExp()) >= 0){
-					level = up;
+			if(totalFee != null){
+				for(UserLevelPrivilegeEntity up : levels){
+					if(totalFee.compareTo(up.getExp()) >= 0){
+						level = up;
+					}
 				}
 			}
 		}

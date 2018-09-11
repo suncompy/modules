@@ -149,7 +149,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 			throw new I18nMessageException("500");
 		}
 		if(user.getBalance().compareTo(tradeMoney) < 0){
-			throw new I18nMessageException("40008");
+			throw new I18nMessageException("40008","余额不足");
 		}
 		user.setBalance(user.getBalance().subtract(tradeMoney));
 		this.updateById(user);
@@ -164,7 +164,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 			throw new I18nMessageException("500");
 		}
 		if(user.getScore() < score){
-			throw new I18nMessageException("40007");
+			throw new I18nMessageException("40007","积分不足");
 		}
 		user.setScore(user.getScore() - score);
 		this.updateById(user);

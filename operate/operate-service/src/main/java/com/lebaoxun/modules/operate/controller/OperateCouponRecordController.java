@@ -86,11 +86,12 @@ public class OperateCouponRecordController {
 	 */
     @RequestMapping("/operate/operatecouponrecord/findByUserId")
     ResponseMessage findByUserId(@RequestParam("userId")Long userId,
+    		@RequestParam(value="macId",required=false)Integer macId,
     		@RequestParam(value="use",required=false)Integer use,
     		@RequestParam(value="flag",required=false)Integer flag,
     		@RequestParam(value="size",required=false)Integer size,
     		@RequestParam(value="offset",required=false)Integer offset){
-    	return ResponseMessage.ok(operateCouponRecordService.findByUserId(userId, use, flag,size, offset));
+    	return ResponseMessage.ok(operateCouponRecordService.findByUserId(userId, macId, use, flag,size, offset));
 	}
     
     @RequestMapping("/operate/operatecouponrecord/getCouponByCouponId")

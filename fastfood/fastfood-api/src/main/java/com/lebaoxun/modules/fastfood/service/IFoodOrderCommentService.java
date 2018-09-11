@@ -55,7 +55,6 @@ public interface IFoodOrderCommentService {
     
     @RequestMapping("/fastfood/foodordercomment/publish")
     ResponseMessage publish(@RequestParam("userId") Long userId, 
-    		@RequestParam("childId") Long childId,
     		@RequestBody FoodOrderCommentEntity comment);
 	
     @RequestMapping("/fastfood/foodordercomment/findByMacId")

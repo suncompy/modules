@@ -47,7 +47,7 @@ public class OperateCouponEntity implements Serializable {
 	/**
 	 * 使用限制，满x元可用
 	 */
-	private Integer useRestrict;
+	private BigDecimal useRestrict;
 	/**
 	 * 启用时间
 	 */
@@ -163,13 +163,13 @@ public class OperateCouponEntity implements Serializable {
 	/**
 	 * 设置：使用限制，满x元可用
 	 */
-	public void setUseRestrict(Integer useRestrict) {
+	public void setUseRestrict(BigDecimal useRestrict) {
 		this.useRestrict = useRestrict;
 	}
 	/**
 	 * 获取：使用限制，满x元可用
 	 */
-	public Integer getUseRestrict() {
+	public BigDecimal getUseRestrict() {
 		return useRestrict;
 	}
 	/**

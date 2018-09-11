@@ -51,33 +51,26 @@ public class FoodOrderCommentServiceImpl extends ServiceImpl<FoodOrderCommentDao
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void publish(Long userId, Long childId,
-			FoodOrderCommentEntity comment) {
+	public void publish(Long userId, FoodOrderCommentEntity comment) {
 		// TODO Auto-generated method stub
-		FoodOrderChildsEntity orderChild = foodOrderChildsDao.selectById(childId);
-		if(orderChild == null || orderChild.getStatus() == 1){
-			throw new I18nMessageException("500");
+		FoodOrderEntity order = foodOrderDao.selectById(comment.getOrderId());
+		if(order == null){
+			throw new I18nMessageException("60007","订单不存在");
 		}
 		
-		int total = foodOrderChildsDao.selectCount(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", orderChild.getOrderId())),
-				current = foodOrderChildsDao.selectCount(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", orderChild.getOrderId()).eq("status", 1));
-		boolean isAll = total == current;//是否全部评价
+		if(order.getOrderStatus() != 2){
+			throw new I18nMessageException("60017","订单已评价");
+		}
 		
 		//修改订单状态为已评价
-		orderChild.setStatus(1);
-		foodOrderChildsDao.updateById(orderChild);
+		order.setOrderStatus(3);
+		foodOrderDao.updateById(order);
 		
-		if(isAll){
-			FoodOrderEntity order = foodOrderDao.selectById(orderChild.getOrderId());
-			order.setOrderStatus(3);
-			foodOrderDao.updateById(order);
-		}
-		comment.setAisleId(orderChild.getAisleId());
-		comment.setMacId(orderChild.getMacId());
-		comment.setOrderChildId(orderChild.getId());
+		comment.setUserId(userId);
+		comment.setMacId(order.getMacId());
+		comment.setOrderId(order.getId());
+		comment.setOrderNo(order.getOrderNo());
 		comment.setPraises(0);
-		comment.setProductId(orderChild.getProductId());
-		comment.setOrderId(orderChild.getOrderId());
 		comment.setType(0);
 		comment.setCreateTime(new Date());
 		this.baseMapper.save(comment);

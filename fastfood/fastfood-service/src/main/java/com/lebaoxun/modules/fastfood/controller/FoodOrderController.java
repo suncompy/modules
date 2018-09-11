@@ -10,8 +10,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.lebaoxun.commons.utils.StringUtils;
-
 import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -115,9 +115,18 @@ public class FoodOrderController {
 			@RequestParam("spbill_create_ip")String spbill_create_ip,
 			@RequestParam("payGroup")String payGroup, 
 			@RequestParam("openid")String openid, 
-			@RequestParam("orderNo")String orderNo){
-		return foodOrderService.wxAppPayForOrder(userId, dis, spbill_create_ip, payGroup, openid, orderNo);
+			@RequestParam("orderNo")String orderNo,
+			@RequestParam(value="couponId",required=false)Integer couponId){
+		return foodOrderService.wxAppPayForOrder(userId, dis, spbill_create_ip, payGroup, openid, orderNo, couponId);
 	}
+    
+    @RequestMapping("/fastfood/foodorder/calCheckTotalFeeByOrderNo")
+	ResponseMessage calCheckTotalFeeByOrderNo(
+			@RequestParam("userId") Long userId, 
+			@RequestParam("orderNo")String orderNo,
+			@RequestParam(value="dis",required=false)BigDecimal dis){
+    	return ResponseMessage.ok(foodOrderService.calCheckTotalFee(userId, orderNo, dis));
+    }
 	
     /**
 	 * 余额支付
@@ -131,8 +140,9 @@ public class FoodOrderController {
 	ResponseMessage balancePayForOrder(
 			@RequestParam("userId") Long userId, 
 			@RequestParam("dis") BigDecimal dis,
-			@RequestParam("orderNo") String orderNo){
-    	ResponseMessage rm = foodOrderService.balancePayForOrder(userId, dis, orderNo);
+			@RequestParam("orderNo") String orderNo,
+			@RequestParam(value="couponId",required=false)Integer couponId){
+    	ResponseMessage rm = foodOrderService.balancePayForOrder(userId, dis, orderNo, couponId);
     	if("0".equals(rm.getErrcode())){
     		Map<String,String> message = new HashMap<String,String>();
     		message.put("orderNo", orderNo);
