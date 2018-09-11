@@ -1,6 +1,10 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
+import com.lebaoxun.commons.utils.DateUtil;
+import com.lebaoxun.modules.fastfood.entity.FoodProductCatEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -22,8 +26,13 @@ public class FoodMachineProductCatServiceImpl extends ServiceImpl<FoodMachinePro
                 new Query<FoodMachineProductCatEntity>(params).getPage(),
                 new EntityWrapper<FoodMachineProductCatEntity>()
         );
-
+        List<FoodMachineProductCatEntity> records = page.getRecords();
+        if (records != null) {
+            for (FoodMachineProductCatEntity fpc : records) {
+                fpc.setCreateTimeStr(DateUtil.formatDatetime(fpc.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+                fpc.setUpdateTimeStr(DateUtil.formatDatetime(fpc.getUpdateTime(), "yyyy-MM-dd HH:mm:ss"));
+            }
+        }
         return new PageUtils(page);
     }
-
 }

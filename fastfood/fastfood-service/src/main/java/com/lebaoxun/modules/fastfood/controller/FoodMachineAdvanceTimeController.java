@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.commons.utils.DateUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +61,19 @@ public class FoodMachineAdvanceTimeController {
     }
 
     /**
+     * 根据机器id、货道Id查询预定日期
+     */
+    @RequestMapping("/fastfood/foodmachineadvancetime/findPreDatesByMacIdOrAisleId")
+    List<FoodMachineAdvanceTimeEntity> findPreDatesByMacIdOrAisleId(@RequestParam("macId")Integer macId,
+                                                 @RequestParam("aisleId")Integer aisleId){
+        EntityWrapper<FoodMachineAdvanceTimeEntity> entityWrapper=new EntityWrapper<FoodMachineAdvanceTimeEntity>();
+        entityWrapper.eq("mac_id",macId);
+        entityWrapper.eq("aisle_id",aisleId);
+        entityWrapper.ge("time", DateUtil.formatDatetime(new Date(),"yyyy-MM-dd"));
+        return foodMachineAdvanceTimeService.selectList(entityWrapper);
+    }
+
+    /**
      * 信息
      */
     @RequestMapping("/fastfood/foodmachineadvancetime/info/{id}")
@@ -79,9 +94,25 @@ public class FoodMachineAdvanceTimeController {
     @RequestMapping("/fastfood/foodmachineadvancetime/batchSave")
     ResponseMessage batchSave(@RequestParam("adminId")Long adminId,@RequestBody List<FoodMachineAdvanceTimeEntity> advanceTimeList){
         advanceTimeList.forEach(e->{
-            e.setCreateBy(adminId);
-            e.setCreateTime(new Date());
-            foodMachineAdvanceTimeService.insert(e);
+            if(e.getIsPre()==1){
+                EntityWrapper<FoodMachineAdvanceTimeEntity> entityWrapper=new EntityWrapper<FoodMachineAdvanceTimeEntity>();
+                entityWrapper.eq("mac_id",advanceTimeList.get(0).getMacId());
+                entityWrapper.eq("aisle_id",advanceTimeList.get(0).getAisleId());
+                entityWrapper.ge("time", e.getTime());
+                FoodMachineAdvanceTimeEntity entity=foodMachineAdvanceTimeService.selectOne(entityWrapper);
+                if (entity!=null&&entity.getId()>0){
+                    return;
+                }
+                e.setCreateBy(adminId);
+                e.setCreateTime(new Date());
+                foodMachineAdvanceTimeService.insert(e);
+            }else{
+                EntityWrapper<FoodMachineAdvanceTimeEntity> entityWrapper=new EntityWrapper<FoodMachineAdvanceTimeEntity>();
+                entityWrapper.eq("mac_id",advanceTimeList.get(0).getMacId());
+                entityWrapper.eq("aisle_id",advanceTimeList.get(0).getAisleId());
+                entityWrapper.ge("time", e.getTime());
+                foodMachineAdvanceTimeService.delete(entityWrapper);
+            }
         });
         return ResponseMessage.ok();
     }
