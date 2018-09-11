@@ -17,8 +17,6 @@ import com.lebaoxun.modules.fastfood.entity.FoodOrderCommentEntity;
  */
 @Mapper
 public interface FoodOrderCommentDao extends BaseMapper<FoodOrderCommentEntity> {
-void save(FoodOrderCommentEntity comment);
-	
 	List<FoodOrderCommentEntity> selectByMacId(@Param("macId") Integer macId);
 	
 	FoodOrderCommentEntity selectLastByMacId(@Param("macId") Integer macId);
