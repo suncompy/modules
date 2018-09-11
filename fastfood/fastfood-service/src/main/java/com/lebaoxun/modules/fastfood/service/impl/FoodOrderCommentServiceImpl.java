@@ -73,11 +73,14 @@ public class FoodOrderCommentServiceImpl extends ServiceImpl<FoodOrderCommentDao
 		comment.setPraises(0);
 		comment.setType(0);
 		comment.setCreateTime(new Date());
-		this.baseMapper.save(comment);
+		this.baseMapper.insert(comment);
 		List<FoodOrderCommentImageEntity> images = comment.getPicImgs();
-		for(FoodOrderCommentImageEntity commentImg : images){
-			commentImg.setCommentId(comment.getId());
-			foodOrderCommentImageDao.insert(commentImg);
+		if(images != null){
+			for(FoodOrderCommentImageEntity commentImg : images){
+				commentImg.setStatus(1);
+				commentImg.setCommentId(comment.getId());
+				foodOrderCommentImageDao.insert(commentImg);
+			}
 		}
 	}
 
