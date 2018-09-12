@@ -9,6 +9,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineAddStockOrderEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodMachineAddStockOrderServiceHystrix;
 import com.lebaoxun.commons.exception.ResponseMessage;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,7 +39,7 @@ public interface IFoodMachineAddStockOrderService {
      * 保存
      */
     @RequestMapping("/fastfood/foodmachineaddstockorder/save")
-    ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineAddStockOrderEntity foodMachineAddStockOrder);
+    ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody List<FoodMachineAddStockOrderEntity> addStockOrderList);
 
     /**
      * 修改

@@ -1,4 +1,5 @@
 package com.lebaoxun.modules.fastfood.service.hystrix;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -7,6 +8,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineAddStockOrderEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodMachineAddStockOrderService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 取餐机进货派单
@@ -30,7 +32,7 @@ public class FoodMachineAddStockOrderServiceHystrix implements IFoodMachineAddSt
 	}
 
 	@Override
-	public ResponseMessage save(Long adminId,FoodMachineAddStockOrderEntity foodMachineAddStockOrder) {
+	public ResponseMessage save(Long adminId,List<FoodMachineAddStockOrderEntity> addStockOrderList) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
