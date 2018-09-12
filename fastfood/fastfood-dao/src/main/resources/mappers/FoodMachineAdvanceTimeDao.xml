@@ -20,6 +20,7 @@
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineAdvanceTimeEntity" id="preOrderAndProMap">
         <result property="aisleId" column="aisleId"/>
         <result property="macId" column="macId"/>
+        <result property="productCatId" column="productCatId"/>
         <result property="productId" column="productId"/>
         <result property="productName" column="productName"/>
     </resultMap>
@@ -27,6 +28,7 @@
         SELECT
           aisle.id as aisleId,
           aisle.mac_id as macId,
+          aisle.product_cat_id as productCatId,
           aisle.product_id as productId,
           product.`name` as productName
         FROM
