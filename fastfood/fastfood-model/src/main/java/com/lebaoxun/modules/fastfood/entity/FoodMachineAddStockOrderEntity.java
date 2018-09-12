@@ -31,6 +31,11 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	 * 通道ID
 	 */
 	private Integer aisleId;
+	private Integer x;
+	private Integer y;
+	private Integer z=0;
+	private Integer size;
+	private Integer stock;
 	/**
 	 * 进货数
 	 */
@@ -198,5 +203,45 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	}
 	public void setAisle(FoodMachineAisleEntity aisle) {
 		this.aisle = aisle;
+	}
+
+	public Integer getX() {
+		return x;
+	}
+
+	public void setX(Integer x) {
+		this.x = x;
+	}
+
+	public Integer getY() {
+		return y;
+	}
+
+	public void setY(Integer y) {
+		this.y = y;
+	}
+
+	public Integer getZ() {
+		return z;
+	}
+
+	public void setZ(Integer z) {
+		this.z = z;
+	}
+
+	public Integer getSize() {
+		return size;
+	}
+
+	public void setSize(Integer size) {
+		this.size = size;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
 	}
 }

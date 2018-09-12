@@ -50,6 +50,11 @@ public class FoodMachineRefAisleEntity implements Serializable {
 	 */
 	private String aisleSize;
 
+	/**
+	 * 货道库存
+	 */
+	private Integer stock;
+
 	public List<String> getAisleIds() {
 		return aisleIds;
 	}
@@ -116,6 +121,14 @@ public class FoodMachineRefAisleEntity implements Serializable {
 
 	public void setPrice(Float price) {
 		this.price = price;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
 	}
 
 	public String getName() {
