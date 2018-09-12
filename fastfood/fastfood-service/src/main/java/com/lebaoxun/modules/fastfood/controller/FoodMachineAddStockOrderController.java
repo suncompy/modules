@@ -1,8 +1,11 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,8 +56,30 @@ public class FoodMachineAddStockOrderController {
      */
     @RequestMapping("/fastfood/foodmachineaddstockorder/save")
     @RedisLock(value="fastfood:foodmachineaddstockorder:save:lock:#arg0")
-    ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineAddStockOrderEntity foodMachineAddStockOrder){
-		foodMachineAddStockOrderService.insert(foodMachineAddStockOrder);
+    ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody List<FoodMachineAddStockOrderEntity> addStockOrderList){
+        if (addStockOrderList!=null&&addStockOrderList.size()>0){
+            for (FoodMachineAddStockOrderEntity e:addStockOrderList){
+                //首先判断补货、配货单是否在进行中
+                EntityWrapper<FoodMachineAddStockOrderEntity> entityWrapper=new EntityWrapper<FoodMachineAddStockOrderEntity>();
+                entityWrapper.eq("mac_id",e.getMacId());
+                entityWrapper.eq("x",e.getX());
+                entityWrapper.eq("y",e.getY());
+                entityWrapper.eq("type",e.getType());
+                entityWrapper.eq("status",0);
+                List<FoodMachineAddStockOrderEntity> cList=foodMachineAddStockOrderService.selectList(entityWrapper);
+                if (cList!=null&&cList.size()>0){
+                    return ResponseMessage.error("600002","机器["+e.getMacId()
+                            +"],货道["+e.getX()+"-"+e.getY()+"已有补货单在进行中！]!");
+                }
+                e.setStatus(0);
+                e.setCreateBy(adminId);
+                e.setCreateTime(new Date());
+                e.setUpdateTime(new Date());
+                foodMachineAddStockOrderService.insert(e);
+            }
+        }else {
+            return ResponseMessage.error("600001","未收到补货数据!");
+        }
         return ResponseMessage.ok();
     }
 
