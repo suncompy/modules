@@ -37,6 +37,7 @@
             f.mac_id,
             CONCAT(f.x,'-',f.y) as aisl_xy,
             f.size as aisle_size,
+            f.stock,
             f.product_cat_id,
             f.product_id,
             f.price,
