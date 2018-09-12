@@ -352,6 +352,12 @@ public class FoodOrderServiceImpl extends
 				|| order.getChilds().isEmpty()) {
 			return order;
 		}
+		Date now = new Date();
+		if(order.getTakeFoodTime() != null){
+			if(order.getTakeFoodTime().before(now)){
+				throw new I18nMessageException("60018","预定时间已过期");
+			}
+		}
 
 		int paycount = this.selectCount(new EntityWrapper<FoodOrderEntity>().eq(
 				"user_id", userId).gt("order_status", 0));

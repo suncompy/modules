@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
@@ -93,10 +94,10 @@ public class OperatePrizeGetLogServiceImpl extends
 		log.setStatus(0);
 		log.setUserId(userId);
 		log.setWeight(prize.getWeight());
-		
 		this.baseMapper.insert(log);
 		
-		ResponseMessage rm = userService.scorePay(userId, prize.getScore(), null, "{\"prizeId\":"+prize.getId()+",\"aisle:\":"+prize.getId()+"}", "积分抽奖扣除");
+		logger.debug("prize={}",new Gson().toJson(prize));
+		ResponseMessage rm = userService.scorePay(userId, prize.getScore(), null, "prizeId_"+prize.getId()+",aisle_"+prize.getId()+"", "积分抽奖扣除");
 
 		if("0".equals(rm.getErrcode())){
 			rm.setData(log);

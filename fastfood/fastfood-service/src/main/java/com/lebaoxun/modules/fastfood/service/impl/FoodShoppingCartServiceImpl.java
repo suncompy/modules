@@ -38,7 +38,7 @@ public class FoodShoppingCartServiceImpl extends ServiceImpl<FoodShoppingCartDao
 		// TODO Auto-generated method stub
 		FoodShoppingCartEntity cart = this.selectOne(new EntityWrapper<FoodShoppingCartEntity>().eq("aisle_id", aisleId).eq("user_id", userId));
 		if(cart != null){
-			return set(userId, cart.getCartId(), checkStatus, cart.getBuyNumber()+buyNumber);
+			return set(userId, cart.getCartId(), productId, checkStatus, cart.getBuyNumber()+buyNumber);
 		}
 		cart = new FoodShoppingCartEntity();
 		cart.setAisleId(aisleId);
@@ -55,11 +55,14 @@ public class FoodShoppingCartServiceImpl extends ServiceImpl<FoodShoppingCartDao
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public FoodShoppingCartEntity set(Long userId, Long cartId,
-			Integer checkStatus, Integer buyNumber) {
+			Integer productId, Integer checkStatus, Integer buyNumber) {
 		// TODO Auto-generated method stub
 		FoodShoppingCartEntity cart = this.selectOne(new EntityWrapper<FoodShoppingCartEntity>().eq("cart_id", cartId).eq("user_id", userId));
 		if(cart == null){
 			return cart;
+		}
+		if(productId != null){
+			cart.setProductId(productId);
 		}
 		cart.setCheckStatus(checkStatus);
 		cart.setBuyNumber(buyNumber);

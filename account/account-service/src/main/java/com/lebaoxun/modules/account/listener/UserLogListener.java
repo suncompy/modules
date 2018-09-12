@@ -60,11 +60,11 @@ public class UserLogListener {
 		String body = new String(m.getBody());
 		logger.debug("body={}",body);
 		String text = body.replace("\\\"", "\"");
-		JSONObject message = JSONObject.parseObject(text);
 		
-		logger.info("rabbit|sendContractDirect|message={}",message);
 		
 		try {
+			JSONObject message = JSONObject.parseObject(text);
+			logger.info("rabbit|sendContractDirect|message={}",message);
 			Long userId = message.getLong("userId"),
 					timestamp = message.getLong("timestamp");
 			

@@ -172,7 +172,7 @@ public class UserController {
     @RequestMapping("/account/user/score/pay")
     @RedisLock(value="account:user:score:pay:lock:#arg0")
     ResponseMessage scorePay(@RequestParam(value="userId")Long userId, 
-    		Integer score,
+    		@RequestParam(value="score") Integer score,
     		@RequestParam(value="platform",required=false) String platform,
     		@RequestParam(value="adjunctInfo") String adjunctInfo,
     		@RequestParam(value="descr",required=false) String descr){

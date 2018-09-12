@@ -54,7 +54,10 @@ public class FoodShoppingCartEntity implements Serializable {
 	 * 购物车状态：0,未选中；1,选中
 	 */
 	private Integer checkStatus;
-
+	/**
+	 * 取餐时间
+	 */
+	private Date takeFoodTime;
 	/**
 	 * 设置：购物车ID
 	 */
@@ -156,5 +159,11 @@ public class FoodShoppingCartEntity implements Serializable {
 	}
 	public void setAisleId(Integer aisleId) {
 		this.aisleId = aisleId;
+	}
+	public Date getTakeFoodTime() {
+		return takeFoodTime;
+	}
+	public void setTakeFoodTime(Date takeFoodTime) {
+		this.takeFoodTime = takeFoodTime;
 	}
 }

@@ -51,8 +51,8 @@ public class FoodShoppingCartServiceHystrix implements IFoodShoppingCartService 
 	}
 
 	@Override
-	public ResponseMessage set(Long userId, Long cartId, Integer checkStatus,
-			Integer buyNumber) {
+	public ResponseMessage set(Long userId, Long cartId, Integer productId,
+			Integer checkStatus, Integer buyNumber) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 

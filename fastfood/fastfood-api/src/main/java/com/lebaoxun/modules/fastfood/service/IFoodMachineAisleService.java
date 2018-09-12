@@ -89,5 +89,10 @@ public interface IFoodMachineAisleService {
     @RequestMapping("/fastfood/foodmachineaisle/findProductByMacIdAndWeek")
     ResponseMessage findProductByMacIdAndWeek(@RequestParam("macId") Integer macId, 
     		@RequestParam("week")Integer week);
+    
+    @RequestMapping("/fastfood/foodmachineaisle/findProductByMacIdAndAdTime")
+    ResponseMessage findProductByMacIdAndAdTime(@RequestParam("macId") Integer macId, 
+    		@RequestParam("time") String time, 
+    		@RequestParam(value="productCatId",required=false) Integer productCatId);
 }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lebaoxun.modules.operate.dao.OperatePrizeGetLogDao">
+<mapper namespace="com.lebaoxun.modules.fastfood.dao.operate.OperatePrizeGetLogDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.lebaoxun.modules.fastfood.entity.operate.OperatePrizeGetLogEntity" id="operatePrizeGetLogMap">
@@ -21,7 +21,7 @@
 	<select id="findLogByUserId" resultMap="operatePrizeGetLogMap">
 	    select * from operate_prize_get_log where user_id = #{userId}
 	    <if test="status != null">
-	        and status = #{status}
+	        and `status` = #{status}
 	    </if>
 	    order by create_time desc 
 	    <if test="size != null">
