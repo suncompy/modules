@@ -110,6 +110,14 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 		this.isPre = isPre;
 	}
 
+	public Integer getProductCatId() {
+		return productCatId;
+	}
+
+	public void setProductCatId(Integer productCatId) {
+		this.productCatId = productCatId;
+	}
+
 	/**
 	 * 设置：
 	 */
