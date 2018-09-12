@@ -43,8 +43,9 @@ public class FoodMachineAdvanceTimeEntity implements Serializable {
 	/**
 	 * 产品ID
 	 */
-	@TableField(exist = false)
 	private Integer productId;
+
+	private Integer productCatId;
 
 	/**
 	 * 产品名称
