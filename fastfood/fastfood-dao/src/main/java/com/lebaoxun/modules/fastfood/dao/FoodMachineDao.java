@@ -38,7 +38,7 @@ public interface FoodMachineDao extends BaseMapper<FoodMachineEntity> {
     */
    FoodMachineEntity findByMacId(@Param("macId")Integer macId);
 
-   Map<String, Object> findByMacOpenApiById(@Param("macId")Integer macId);
+   FoodMachineEntity findByMacOpenApiById(@Param("macId")Integer macId);
 
    List<Map<String, Object>> findByMacRefProductById(
                                                    @Param("pageSize") Integer pageSize,

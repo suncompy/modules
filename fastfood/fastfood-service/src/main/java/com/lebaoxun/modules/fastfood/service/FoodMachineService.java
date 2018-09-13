@@ -40,7 +40,7 @@ public interface FoodMachineService extends IService<FoodMachineEntity> {
     FoodMachineEntity findByMacId(Integer macId);
 
 
-    Map<String,Object> findByMacOpenApiById(Integer macId);
+    FoodMachineEntity findByMacOpenApiById(Integer macId);
 
     /**
      *查询机器关联产品

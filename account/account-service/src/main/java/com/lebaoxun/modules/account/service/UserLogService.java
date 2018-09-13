@@ -3,6 +3,8 @@ package com.lebaoxun.modules.account.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.account.entity.UserLogEntity;
@@ -32,6 +34,10 @@ public interface UserLogService extends IService<UserLogEntity> {
     void zRange(Long userId,String logType,String time);
     
     Map<String,Object> zRank(Long userId,String logType,String time);
+    
+    Integer countLogByUser(Long userId, String month, String logType, String adjunctInfo);
+	
+	Integer sumScoreLogByUser(Long userId, String month, String logType, String adjunctInfo);
     
 }
 

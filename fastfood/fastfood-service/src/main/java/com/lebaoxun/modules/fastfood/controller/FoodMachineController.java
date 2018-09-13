@@ -137,9 +137,11 @@ public class FoodMachineController {
             @RequestParam("pageNo") Integer pageNo,
             @RequestParam("macId") Integer macId,
             @RequestParam("catId") Integer catId){
-        Map<String,Object> foodMachineMap= foodMachineService.findByMacOpenApiById(macId);
-        if (foodMachineMap==null||foodMachineMap.size()==0)
+    	Map<String,Object> foodMachineMap = new HashMap<String,Object>();
+        FoodMachineEntity mac = foodMachineService.findByMacOpenApiById(macId);
+        if (mac==null)
             return ResponseMessage.error("00002","机器不存在！");
+        foodMachineMap.put("mac", mac);
         foodMachineMap.put("itemList",foodMachineService.findByMacRefProductById(pageSize,pageNo,macId,catId));
         return ResponseMessage.ok(foodMachineMap);
     }

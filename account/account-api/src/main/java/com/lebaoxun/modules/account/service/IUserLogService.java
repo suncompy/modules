@@ -62,5 +62,17 @@ public interface IUserLogService {
     ResponseMessage zRank(@RequestParam(value="userId") Long userId,
     		@RequestParam(value="logType") String logType,
     		@RequestParam(value="time") String time);
+    
+    @RequestMapping("/account/userlog/countLogByUser")
+    Integer countLogByUser(@RequestParam(value="userId") Long userId, 
+    		@RequestParam(value="logType") String logType,
+    		@RequestParam(value="adjunctInfo",required=false) String adjunctInfo,
+    		@RequestParam(value="month",required=false) String month);
+	
+    @RequestMapping("/account/userlog/sumScoreLogByUser")
+    Integer sumScoreLogByUser(@RequestParam(value="userId") Long userId, 
+    		@RequestParam(value="logType") String logType,
+    		@RequestParam(value="adjunctInfo",required=false) String adjunctInfo,
+    		@RequestParam(value="month",required=false) String month);
 }
 

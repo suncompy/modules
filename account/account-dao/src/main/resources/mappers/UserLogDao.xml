@@ -93,6 +93,30 @@
 	    </if>
 	</select>
 	
+	<select id="countLogByUser" resultType="java.lang.Integer">
+	    select count(id) from user_log where 
+	    user_id = #{userId}
+    	and log_type = #{logType} 
+	    <if test="adjunctInfo != null">
+		   and adjunct_info = #{adjunctInfo}
+	    </if>
+	    <if test="month != null">
+		   and DATE_FORMAT(create_time,"%Y%m") = #{month}
+	    </if>
+	</select>
+	
+	<select id="sumScoreLogByUser" resultType="java.lang.Integer">
+	    select ifnull(sum(trade_score),0) from user_log where 
+	    user_id = #{userId}
+	    and log_type = #{logType} 
+	    <if test="adjunctInfo != null">
+		   and adjunct_info = #{adjunctInfo}
+	    </if>
+	    <if test="month != null">
+		   and DATE_FORMAT(create_time,"%Y%m") = #{month}
+	    </if>
+	</select>
+	
 	<select id="queryUserLogByDay" resultMap="userLogMap">
 	    SELECT id,user_id,account,create_time,log_type,platform,trade_money,money,descr,adjunct_info,score,trade_score,token,log_time 
 		FROM user_log 

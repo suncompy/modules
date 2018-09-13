@@ -72,5 +72,8 @@ public interface IFoodProductCatService {
     @RequestMapping("/fastfood/foodproductcat/get_list")
     ResponseMessage get_list(@RequestParam Map<String, Object> params);
     
+    @RequestMapping("/fastfood/foodmachineproductcat/findCatByMacId")
+    ResponseMessage findCatByMacId(@RequestParam("macId")Integer macId);
+    
 }
 
