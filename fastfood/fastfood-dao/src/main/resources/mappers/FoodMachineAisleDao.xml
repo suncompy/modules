@@ -22,6 +22,7 @@
     <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity" id="foodRefMachineAisleMap">
         <result property="id" column="id"/>
         <result property="macId" column="mac_id"/>
+		<result property="catAisleId" column="cat_aisle_id"/>
         <result property="productCatId" column="product_cat_id"/>
         <result property="productId" column="product_id"/>
         <result property="price" column="price"/>
@@ -33,7 +34,8 @@
 
     <select id="findMachineAisleListByMacId" resultMap="foodRefMachineAisleMap">
 		SELECT
-			cat_aisle.id,
+		    aisle.id,
+		    cat_aisle.id as cat_aisle_id,
 			cat_aisle.mac_id,
 			cat_aisle.aisl_xy,
 			cat_aisle.aisle_size,
