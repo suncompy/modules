@@ -15,6 +15,8 @@ public class FoodMachineRefAisleEntity implements Serializable {
 	 * 机器渠道id集
 	 */
 	private List<String> aisleIds;
+	private Integer catAisleId;
+	private  List<String> catAisleIds;
 	/**
 	 * 机器id
 	 */
@@ -95,8 +97,24 @@ public class FoodMachineRefAisleEntity implements Serializable {
 		return productCatId;
 	}
 
+	public Integer getCatAisleId() {
+		return catAisleId;
+	}
+
+	public void setCatAisleId(Integer catAisleId) {
+		this.catAisleId = catAisleId;
+	}
+
 	public void setProductCatId(Integer productCatId) {
 		this.productCatId = productCatId;
+	}
+
+	public List<String> getCatAisleIds() {
+		return catAisleIds;
+	}
+
+	public void setCatAisleIds(List<String> catAisleIds) {
+		this.catAisleIds = catAisleIds;
 	}
 
 	public Integer getId() {
