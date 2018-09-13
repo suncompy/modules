@@ -113,8 +113,39 @@
         <result property="spec" column="materialSpec"/>
     </resultMap>
     
+    <select id="findProductByMacIdAndAdTime" resultMap="foodMacAisleMap">
+        select 
+		pro_activity.activity_type as activity, 
+        aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
+		product.id as productId,product.name as productName,product.materials as pMaterials,
+		product.show_price as showPrice, product.picture as picture,
+		product.unit as unit, product.zs_weight as zsWeight,
+		product.cp_weight as cpWeight, product.warm_flag as warmFlag,
+		product.warm_time as warmTime, product.hot_num as hotNum,
+		product.label as label, product.`status` as status,
+		product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
+		product.keyword as keyword, product.descr as descr, product.type as type,
+		product.create_time as createTime,
+		material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec
+        from food_machine_advance_time as ad_time
+		left join food_machine_aisle as aisle on aisle.id = ad_time.aisle_id
+		left join food_product as product on product.id = ad_time.product_id
+		left join food_machine_pro_activity_ref as pro_activity on
+				pro_activity.mac_id = ad_time.mac_id and pro_activity.aisle_id = ad_time.aisle_id
+		left join food_product_material_rcrt as mr on mr.product_id = ad_time.product_id
+		left join food_material as material on material.id = mr.material_id
+		where ad_time.mac_id = #{macId}
+		and ad_time.time = #{time}
+		<if test="productCatId != null">
+		    and ad_time.product_cat_id = #{productCatId}
+		</if>
+		and product.`status` = 1
+		and date_add(product.up_time, interval period day) > now();
+    </select>
+    
     <select id="findProductByMacIdAndProductCatId" resultMap="foodMacAisleMap" >
 		select 
+			pro_activity.activity_type as activity,
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
 			product.id as productId,product.name as productName,product.materials as pMaterials,
 			product.show_price as showPrice, product.picture as picture,
@@ -125,8 +156,7 @@
 			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
 			product.keyword as keyword, product.descr as descr, product.type as type,
 			product.create_time as createTime,
-			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec,
-			pro_activity.activity_type as activity
+			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec
 		from food_machine_aisle as aisle
 		left join food_product as product on product.id = aisle.product_id
 		left join food_machine_pro_activity_ref as pro_activity on
@@ -143,6 +173,7 @@
     
     <select id="findProductByMacIdAndWeek" resultMap="foodMacAisleMap">
 		select 
+			pro_activity.activity_type as activity,
 			t1.id,
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
 			product.id as productId,product.name as productName,product.materials as pMaterials,
@@ -154,8 +185,7 @@
 			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
 			product.keyword as keyword, product.descr as descr, product.type as type,
 			product.create_time as createTime,
-			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec,
-			pro_activity.activity_type as activity
+			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec
 		from food_week_menu as t1 
 		left join food_product as product on product.id = t1.product_id
 		left join food_machine_aisle as aisle on aisle.product_id = t1.product_id
@@ -171,6 +201,7 @@
     
     <select id="findProductByAisle" resultMap="foodMacAisleMap">
         select 
+			pro_activity.activity_type as activity,
 			aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
 			product.id as productId,product.name as productName,product.materials as pMaterials,
 			product.show_price as showPrice, product.picture as picture,
@@ -181,8 +212,7 @@
 			product.up_time as upTime, date_add(product.up_time, interval period day) as downTime,
 			product.keyword as keyword, product.descr as descr, product.type as type,
 			product.create_time as createTime,
-			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec,
-			pro_activity.activity_type as activity
+			material.`name` as materialName, material.picture as materialPicture, material.spec as materialSpec
 		from food_machine_aisle as aisle
 		left join food_product as product on product.id = aisle.product_id
 		left join food_machine_pro_activity_ref as pro_activity on
@@ -195,10 +225,10 @@
 			and aisle.product_id = #{productId}
 		</if> 
 		<if test="macId != null">
-		and aisle.mac_id = #{macId}
+			and aisle.mac_id = #{macId}
 		</if> 
 		<if test="productCatId != null">
-			and aisle.product_cat_id =#{productCatId} 
+			and aisle.product_cat_id = #{productCatId} 
 		</if> 
 		and product.`status` = 1
 		and date_add(product.up_time, interval period day) > now();

@@ -319,6 +319,12 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user != null){
 			throw new I18nMessageException("500");
 		}
+		if(q.getInviter() != null){
+			int countInviter = this.selectCount(new EntityWrapper<UserEntity>().eq("user_id", q.getInviter()));
+			if(countInviter == 0){
+				throw new I18nMessageException("50001");
+			}
+		}
 		UserEntity entity = new UserEntity();
 		entity.setCity(q.getCity());
 		entity.setCountry(q.getCountry());
@@ -338,7 +344,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setSource("SELF_WECHAT_OA");
 		entity.setUserId(userId);
 		entity.setStatus("Y");
-		
+		entity.setInviter(q.getInviter());
 		this.insert(entity);
 		
 		return entity;
@@ -356,6 +362,13 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(user != null){
 			throw new I18nMessageException("50001");
 		}
+		if(q.getInviter() != null){
+			int countInviter = this.selectCount(new EntityWrapper<UserEntity>().eq("user_id", q.getInviter()));
+			if(countInviter == 0){
+				throw new I18nMessageException("50001");
+			}
+		}
+		
 		logger.debug("passwdSecret={},account={},password={}",passwdSecret,q.getAccount(), q.getPassword());
 		String password = PwdUtil.getMd5Password(passwdSecret,q.getAccount(), q.getPassword());
 		Date now = new Date();

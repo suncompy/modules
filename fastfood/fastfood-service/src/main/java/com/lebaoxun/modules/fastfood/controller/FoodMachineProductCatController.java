@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineProductCatEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineProductCatService;
 import com.lebaoxun.commons.utils.PageUtils;
@@ -85,4 +86,8 @@ public class FoodMachineProductCatController {
         return ResponseMessage.ok();
     }
 
+    @RequestMapping("/fastfood/foodmachineproductcat/findCatByMacId")
+    ResponseMessage findCatByMacId(@RequestParam("macId")Integer macId){
+    	return ResponseMessage.ok(foodMachineProductCatService.selectList(new EntityWrapper<FoodMachineProductCatEntity>().eq("mac_id", macId)));
+    }
 }

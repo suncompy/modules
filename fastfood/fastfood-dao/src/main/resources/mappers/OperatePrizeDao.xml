@@ -19,6 +19,6 @@
     </resultMap>
 
     <select id="findPrizeByGroup" resultMap="operatePrizeMap">
-        select id,name,icon,aisle,score from operate_prize where group = #{group} and status = 1
+        select id,name,icon,aisle,weight,score from operate_prize where `group` = #{group} and status = 1
     </select>
 </mapper>

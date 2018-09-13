@@ -81,6 +81,7 @@ public interface IFoodShoppingCartService {
     ResponseMessage set(
     		@RequestParam("userId")Long userId,
     		@RequestParam("cartId")Long cartId,
+    		@RequestParam(value="productId",required=false)Integer productId,
     		@RequestParam("checkStatus")Integer checkStatus,
     		@RequestParam("buyNumber")Integer buyNumber);
     

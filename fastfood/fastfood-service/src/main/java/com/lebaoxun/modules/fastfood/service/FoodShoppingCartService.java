@@ -20,7 +20,7 @@ public interface FoodShoppingCartService extends IService<FoodShoppingCartEntity
     
     FoodShoppingCartEntity add(Long userId,Integer aisleId,Integer macId,Integer productId,Integer checkStatus,Integer buyNumber);
     
-    FoodShoppingCartEntity set(Long userId,Long cartId,Integer checkStatus,Integer buyNumber);
+    FoodShoppingCartEntity set(Long userId,Long cartId,Integer productId, Integer checkStatus,Integer buyNumber);
     
     void remove(Long userId,Long cartId);
     

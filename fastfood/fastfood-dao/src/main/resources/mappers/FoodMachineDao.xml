@@ -127,14 +127,14 @@
 		mac.id = #{macId}
 	</select>
 
-	<select id="findByMacOpenApiById" resultType="java.util.HashMap">
+	<select id="findByMacOpenApiById" resultMap="foodMachineMap">
 		SELECT
-			mac.id AS macId,
+			mac.id ,
 			mac.`name`,
-			mac.IMEI AS macCode,
+			mac.IMEI,
 			mac.notice,
-			mac.cat_id AS catId,
-			cat.`name` AS catName,
+			mac.cat_id,
+			cat.`name` AS cat_name,
 			mac.address
 		FROM
 			food_machine AS mac

@@ -3,8 +3,6 @@ package com.lebaoxun.modules.fastfood.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
@@ -25,6 +23,7 @@ public interface FoodMachineAisleService extends IService<FoodMachineAisleEntity
 
     List<FoodMachineRefAisleEntity> findMachineAisleListByMacId(Integer macId);
     
+    List<Map<String, Object>> findProductByMacIdAndAdTime(Integer macId, String time, Integer productCatId);
     /**
      * 根据机器查询产品
      * @param macId

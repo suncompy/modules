@@ -54,7 +54,6 @@ public class FoodShoppingCartEntity implements Serializable {
 	 * 购物车状态：0,未选中；1,选中
 	 */
 	private Integer checkStatus;
-
 	/**
 	 * 设置：购物车ID
 	 */

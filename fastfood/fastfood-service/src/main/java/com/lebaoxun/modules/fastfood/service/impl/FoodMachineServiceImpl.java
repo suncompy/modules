@@ -139,7 +139,7 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
     }
 
     @Override
-    public Map<String, Object> findByMacOpenApiById(Integer macId) {
+    public FoodMachineEntity findByMacOpenApiById(Integer macId) {
         return this.baseMapper.findByMacOpenApiById(macId);
     }
 

@@ -172,7 +172,7 @@ public class UserController {
     @RequestMapping("/account/user/score/pay")
     @RedisLock(value="account:user:score:pay:lock:#arg0")
     ResponseMessage scorePay(@RequestParam(value="userId")Long userId, 
-    		Integer score,
+    		@RequestParam(value="score") Integer score,
     		@RequestParam(value="platform",required=false) String platform,
     		@RequestParam(value="adjunctInfo") String adjunctInfo,
     		@RequestParam(value="descr",required=false) String descr){
@@ -354,6 +354,21 @@ public class UserController {
 		logger.info("rabbit|sendContractDirect|message={}",message);
 		rabbitmqSender.sendContractDirect("account.log.queue",
 				new Gson().toJson(message));
+		
+		if(entity.getInviter() != null){
+			Map<String,String> imessage = new HashMap<String,String>();
+			imessage.put("userId", entity.getInviter()+"");
+			imessage.put("timestamp", timestamp);
+			imessage.put("logType", "U_INVITE_REGISTER");
+			imessage.put("platform", null);
+			imessage.put("descr", "邀请用户注册");
+			imessage.put("adjunctInfo", userId+"");
+			imessage.put("token", MD5.md5("U_INVITE_REGISTER"+"_"+userId));
+			
+			logger.info("rabbit|sendContractDirect|message={}",message);
+			rabbitmqSender.sendContractDirect("account.log.queue",
+					new Gson().toJson(imessage));
+		}
     	return ResponseMessage.ok();
     }
 

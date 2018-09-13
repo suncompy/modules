@@ -104,7 +104,7 @@ public interface IUserService {
      */
     @RequestMapping("/account/user/score/pay")
     ResponseMessage scorePay(@RequestParam(value="userId")Long userId, 
-    		Integer score,
+    		@RequestParam(value="score") Integer score,
     		@RequestParam(value="platform",required=false) String platform,
     		@RequestParam(value="adjunctInfo") String adjunctInfo,
     		@RequestParam(value="descr",required=false) String descr);

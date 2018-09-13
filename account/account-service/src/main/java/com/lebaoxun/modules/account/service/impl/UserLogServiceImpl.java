@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.lebaoxun.commons.utils.StringUtils;
+
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -85,5 +86,17 @@ public class UserLogServiceImpl extends ServiceImpl<UserLogDao, UserLogEntity> i
 		result.put("size", size);
 		return result;
 	}
+
 	
+	@Override
+	public Integer countLogByUser(Long userId, String month, String logType, String adjunctInfo) {
+		// TODO Auto-generated method stub
+		return this.baseMapper.countLogByUser(userId, month, logType, adjunctInfo);
+	}
+	
+	@Override
+	public Integer sumScoreLogByUser(Long userId, String month, String logType, String adjunctInfo) {
+		// TODO Auto-generated method stub
+		return this.baseMapper.sumScoreLogByUser(userId, month, logType, adjunctInfo);
+	}
 }

@@ -27,6 +27,11 @@ public interface FoodMachineAisleDao extends BaseMapper<FoodMachineAisleEntity> 
 			@Param("macId") Integer macId,
 			@Param("productCatId") Integer productCatId);
 	
+	List<Map<String, Object>> findProductByMacIdAndAdTime(
+			@Param("macId") Integer macId,
+			@Param("time") String time,
+			@Param("productCatId") Integer productCatId);
+	
 	/**
 	 * 每周菜谱关联 机器产品列表
 	 * @param macId

@@ -90,19 +90,21 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
     	
     	List<Integer> l2 = new ArrayList<Integer>();
     	l2.addAll(l1);
-    	for(Integer materialId : materialIds){
-    		if(!l1.contains(materialId)){
-    			FoodProductMaterialRcrtEntity fpcmr = new FoodProductMaterialRcrtEntity();
-    			fpcmr.setMaterialId(materialId);
-    			fpcmr.setProductId(entity.getId());
-    			foodProductMaterialRcrtDao.insert(fpcmr);
-    		}else{
-    			l2.remove(materialId);
+    	if(materialIds != null && !materialIds.isEmpty()){
+    		for(Integer materialId : materialIds){
+    			if(!l1.contains(materialId)){
+    				FoodProductMaterialRcrtEntity fpcmr = new FoodProductMaterialRcrtEntity();
+    				fpcmr.setMaterialId(materialId);
+    				fpcmr.setProductId(entity.getId());
+    				foodProductMaterialRcrtDao.insert(fpcmr);
+    			}else{
+    				l2.remove(materialId);
+    			}
     		}
-    	}
-    	
-    	for(Integer materialId : l2){
-    		foodProductMaterialRcrtDao.delete(new EntityWrapper<FoodProductMaterialRcrtEntity>().eq("material_id", materialId).eq("product_id", entity.getId()));
+    		
+    		for(Integer materialId : l2){
+    			foodProductMaterialRcrtDao.delete(new EntityWrapper<FoodProductMaterialRcrtEntity>().eq("material_id", materialId).eq("product_id", entity.getId()));
+    		}
     	}
     	int period = (int) ((entity.getDownTime().getTime()  - entity.getUpTime().getTime()) / (1000*3600*24));
     	

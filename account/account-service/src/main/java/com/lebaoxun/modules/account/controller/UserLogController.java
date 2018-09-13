@@ -1,12 +1,9 @@
 package com.lebaoxun.modules.account.controller;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +12,6 @@ import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.account.entity.UserLogEntity;
 import com.lebaoxun.modules.account.service.UserLogService;
-import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
 
@@ -84,4 +80,19 @@ public class UserLogController {
     	return ResponseMessage.ok(userLogService.zRank(userId, logType, time));
     }
 
+    @RequestMapping("/account/userlog/countLogByUser")
+    Integer countLogByUser(@RequestParam(value="userId") Long userId, 
+    		@RequestParam(value="logType") String logType,
+    		@RequestParam(value="adjunctInfo",required=false) String adjunctInfo,
+    		@RequestParam(value="month",required=false) String month){
+    	return userLogService.countLogByUser(userId, month, logType, adjunctInfo);
+    }
+	
+    @RequestMapping("/account/userlog/sumScoreLogByUser")
+    Integer sumScoreLogByUser(@RequestParam(value="userId") Long userId, 
+    		@RequestParam(value="logType") String logType,
+    		@RequestParam(value="adjunctInfo",required=false) String adjunctInfo,
+    		@RequestParam(value="month",required=false) String month){
+    	return userLogService.sumScoreLogByUser(userId, month, logType, adjunctInfo);
+	}
 }

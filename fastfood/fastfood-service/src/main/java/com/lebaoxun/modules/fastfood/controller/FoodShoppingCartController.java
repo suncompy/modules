@@ -1,7 +1,6 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,9 +109,10 @@ public class FoodShoppingCartController {
     ResponseMessage set(
     		@RequestParam("userId")Long userId,
     		@RequestParam("cartId")Long cartId,
+    		@RequestParam(value="productId",required=false)Integer productId,
     		@RequestParam("checkStatus")Integer checkStatus,
     		@RequestParam("buyNumber")Integer buyNumber){
-    	return ResponseMessage.ok(foodShoppingCartService.set(userId, cartId, checkStatus, buyNumber));
+    	return ResponseMessage.ok(foodShoppingCartService.set(userId, cartId, productId, checkStatus, buyNumber));
     }
     
     /**

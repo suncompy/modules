@@ -69,4 +69,10 @@ public class FoodMachineAisleServiceImpl extends ServiceImpl<FoodMachineAisleDao
     	// TODO Auto-generated method stub
     	return this.baseMapper.findProductByMacIdAndWeek(macId, week);
     }
+	@Override
+	public List<Map<String, Object>> findProductByMacIdAndAdTime(Integer macId,
+			String time, Integer productCatId) {
+		// TODO Auto-generated method stub
+		return this.baseMapper.findProductByMacIdAndAdTime(macId, time, productCatId);
+	}
 }

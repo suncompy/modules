@@ -32,6 +32,16 @@ public interface UserLogDao extends BaseMapper<UserLogEntity> {
 			@Param("time") String time,
 			@Param("logType") String logType);
 	
+	Integer countLogByUser(@Param("userId") Long userId,
+			@Param("month") String month,
+			@Param("logType") String logType,
+			@Param("adjunctInfo") String adjunctInfo);
+	
+	Integer sumScoreLogByUser(@Param("userId") Long userId,
+			@Param("month") String month,
+			@Param("logType") String logType,
+			@Param("adjunctInfo") String adjunctInfo);
+	
 	List<UserLogEntity> queryUserLogByDay(@Param("user_id")long userId,
 			@Param("adjunctInfo")String adjunctInfo, 
 			@Param("dayTime")String dayTime);
