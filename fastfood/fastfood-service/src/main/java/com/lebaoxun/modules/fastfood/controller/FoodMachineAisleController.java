@@ -93,6 +93,11 @@ public class FoodMachineAisleController {
         int totalCount=foodMachineAisleEntityList.size();
         int pageSize=100;
         int currPage=0;
+        if (foodMachineAisleEntityList!=null){
+            for (int i=0;i<foodMachineAisleEntityList.size();i++){
+                foodMachineAisleEntityList.get(i).setRowId(i+1);
+            }
+        }
         PageUtils page=new PageUtils(foodMachineAisleEntityList,totalCount,pageSize,0);
         return ResponseMessage.ok(page);
     }
