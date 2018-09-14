@@ -34,8 +34,8 @@
 
     <select id="findMachineAisleListByMacId" resultMap="foodRefMachineAisleMap">
 		SELECT
-		    aisle.id,
-		    cat_aisle.id as cat_aisle_id,
+			aisle.id,
+			cat_aisle.id AS cat_aisle_id,
 			cat_aisle.mac_id,
 			cat_aisle.aisl_xy,
 			cat_aisle.aisle_size,
@@ -50,6 +50,8 @@
 			SELECT
 			aisle.id,
 			ma.id AS mac_id,
+			aisle.x,
+			aisle.y,
 			CONCAT(aisle.x, '-', aisle.y) AS aisl_xy,
 			aisle.size AS aisle_size
 			FROM
@@ -57,9 +59,11 @@
 			INNER JOIN food_machine_cat cat ON aisle.cat_id = cat.id
 			LEFT JOIN food_machine ma ON cat.id = ma.cat_id
 			WHERE
-			ma.id = #{macId}
+			ma.id =  #{macId}
 			) cat_aisle
 		LEFT JOIN food_machine_aisle aisle ON cat_aisle.mac_id = aisle.mac_id
+			AND cat_aisle.x = aisle.x
+			AND cat_aisle.y = aisle.y
 		LEFT JOIN food_product p ON aisle.product_id = p.id
 		LEFT JOIN food_machine_product_cat c ON aisle.product_cat_id = c.id
         <!--SELECT
