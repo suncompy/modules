@@ -3,6 +3,7 @@ package com.lebaoxun.modules.account.service.impl;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.I18nMessageException;
+import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.modules.account.dao.UserLogDao;
@@ -28,6 +31,7 @@ import com.lebaoxun.modules.account.entity.UserLogEntity;
 import com.lebaoxun.modules.account.entity.UserScoreAchievementAwardEntity;
 import com.lebaoxun.modules.account.service.UserScoreAchievementAwardService;
 import com.lebaoxun.modules.account.service.UserService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 
 
 @Service("userScoreAchievementAwardService")
@@ -40,6 +44,9 @@ public class UserScoreAchievementAwardServiceImpl extends ServiceImpl<UserScoreA
 	
 	@Resource
 	private UserLogDao userLogDao;
+	
+	@Resource
+	private IRabbitmqSender rabbitmqSender;
 	
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -77,7 +84,9 @@ public class UserScoreAchievementAwardServiceImpl extends ServiceImpl<UserScoreA
 				int mm = log.getTradeMoney().intValue(); // 交易/消费金额
 				int gz = Integer.parseInt(uaa.getCondi()); // 每多少钱给一份积分
 				int sc = mm / gz * uaa.getBonus();
-				rewardSocreAndLog(userId, action, logId, sc);
+				if(sc > 0){
+					rewardSocreAndLog(userId, action, logId, sc);
+				}
 			}
 		}
 		
@@ -93,20 +102,24 @@ public class UserScoreAchievementAwardServiceImpl extends ServiceImpl<UserScoreA
 		user.setScore(oldScore + bonus);
 		// 用户获得积分
 		userService.updateById(user);
-		UserLogAction logType = UserLogAction.U_AWARD_SCORE;
-		UserLogEntity log = new UserLogEntity();
-		log.setUserId(user.getUserId());
-		log.setAccount(user.getAccount());
-		log.setCreateTime(new Date());
-		log.setLogType(logType.toString());
-		log.setDescr(logType.getDescr());
-		log.setMoney(user.getBalance());
-		log.setPlatform(logId+"");
-		log.setAdjunctInfo(action);
-		log.setScore(oldScore);
-		log.setTradeScore(bonus);
+		
 		// 奖励积分日志
-		userLogDao.insert(log);
+		UserLogAction logType = UserLogAction.U_AWARD_SCORE;
+		Map<String,String> message = new HashMap<String,String>();
+		Date now = new Date();
+		String timestamp = now.getTime()+"";
+		message.put("userId", userId+"");
+		message.put("timestamp", timestamp);
+		message.put("logType", logType.toString());
+		message.put("platform", null);
+		message.put("tradeScore", bonus+"");
+		message.put("score", oldScore+"");
+		message.put("descr", logType.getDescr());
+		message.put("adjunctInfo", action);
+		message.put("token", MD5.md5(logType+"_"+logId+"_"+timestamp));
+		
+		rabbitmqSender.sendContractDirect("account.log.queue",
+				new Gson().toJson(message));
 	}
 	
 }

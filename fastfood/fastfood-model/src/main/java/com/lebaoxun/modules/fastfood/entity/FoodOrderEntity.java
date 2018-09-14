@@ -65,6 +65,12 @@ public class FoodOrderEntity implements Serializable {
 	 * 取餐机ID
 	 */
 	private Integer macId;
+	
+	@TableField(exist=false)
+	private String macAreaCode;
+	
+	@TableField(exist=false)
+	private String macAddress;
 	/**
 	 * 活动ID
 	 */
@@ -391,5 +397,16 @@ public class FoodOrderEntity implements Serializable {
 	public void setTakeFoodTime(Date takeFoodTime) {
 		this.takeFoodTime = takeFoodTime;
 	}
-	
+	public String getMacAddress() {
+		return macAddress;
+	}
+	public void setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
+	}
+	public String getMacAreaCode() {
+		return macAreaCode;
+	}
+	public void setMacAreaCode(String macAreaCode) {
+		this.macAreaCode = macAreaCode;
+	}
 }

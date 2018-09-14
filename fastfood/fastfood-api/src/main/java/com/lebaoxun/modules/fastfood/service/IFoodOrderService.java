@@ -187,7 +187,7 @@ public interface IFoodOrderService {
     
     
     @RequestMapping("/fastfood/foodorder/findOrderInfoByUser")
-    ResponseMessage findOrderInfoByUser(@RequestParam("userId") Long userId,
+    ResponseMessage findOrderInfoByUser(@RequestParam(value="userId",required=false) Long userId,
     		@RequestParam("orderNo") String orderNo);
 
 	/**

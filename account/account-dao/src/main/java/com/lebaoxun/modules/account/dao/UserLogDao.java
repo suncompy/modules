@@ -42,7 +42,7 @@ public interface UserLogDao extends BaseMapper<UserLogEntity> {
 			@Param("logType") String logType,
 			@Param("adjunctInfo") String adjunctInfo);
 	
-	List<UserLogEntity> queryUserLogByDay(@Param("user_id")long userId,
+	List<UserLogEntity> queryUserLogByDay(@Param("userId")long userId,
 			@Param("adjunctInfo")String adjunctInfo, 
 			@Param("dayTime")String dayTime);
 	

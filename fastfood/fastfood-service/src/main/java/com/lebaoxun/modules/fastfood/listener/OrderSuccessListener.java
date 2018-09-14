@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.lebaoxun.commons.utils.MD5;
+import com.lebaoxun.modules.account.entity.UserEntity;
+import com.lebaoxun.modules.account.service.IUserService;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderEntity;
 import com.lebaoxun.modules.fastfood.service.FoodOrderService;
 import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
@@ -39,6 +41,9 @@ public class OrderSuccessListener {
 	
 	@Resource
 	private FoodOrderService foodOrderService;
+	
+	@Resource
+	private IUserService userService;
 	
 	@Resource
 	private IRabbitmqSender rabbitmqSender;
@@ -76,7 +81,7 @@ public class OrderSuccessListener {
 				pmessage.put("timestamp", buyTime);
 				pmessage.put("logType", logType);
 				pmessage.put("platform", null);
-				pmessage.put("tradeMoney", null);
+				pmessage.put("tradeMoney", order.getPayAmount().toString());
 				pmessage.put("money", null);
 				pmessage.put("descr", "支付餐品订单");
 				pmessage.put("adjunctInfo", orderNo);
@@ -84,6 +89,22 @@ public class OrderSuccessListener {
 				
 				rabbitmqSender.sendContractDirect("account.log.queue",
     					new Gson().toJson(pmessage));
+				
+				UserEntity user = userService.findByUserId(order.getUserId());
+				if(user.getInviter() != null){
+					String logTypeInviter = "PAY_FOOD_ORDER_INVITER";
+					Map<String,String> pmessageInviter = new HashMap<String,String>();
+					pmessageInviter.put("userId", user.getInviter()+"");
+					pmessageInviter.put("timestamp", buyTime);
+					pmessageInviter.put("logType", logTypeInviter);
+					pmessageInviter.put("platform", null);
+					pmessageInviter.put("descr", "邀请人支付餐品订单");
+					pmessageInviter.put("adjunctInfo", orderNo);
+					pmessageInviter.put("token", MD5.md5(logTypeInviter+"_"+orderNo));
+					
+					rabbitmqSender.sendContractDirect("account.log.queue",
+	    					new Gson().toJson(pmessageInviter));
+				}
 			}
 		}  catch (Exception e) {
 			logger.error("error|body={}",body);

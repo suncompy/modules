@@ -352,12 +352,6 @@ public class FoodOrderServiceImpl extends
 				|| order.getChilds().isEmpty()) {
 			return order;
 		}
-		Date now = new Date();
-		if(order.getTakeFoodTime() != null){
-			if(order.getTakeFoodTime().before(now)){
-				throw new I18nMessageException("60018","预定时间已过期");
-			}
-		}
 
 		int paycount = this.selectCount(new EntityWrapper<FoodOrderEntity>().eq(
 				"user_id", userId).gt("order_status", 0));
@@ -381,7 +375,7 @@ public class FoodOrderServiceImpl extends
 		for (FoodOrderChildsEntity orderChild : order.getChilds()) {
 			logger.debug("orderChild={}",new Gson().toJson(orderChild));
 			Map<String, Object> aisle = foodMachineAisleDao.findProductByAisle(
-					orderChild.getMacId(), orderChild.getProductId(), null,
+					order.getMacId(), orderChild.getProductId(), null,
 					orderChild.getAisleId());
 			logger.debug("aisle={}",new Gson().toJson(aisle));
 			if (aisle == null) {
@@ -512,7 +506,7 @@ public class FoodOrderServiceImpl extends
 					payAmount = payAmount.subtract(firstOrderActivity.getAmount());
 				}
 			}else{
-				logger.debug("payAmount={},keepDiscountActivity={}",payAmount,new Gson().toJson(keepDiscountActivity));
+				//logger.debug("payAmount={},keepDiscountActivity={}",payAmount,new Gson().toJson(keepDiscountActivity));
 				if(mac.getActivitys().contains("2") && keepDiscountActivity != null){
 					if(keepDiscountActivity.getJoinRestrict().compareTo(payAmount) >= 0){//满足参加活动状态
 						Integer count = getActivityFor("2", keepDiscountActivity.getId(), order.getMacId(), null, userId, "2");
@@ -604,6 +598,10 @@ public class FoodOrderServiceImpl extends
 			BigDecimal redFee = payAmount.subtract(payAmount.multiply(dis));
 			order.setRedPackedAmount(redFee);
 			payAmount = payAmount.subtract(redFee);
+		}
+		
+		if(payAmount.compareTo(new BigDecimal("0.00")) < 0){
+			payAmount = new BigDecimal("0.00");
 		}
 		order.setBuyNumber(buyNumber);
 		order.setOrderAmount(totalFee);
@@ -724,6 +722,9 @@ public class FoodOrderServiceImpl extends
 		order.setCreateTime(now);
 		if(order.getTakeFoodTime() == null){
 			order.setTakeFoodTime(now);
+		}
+		if(order.getTakeFoodTime().before(now)){
+			throw new I18nMessageException("60018","预定时间已过期");
 		}
 		order.setUserId(userId);
 		order.setOrderStatus(0);
@@ -1074,7 +1075,7 @@ public class FoodOrderServiceImpl extends
 			try{
 				for(String code : entries.keySet()){
 					String  takeFoodStr = entries.get(code);
-					logger.debug("takeFoodStr={}",takeFoodStr);
+					//logger.debug("takeFoodStr={}",takeFoodStr);
 					TakeFoodCodeEntity tfc = JSONObject.parseObject(takeFoodStr, TakeFoodCodeEntity.class);
 					if(orderNo.equals(tfc.getOrderNo())){
 						return Integer.parseInt(code);

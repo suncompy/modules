@@ -187,7 +187,7 @@ public class UserController {
 		message.put("logType", logType);
 		message.put("platform", platform);
 		message.put("tradeMoney", null);
-		message.put("score", user.getSource().toString());
+		message.put("score", user.getScore().toString());
 		message.put("tradeScore", score.toString());
 		message.put("descr", descr);
 		message.put("adjunctInfo", adjunctInfo);

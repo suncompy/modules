@@ -146,6 +146,7 @@ public class FoodOrderController {
     	if("0".equals(rm.getErrcode())){
     		Map<String,String> message = new HashMap<String,String>();
     		message.put("orderNo", orderNo);
+    		message.put("buyTime", new Date().getTime()+"");
     		rabbitmqSender.sendContractDirect("order.pay.success.queue",
     				new Gson().toJson(message));
     	}
@@ -286,15 +287,14 @@ public class FoodOrderController {
             Date now = new Date();
             Map<String,String> message = new HashMap<String,String>();
             String timestamp = now.getTime()+"";
-            message.put("mehtod", "updateTakeNum");
-            message.put("orderId", orderId+"");
+            String logType = "PAY_FOOD_ORDER_COMPLETE";
             message.put("userId", foodOrderEntity.getUserId()+"");
-            message.put("timestamp", timestamp);
-            message.put("macId", macId);
-            message.put("productId", productId);
-            message.put("rows", ret+"");//影响行数
-            message.put("descr", "取餐成功，更新已取餐餐品数量");
-            message.put("token", MD5.md5(orderId+"_"+timestamp));
+    		message.put("timestamp", timestamp);
+    		message.put("logType", logType);
+    		message.put("descr", "取餐成功");
+    		message.put("adjunctInfo", orderId);
+    		message.put("token", MD5.md5(logType+"_"+orderId));
+    		
             rabbitmqSender.sendContractDirect("account.log.queue",
                     new Gson().toJson(message));
             return ResponseMessage.ok();
@@ -315,7 +315,7 @@ public class FoodOrderController {
     }
     
     @RequestMapping("/fastfood/foodorder/findOrderInfoByUser")
-    ResponseMessage findOrderInfoByUser(@RequestParam("userId") Long userId,
+    ResponseMessage findOrderInfoByUser(@RequestParam(value="userId",required=false) Long userId,
     		@RequestParam("orderNo") String orderNo){
     	return ResponseMessage.ok(foodOrderService.findOrderInfoByUser(userId, orderNo));
     }

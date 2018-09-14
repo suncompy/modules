@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lebaoxun.modules.fastfood.dao.operate.OperatePrizeGetLogDao">
+<mapper
+	namespace="com.lebaoxun.modules.fastfood.dao.operate.OperatePrizeGetLogDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.lebaoxun.modules.fastfood.entity.operate.OperatePrizeGetLogEntity" id="operatePrizeGetLogMap">
-        <result property="id" column="id"/>
-        <result property="prizeId" column="prize_id"/>
-        <result property="name" column="name"/>
-        <result property="icon" column="icon"/>
-        <result property="aisle" column="aisle"/>
-        <result property="weight" column="weight"/>
-        <result property="userId" column="user_id"/>
-        <result property="createTime" column="create_time"/>
-        <result property="status" column="status"/>
-        <result property="orderNo" column="order_no"/>
-        <result property="group" column="group"/>
-    </resultMap>
+	<resultMap
+		type="com.lebaoxun.modules.fastfood.entity.operate.OperatePrizeGetLogEntity"
+		id="operatePrizeGetLogMap">
+		<result property="id" column="id" />
+		<result property="prizeId" column="prize_id" />
+		<result property="name" column="name" />
+		<result property="icon" column="icon" />
+		<result property="aisle" column="aisle" />
+		<result property="weight" column="weight" />
+		<result property="userId" column="user_id" />
+		<result property="createTime" column="create_time" />
+		<result property="status" column="status" />
+		<result property="orderNo" column="order_no" />
+		<result property="group" column="group" />
+	</resultMap>
 
+	<insert id="insert"
+		parameterType="com.lebaoxun.modules.fastfood.entity.operate.OperatePrizeGetLogEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO operate_prize_get_log (
+		`prize_id`, `name`, `icon`, `aisle`,
+		`weight`, `user_id`, `create_time`, `status`, `order_no`, `group`) VALUES
+		( #{prizeId}, #{name}, #{icon}, #{aisle},
+		#{weight}, #{userId}, #{createTime}, #{status}, #{orderNo}, #{group});
+	</insert>
 	<select id="findLogByUserId" resultMap="operatePrizeGetLogMap">
-	    select * from operate_prize_get_log where user_id = #{userId}
-	    <if test="status != null">
-	        and `status` = #{status}
-	    </if>
-	    order by create_time desc 
-	    <if test="size != null">
-	        limit #{size}
-	        <if test="offset != null">
-		        ,#{offset}
-	        </if>
-	    </if>
+		select * from operate_prize_get_log where user_id = #{userId}
+		<if test="status != null">
+			and `status` = #{status}
+		</if>
+		order by create_time desc
+		<if test="size != null">
+			limit #{size}
+			<if test="offset != null">
+				,#{offset}
+			</if>
+		</if>
 	</select>
-	
+
 	<select id="findLogById" resultMap="operatePrizeGetLogMap">
-	    select * from operate_prize_get_log where user_id = #{userId} and id = #{id}
+		select * from operate_prize_get_log where user_id = #{userId} and id = #{id}
 	</select>
 </mapper>

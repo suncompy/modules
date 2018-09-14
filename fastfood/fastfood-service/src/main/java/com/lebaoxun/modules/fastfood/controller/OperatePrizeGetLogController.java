@@ -1,7 +1,10 @@
 package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.operate.OperatePrizeGetLogEntity;
 import com.lebaoxun.modules.fastfood.service.OperatePrizeGetLogService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
@@ -28,6 +33,9 @@ import com.lebaoxun.soa.core.redis.lock.RedisLock;
 public class OperatePrizeGetLogController {
     @Autowired
     private OperatePrizeGetLogService operatePrizeGetLogService;
+    
+    @Resource
+	private IRabbitmqSender rabbitmqSender;
 
     /**
      * 列表
@@ -104,7 +112,18 @@ public class OperatePrizeGetLogController {
     @RedisLock(value="operate:operateprizegetlog:draw:lock:#arg0")
     ResponseMessage draw(@RequestParam("userId") Long userId, 
     		@RequestParam("group") String group){
-    	return operatePrizeGetLogService.draw(userId, group);
+    	ResponseMessage rm = operatePrizeGetLogService.draw(userId, group);
+    	if("0".equals(rm.getErrcode())){
+    		OperatePrizeGetLogEntity log = (OperatePrizeGetLogEntity) rm.getData();
+    		if(log != null && log.getAisle() != null){
+    			Map<String,String> message = new HashMap<String,String>();
+    			message.put("userId", userId+"");
+    			message.put("prizeLogId", log.getId()+"");
+    			rabbitmqSender.sendContractDirect("order.prize.exchange.queue",
+	    				new Gson().toJson(message));
+    		}
+    	}
+    	return rm;
     }
 
 }
