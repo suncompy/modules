@@ -11,6 +11,7 @@ public class FoodMachineRefAisleEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
+	private Integer rowId;
 	/**
 	 * 机器渠道id集
 	 */
@@ -56,6 +57,14 @@ public class FoodMachineRefAisleEntity implements Serializable {
 	 * 货道库存
 	 */
 	private Integer stock;
+
+	public Integer getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(Integer rowId) {
+		this.rowId = rowId;
+	}
 
 	public List<String> getAisleIds() {
 		return aisleIds;
