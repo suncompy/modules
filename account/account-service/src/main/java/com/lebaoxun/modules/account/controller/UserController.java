@@ -158,7 +158,7 @@ public class UserController {
 		message.put("timestamp", timestamp);
 		message.put("logType", logType);
 		message.put("platform", platform);
-		message.put("tradeMoney", tradeMoney.toString());
+		message.put("tradeMoney", new BigDecimal("0").subtract(tradeMoney).toString());
 		message.put("money", user.getBalance().toString());
 		message.put("descr", descr);
 		message.put("adjunctInfo", adjunctInfo);
@@ -188,7 +188,7 @@ public class UserController {
 		message.put("platform", platform);
 		message.put("tradeMoney", null);
 		message.put("score", user.getScore().toString());
-		message.put("tradeScore", score.toString());
+		message.put("tradeScore", (0-score) + "");
 		message.put("descr", descr);
 		message.put("adjunctInfo", adjunctInfo);
 		message.put("token", MD5.md5(logType+"_"+timestamp+"_"+adjunctInfo));

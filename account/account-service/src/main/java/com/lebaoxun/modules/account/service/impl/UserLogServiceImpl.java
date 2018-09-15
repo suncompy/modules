@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.account.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,12 +38,18 @@ public class UserLogServiceImpl extends ServiceImpl<UserLogDao, UserLogEntity> i
     	String userId = (String)params.get("userId");
     	String account = (String)params.get("account");
     	String type = (String)params.get("type");
+    	String flag = (String)params.get("flag");
         Page<UserLogEntity> page = this.selectPage(
                 new Query<UserLogEntity>(params).getPage(),
                 new EntityWrapper<UserLogEntity>()
                 .eq(StringUtils.isNotBlank(userId) && StringUtils.isNumeric(userId), "user_id", userId)
                 .eq(StringUtils.isNotBlank(account), "account", account)
                 .eq(StringUtils.isNotBlank(type), "log_type", type)
+                .isNotNull("1".equals(flag), "score")
+                .isNotNull("1".equals(flag), "trade_score")
+                .isNotNull("0".equals(flag), "money")
+                .isNotNull("0".equals(flag), "trade_money")
+                .orderDesc(Arrays.asList(new String[]{"log_time"}))
         );
 
         return new PageUtils(page);

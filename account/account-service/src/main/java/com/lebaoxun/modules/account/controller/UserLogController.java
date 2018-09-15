@@ -35,6 +35,7 @@ public class UserLogController {
         PageUtils page = userLogService.queryPage(params);
         return ResponseMessage.ok(page);
     }
+    
     @RequestMapping("/account/userlog/allLogType")
     ResponseMessage allLogType(){
     	return ResponseMessage.ok(userLogService.queryAllLogType());
