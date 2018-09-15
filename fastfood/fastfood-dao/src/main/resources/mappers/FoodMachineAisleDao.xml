@@ -33,7 +33,7 @@
     </resultMap>
 
     <select id="findMachineAisleListByMacId" resultMap="foodRefMachineAisleMap">
-		SELECT
+		<!--SELECT
 			aisle.id,
 			cat_aisle.id AS cat_aisle_id,
 			cat_aisle.mac_id,
@@ -65,8 +65,8 @@
 			AND cat_aisle.x = aisle.x
 			AND cat_aisle.y = aisle.y
 		LEFT JOIN food_product p ON aisle.product_id = p.id
-		LEFT JOIN food_machine_product_cat c ON aisle.product_cat_id = c.id
-        <!--SELECT
+		LEFT JOIN food_machine_product_cat c ON aisle.product_cat_id = c.id-->
+        SELECT
             f.id,
             f.mac_id,
             CONCAT(f.x,'-',f.y) as aisl_xy,
@@ -81,7 +81,7 @@
             food_machine_aisle f
         LEFT JOIN food_product p ON f.product_id = p.id
         LEFT JOIN food_machine_product_cat c ON f.product_cat_id = c.id
-        where f.mac_id=#{macId}-->
+        where f.mac_id=#{macId}
     </select>
     
     <resultMap type="java.util.Map" id="foodMacAisleMap">
