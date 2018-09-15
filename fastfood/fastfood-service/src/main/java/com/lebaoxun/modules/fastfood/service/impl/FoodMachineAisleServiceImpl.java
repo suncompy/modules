@@ -41,38 +41,18 @@ public class FoodMachineAisleServiceImpl extends ServiceImpl<FoodMachineAisleDao
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void refProductAndType(Long adminId, FoodMachineRefAisleEntity foodMachineAisle){
         List<String> _ids=foodMachineAisle.getAisleIds();
-        List<String> catAisleIds=foodMachineAisle.getCatAisleIds();
-        if (catAisleIds==null||catAisleIds.size()==0)
-            throw new I18nMessageException("100002", "机器分类货道ID不能为空!");
+        if (_ids==null||_ids.size()==0)
+            throw new I18nMessageException("100002", "机器渠道关联ID不能为空!");
         //遍历批量集，更新产品、分类id到关联表中
-        for (int i=0;i<catAisleIds.size();i++){
-            FoodMachineCatAisleEntity foodMachineCatAisleEntity=foodMachineCatAisleService.selectById(catAisleIds.get(i));
+        for (String id:_ids){
             FoodMachineAisleEntity _aisleObj=new FoodMachineAisleEntity();
+            _aisleObj.setId(Integer.parseInt(id));
             _aisleObj.setUpdateBy(adminId);
             _aisleObj.setUpdateTime(new Date());
             _aisleObj.setPrice(foodMachineAisle.getPrice());
             _aisleObj.setProductId(foodMachineAisle.getProductId());
             _aisleObj.setProductCatId(foodMachineAisle.getProductCatId());
-            if(_ids==null||_ids.size()==0||_ids.get(i)==null||_ids.get(i).equals("0")){
-                _aisleObj.setX(foodMachineCatAisleEntity.getX());
-                _aisleObj.setY(foodMachineCatAisleEntity.getY());
-                _aisleObj.setY(foodMachineCatAisleEntity.getY());
-                _aisleObj.setMacId(foodMachineAisle.getMacId());
-                _aisleObj.setSize(foodMachineCatAisleEntity.getSize());
-                _aisleObj.setCreateTime(new Date());
-                //一个货道只能关联一个产品
-                EntityWrapper<FoodMachineAisleEntity> entityWrapper=new EntityWrapper<>();
-                entityWrapper.eq("mac_id",foodMachineAisle.getMacId());
-                entityWrapper.eq("x",foodMachineCatAisleEntity.getX());
-                entityWrapper.eq("y",foodMachineCatAisleEntity.getY());
-                FoodMachineAisleEntity old=this.selectOne(entityWrapper);
-                if (old!=null&&old.getId()>0)
-                    continue;
-                insert(_aisleObj);
-            }else{
-                _aisleObj.setId(Integer.parseInt(_ids.get(i)));
-                updateById(_aisleObj);
-            }
+            updateById(_aisleObj);
         }
     }
 
