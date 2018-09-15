@@ -58,6 +58,7 @@ public class FoodMachineProductCatEntity implements Serializable {
 	/**
 	 * 机器ID
 	 */
+	@TableField(exist = false)
 	private Integer macId;
 
 	/**
