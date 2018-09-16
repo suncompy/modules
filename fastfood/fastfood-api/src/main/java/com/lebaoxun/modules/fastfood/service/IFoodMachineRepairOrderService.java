@@ -51,6 +51,16 @@ public interface IFoodMachineRepairOrderService {
      */
     @RequestMapping("/fastfood/foodmachinerepairorder/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
-    
+    /**
+     * 维修员列表
+     * @param userName
+     * @param mobile
+     * @param createTime
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachinerepairorder/queryMaintenanceManList")
+    ResponseMessage queryMaintenanceManList(@RequestParam(value = "userName",required = false)String userName,
+                                            @RequestParam(value = "mobile",required = false)String mobile,
+                                            @RequestParam(value = "createTime",required = false)String createTime);
 }
 

@@ -9,6 +9,7 @@ import com.lebaoxun.modules.fastfood.service.IFoodMachineAddStockOrderService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 取餐机进货派单
@@ -45,6 +46,16 @@ public class FoodMachineAddStockOrderServiceHystrix implements IFoodMachineAddSt
 	public ResponseMessage delete(Long adminId,Integer[] ids) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
-    
+
+	@Override
+	public ResponseMessage queryReplenishManList(@RequestParam(value = "userName", required = false) String userName, @RequestParam(value = "mobile", required = false) String mobile, @RequestParam(value = "createTime", required = false) String createTime) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage queryPickingManList(@RequestParam(value = "userName", required = false) String userName, @RequestParam(value = "mobile", required = false) String mobile, @RequestParam(value = "createTime", required = false) String createTime) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
 }
 

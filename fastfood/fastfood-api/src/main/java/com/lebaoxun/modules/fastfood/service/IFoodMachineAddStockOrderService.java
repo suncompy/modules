@@ -52,6 +52,27 @@ public interface IFoodMachineAddStockOrderService {
      */
     @RequestMapping("/fastfood/foodmachineaddstockorder/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
-    
+    /**
+     * 补货员列表
+     * @param userName
+     * @param mobile
+     * @param createTime
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaddstockorder/queryReplenishManList")
+    ResponseMessage queryReplenishManList(@RequestParam(value = "userName",required = false)String userName,
+                                          @RequestParam(value = "mobile",required = false)String mobile,
+                                          @RequestParam(value = "createTime",required = false)String createTime);
+    /**
+     * 配货员列表
+     * @param userName
+     * @param mobile
+     * @param createTime
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaddstockorder/queryPickingManList")
+    ResponseMessage queryPickingManList(@RequestParam(value = "userName",required = false)String userName,
+                                        @RequestParam(value = "mobile",required = false)String mobile,
+                                        @RequestParam(value = "createTime",required = false)String createTime);
 }
 
