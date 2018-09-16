@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -101,6 +103,46 @@ public class FoodMachineAddStockOrderController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids){
 		foodMachineAddStockOrderService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+
+    /**
+     * 补货员列表
+     * @param userName
+     * @param mobile
+     * @param createTime
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaddstockorder/queryReplenishManList")
+    ResponseMessage queryReplenishManList(@RequestParam(value = "userName",required = false)String userName,
+                                                   @RequestParam(value = "mobile",required = false)String mobile,
+                                                   @RequestParam(value = "createTime",required = false)String createTime){
+
+        List<Map<String,Object>> ReplenishManList = foodMachineAddStockOrderService.queryReplenishManList(userName,mobile,createTime);
+        int totalCount=ReplenishManList.size();
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(ReplenishManList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
+    }
+
+    /**
+     * 配货员列表
+     * @param userName
+     * @param mobile
+     * @param createTime
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaddstockorder/queryPickingManList")
+    ResponseMessage queryPickingManList(@RequestParam(value = "userName",required = false)String userName,
+                                          @RequestParam(value = "mobile",required = false)String mobile,
+                                          @RequestParam(value = "createTime",required = false)String createTime){
+
+        List<Map<String,Object>> ReplenishManList = foodMachineAddStockOrderService.queryReplenishManList(userName,mobile,createTime);
+        int totalCount=ReplenishManList.size();
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(ReplenishManList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
     }
 
 }

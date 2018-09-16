@@ -2,6 +2,7 @@ package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,26 @@ public class FoodMachineRepairOrderController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids){
 		foodMachineRepairOrderService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+
+    /**
+     * 维修员列表
+     * @param userName
+     * @param mobile
+     * @param createTime
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachinerepairorder/queryMaintenanceManList")
+    ResponseMessage queryMaintenanceManList(@RequestParam(value = "userName",required = false)String userName,
+                                        @RequestParam(value = "mobile",required = false)String mobile,
+                                        @RequestParam(value = "createTime",required = false)String createTime){
+
+        List<Map<String,Object>> ReplenishManList = foodMachineRepairOrderService.queryMaintenanceManList(userName,mobile,createTime);
+        int totalCount=ReplenishManList.size();
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(ReplenishManList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
     }
 
 }

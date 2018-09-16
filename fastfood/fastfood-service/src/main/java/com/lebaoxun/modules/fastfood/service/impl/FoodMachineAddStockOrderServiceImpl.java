@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -43,8 +44,7 @@ public class FoodMachineAddStockOrderServiceImpl extends ServiceImpl<FoodMachine
         return new PageUtils(page);
     }
 
-    
-    @Override
+	@Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public boolean insert(FoodMachineAddStockOrderEntity entity) {
     	// TODO Auto-generated method stub
@@ -89,5 +89,13 @@ public class FoodMachineAddStockOrderServiceImpl extends ServiceImpl<FoodMachine
     	}
     	return super.updateById(entity);
     }
-    
+	@Override
+	public List<Map<String, Object>> queryReplenishManList(String userName, String mobile, String createTime) {
+		return this.baseMapper.queryReplenishManList(userName,mobile,createTime);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryPickingManList(String userName, String mobile, String createTime) {
+		return this.baseMapper.queryPickingManList(userName,mobile,createTime);
+	}
 }
