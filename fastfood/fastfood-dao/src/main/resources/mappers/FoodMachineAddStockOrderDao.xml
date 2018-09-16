@@ -22,5 +22,76 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
-
+<select id="queryReplenishManList" resultType="java.util.HashMap">
+    SELECT
+        u.user_id,
+        u.username,
+        u.user_type,
+        u.mobile,
+        u.`status`,
+        d.`name`,
+        role.role_name,
+        (
+            SELECT
+                count(1)
+            FROM
+                food_machine_add_stock_order f
+            WHERE
+                f.performer = u.user_id
+            AND f.type = 0
+        AND f.`status`=1
+        ) AS orderCount
+    FROM
+        `sys_user` u
+    LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+    LEFT JOIN sys_user_role r ON u.user_id = r.user_id
+    LEFT JOIN sys_role role ON r.role_id = role.role_id
+    WHERE
+        u.user_type = 4
+    <if test="userName != null and userName!=''">
+        and u.username LIKE '%${userName}%'
+    </if>
+    <if test="mobile != null and mobile!=''">
+        and u.mobile LIKE '%${mobile}%'
+    </if>
+    <if test="createTime != null and createTime!=''">
+        and date_format(u.create_time, '%Y-%m-%d') = #{createTime}
+    </if>
+</select>
+    <select id="queryPickingManList" resultType="java.util.HashMap">
+        SELECT
+        u.user_id,
+        u.username,
+        u.user_type,
+        u.mobile,
+        u.`status`,
+        d.`name`,
+        role.role_name,
+        (
+        SELECT
+        count(1)
+        FROM
+        food_machine_add_stock_order f
+        WHERE
+        f.performer = u.user_id
+        AND f.type = 1
+        AND f.`status`=1
+        ) AS orderCount
+        FROM
+        `sys_user` u
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+        LEFT JOIN sys_user_role r ON u.user_id = r.user_id
+        LEFT JOIN sys_role role ON r.role_id = role.role_id
+        WHERE
+        u.user_type = 3
+        <if test="userName != null and userName!=''">
+            and u.username LIKE '%${userName}%'
+        </if>
+        <if test="mobile != null and mobile!=''">
+            and u.mobile LIKE '%${mobile}%'
+        </if>
+        <if test="createTime != null and createTime!=''">
+            and date_format(u.create_time, '%Y-%m-%d') = #{createTime}
+        </if>
+    </select>
 </mapper>
