@@ -59,11 +59,7 @@ public class FoodMachineCatAisleController {
                                      @RequestBody List<FoodMachineCatAisleEntity> catAisleEntityList){
         if (catAisleEntityList==null||catAisleEntityList.size()==0)
             return ResponseMessage.error("60001","货道数据不能为空！");
-        if(catAisleEntityList.size()>1){
-            return ResponseMessage.error("60002","添加的货道数据不能有多条！");
-        }
         catAisleEntityList.forEach(e->{
-            e.setSize(e.getX()*e.getY());
             if (e.getId()!=null&&e.getId()>0){//修改
                 foodMachineCatAisleService.updateById(e);
             }else {
