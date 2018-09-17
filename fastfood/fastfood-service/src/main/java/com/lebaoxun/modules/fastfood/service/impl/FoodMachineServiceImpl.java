@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import com.lebaoxun.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,23 +92,30 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
     public void batchSycMachineCatAisle(Long adminId,FoodMachineEntity foodMachine){
         EntityWrapper<FoodMachineCatAisleEntity> macCatWrapper=new EntityWrapper<FoodMachineCatAisleEntity>();
         macCatWrapper.eq("cat_id",foodMachine.getCatId());
-        List<FoodMachineCatAisleEntity> machineCatAisleEntityList=foodMachineCatAisleService.selectList(macCatWrapper);
-        if(machineCatAisleEntityList==null||machineCatAisleEntityList.size()==0){
+        FoodMachineCatAisleEntity machineCatAisle=foodMachineCatAisleService.selectOne(macCatWrapper);
+        if(machineCatAisle==null||machineCatAisle.getId()==null||machineCatAisle.getId()==0){
             throw new I18nMessageException("100006", "机器分类["+foodMachine.getCatId()+"]对应的货道为空!");
         }
-        for(FoodMachineCatAisleEntity machineCatAisleEntity:machineCatAisleEntityList){
-            FoodMachineAisleEntity foodMachineAisleEntity=new FoodMachineAisleEntity();
-            foodMachineAisleEntity.setMacId(foodMachine.getId());
-            foodMachineAisleEntity.setX(machineCatAisleEntity.getX());
-            foodMachineAisleEntity.setY(machineCatAisleEntity.getY());
-            foodMachineAisleEntity.setZ(machineCatAisleEntity.getZ()==null?0:machineCatAisleEntity.getZ());
-            foodMachineAisleEntity.setSize(machineCatAisleEntity.getSize());
-            Date date=new Date();
-            foodMachineAisleEntity.setCreateTime(date);
-            foodMachineAisleEntity.setUpdateTime(date);
-            foodMachineAisleEntity.setUpdateBy(adminId);
-            foodMachineAisleService.insert(foodMachineAisleEntity);
+        //根据横排、竖排数量生成机器货道明细
+        int x=machineCatAisle.getX();
+        int y=machineCatAisle.getY();
+        List<FoodMachineAisleEntity> foodMachineAisleEntityList= Lists.newArrayList();
+        for (int i=1;i<=x;i++){
+            for (int j=1;j<=y;j++){
+                FoodMachineAisleEntity foodMachineAisleEntity=new FoodMachineAisleEntity();
+                foodMachineAisleEntity.setMacId(foodMachine.getId());
+                foodMachineAisleEntity.setX(i);
+                foodMachineAisleEntity.setY(j);
+                foodMachineAisleEntity.setZ(machineCatAisle.getZ()==null?0:machineCatAisle.getZ());
+                foodMachineAisleEntity.setSize(machineCatAisle.getSize());
+                Date date=new Date();
+                foodMachineAisleEntity.setCreateTime(date);
+                foodMachineAisleEntity.setUpdateTime(date);
+                foodMachineAisleEntity.setUpdateBy(adminId);
+                foodMachineAisleEntityList.add(foodMachineAisleEntity);
+            }
         }
+        foodMachineAisleService.insertBatch(foodMachineAisleEntityList);
     }
     
     @Override
