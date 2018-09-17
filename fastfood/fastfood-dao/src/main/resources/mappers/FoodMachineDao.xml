@@ -46,7 +46,7 @@
 		useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO food_machine (
 		id,
-		imei, host,
+		imei, host,name,
 		area_code, pos, notice,
 		cat_id, partner_id, status,
 		manager_id,
@@ -55,7 +55,7 @@
 		update_time, update_by)
 		VALUES
 		(
-		#{id}, #{imei},
+		#{id}, #{imei},#{name},
 		#{host},
 		#{areaCode}, #{pos}, #{notice},
 		#{catId}, #{partnerId},
