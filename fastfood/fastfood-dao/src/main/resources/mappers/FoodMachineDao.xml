@@ -174,7 +174,9 @@
 			food_machine AS mac
 		LEFT JOIN food_machine_aisle AS ais ON mac.id = ais.mac_id
 		LEFT JOIN food_product AS product ON product.id = ais.product_id
-		LEFT JOIN food_machine_product_cat AS cat ON mac.id = cat.mac_id
+		LEFT JOIN food_machine_product_cat AS cat
+		<!-- ON mac.id = cat.mac_id -->
+			ON ais.product_cat_id=cat.id
 		WHERE
 		mac.id = #{macId}
 		<if test="catId != null and catId!=''">
