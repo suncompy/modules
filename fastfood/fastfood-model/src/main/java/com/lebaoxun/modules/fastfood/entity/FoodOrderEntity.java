@@ -108,6 +108,22 @@ public class FoodOrderEntity implements Serializable {
 	 */
 	private String source;
 	/**
+	 * 发票类型
+	 */
+	private Integer invoiceFlag;
+	/**
+	 * 税号
+	 */
+	private String invoiceIrd;
+	/**
+	 * 邮箱
+	 */
+	private String invoiceEmail;
+	/**
+	 * 发票抬头
+	 */
+	private String invoiceTitle;
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;
@@ -408,5 +424,29 @@ public class FoodOrderEntity implements Serializable {
 	}
 	public void setMacAreaCode(String macAreaCode) {
 		this.macAreaCode = macAreaCode;
+	}
+	public Integer getInvoiceFlag() {
+		return invoiceFlag;
+	}
+	public void setInvoiceFlag(Integer invoiceFlag) {
+		this.invoiceFlag = invoiceFlag;
+	}
+	public String getInvoiceIrd() {
+		return invoiceIrd;
+	}
+	public void setInvoiceIrd(String invoiceIrd) {
+		this.invoiceIrd = invoiceIrd;
+	}
+	public String getInvoiceEmail() {
+		return invoiceEmail;
+	}
+	public void setInvoiceEmail(String invoiceEmail) {
+		this.invoiceEmail = invoiceEmail;
+	}
+	public String getInvoiceTitle() {
+		return invoiceTitle;
+	}
+	public void setInvoiceTitle(String invoiceTitle) {
+		this.invoiceTitle = invoiceTitle;
 	}
 }

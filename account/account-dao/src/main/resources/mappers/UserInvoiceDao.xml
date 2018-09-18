@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.account.dao.UserInvoiceDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.account.entity.UserInvoiceEntity" id="userInvoiceMap">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="flag" column="flag"/>
+        <result property="ird" column="ird"/>
+        <result property="email" column="email"/>
+        <result property="title" column="title"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+	<select id="findByUserId" resultMap="userInvoiceMap">
+	    select * from user_invoice where user_id = #{userId};
+	</select>
+</mapper>

@@ -244,5 +244,13 @@ public interface IFoodOrderService {
 	 */
     @RequestMapping("/fastfood/foodorder/findOrderConfig")
     ResponseMessage findOrderConfig();
+    
+    @RequestMapping("/fastfood/foodorder/addInvoice")
+    ResponseMessage addInvoice(@RequestParam("userId") Long userId,
+    		@RequestParam("orderNo") String orderNo,
+    		@RequestParam("invoiceFlag")Integer invoiceFlag,
+    		@RequestParam(value="invoiceIRD",required=false)String invoiceIRD,
+    		@RequestParam("invoiceEmail")String invoiceEmail,
+    		@RequestParam("invoiceTitle")String invoiceTitle);
 }
 

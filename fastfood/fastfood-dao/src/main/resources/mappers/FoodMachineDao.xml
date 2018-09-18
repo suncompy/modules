@@ -146,7 +146,7 @@
 	<select id="findByMacRefProductById" resultType="java.util.HashMap">
 		SELECT
 			product.id AS productId,
-			product.NAME AS productName,
+			product. NAME AS productName,
 			product.show_price AS showPrice,
 			product.give_score AS giveScore,
 			product.period AS period,
@@ -164,26 +164,25 @@
 			product.up_time AS upTime,
 			product.down_time AS downTime,
 			product.descr,
-			product.is_meal as isMeal,
-			product.type as type,
+			product.is_meal AS isMeal,
+			product.type AS type,
+			ais.id as asileId,
 			ais.price,
 			ais.stock,
-			mac.cat_id AS catId,
-			cat.NAME AS catName
+			cat. NAME AS catName
 		FROM
-			food_machine AS mac
-		LEFT JOIN food_machine_aisle AS ais ON mac.id = ais.mac_id
+			food_machine_aisle AS ais
+		LEFT JOIN food_machine_product_cat AS cat ON cat.id = ais.product_cat_id
 		LEFT JOIN food_product AS product ON product.id = ais.product_id
-		LEFT JOIN food_machine_product_cat AS cat
-		<!-- ON mac.id = cat.mac_id -->
-			ON ais.product_cat_id=cat.id
 		WHERE
-		mac.id = #{macId}
+			ais.mac_id = #{macId}
+		and product.`status` = 1
+		and date_add(product.up_time, interval period day) > now()
 		<if test="catId != null and catId!=''">
-			and product.product_cat_id=#{catId}
+			and ais.product_cat_id=#{catId}
 		</if>
 		<if test="pageSize != null and pageSize!=0 and pageNo != null and pageNo!=0">
-			and limit #{pageNo}, #{pageSize};
+			limit #{pageNo}, #{pageSize};
 		</if>
 	</select>
 	

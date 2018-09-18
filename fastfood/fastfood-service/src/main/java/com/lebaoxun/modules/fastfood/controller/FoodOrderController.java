@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.google.gson.Gson;
+import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.commons.utils.PageUtils;
@@ -231,6 +233,26 @@ public class FoodOrderController {
     		@RequestParam(value="dis",required=false)BigDecimal dis,
     		@RequestBody FoodOrderEntity order){
     	return ResponseMessage.ok(foodOrderService.calCheckTotalFee(userId,dis,order,true,true));
+    }
+    
+    @RequestMapping("/fastfood/foodorder/addInvoice")
+    @RedisLock(value="fastfood:foodorder:addInvoice:lock:#arg0")
+    ResponseMessage addInvoice(@RequestParam("userId") Long userId,
+    		@RequestParam("orderNo") String orderNo,
+    		@RequestParam("invoiceFlag")Integer invoiceFlag,
+    		@RequestParam(value="invoiceIRD",required=false)String invoiceIRD,
+    		@RequestParam("invoiceEmail")String invoiceEmail,
+    		@RequestParam("invoiceTitle")String invoiceTitle){
+    	FoodOrderEntity order = foodOrderService.selectOne(new EntityWrapper<FoodOrderEntity>().eq("user_id", userId).eq("order_no", orderNo));
+    	if(order == null){
+    		throw new I18nMessageException("60007");
+    	}
+    	order.setInvoiceEmail(invoiceEmail);
+    	order.setInvoiceFlag(invoiceFlag);
+    	order.setInvoiceIrd(invoiceIRD);
+    	order.setInvoiceTitle(invoiceTitle);
+    	foodOrderService.updateById(order);
+    	return ResponseMessage.ok();
     }
 
     /**

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.fastfood.dao.FoodMachinePartnerDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachinePartnerEntity" id="foodMachinePartnerMap">
+        <result property="id" column="id"/>
+        <result property="company" column="company"/>
+        <result property="address" column="address"/>
+        <result property="bindAmount" column="bind_amount"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="upbindTime" column="upbind_time"/>
+    </resultMap>
+
+
+</mapper>

@@ -29,6 +29,12 @@
         <result property="qrCode" column="qr_code"/>
         <result property="macAddress" column="mac_address"/>
         <result property="macAreaCode" column="mac_area_code"/>
+        
+        <result property="invoiceFlag" column="invoice_flag"/>
+        <result property="invoiceIRD" column="invoice_ird"/>
+        <result property="invoiceEamil" column="invoice_eamil"/>
+        <result property="invoiceTitle" column="invoice_title"/>
+        
         <collection property="childs" resultMap="foodOrderChildsMap" ofType="com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity"></collection>
     </resultMap>
     
@@ -49,6 +55,7 @@
         <result property="activityId" column="child_activity_id"/>
         <result property="activity" column="child_activity"/>
         <result property="costPrice" column="cost_price"/>
+        <result property="aisleId" column="aisle_id"/>
     </resultMap>
     
     <insert id="insert" parameterType="com.lebaoxun.modules.fastfood.entity.FoodOrderEntity"
@@ -160,7 +167,8 @@
 			t2.product_score as child_product_score, t2.product_amount as child_product_amount,
 			t2.product_name as child_product_name, t2.product_pic as child_product_pic,
 			t2.activity_fee as child_activity_fee, t2.activity_id as child_activity_id,
-			t2.activity as child_activity, t2.price as cost_price
+			t2.activity as child_activity, t2.price as cost_price,
+			t2.aisle_id as aisle_id
 			from food_order as t1
 		left join food_order_childs as t2 on t2.order_id = t1.id
 		where t1.user_id = #{userId}
@@ -190,7 +198,8 @@
 			t2.product_score as child_product_score, t2.product_amount as child_product_amount,
 			t2.product_name as child_product_name, t2.product_pic as child_product_pic,
 			t2.activity_fee as child_activity_fee, t2.activity_id as child_activity_id,
-			t2.activity as child_activity, t2.price as cost_price
+			t2.activity as child_activity, t2.price as cost_price,
+			t2.aisle_id as aisle_id
         from food_order as t1
 		left join food_order_childs as t2 on t2.order_id = t1.id
 		left join food_machine as mac on mac.id = t1.mac_id

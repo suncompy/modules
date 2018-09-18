@@ -37,7 +37,7 @@ public class SMSGatewayConfig {
 		czkj.setGatewayName(gatewayName);
 		czkj.setJson(false);
 		czkj.setMethod(RequestMethod.POST);
-		czkj.setSignature("畅卓科技");
+		czkj.setSignature("爱闪餐");
 		czkj.setSuccessText("发送成功");
 		czkj.setUrl("http://api.chanzor.com/send");
 		czkj.setWeight(10);

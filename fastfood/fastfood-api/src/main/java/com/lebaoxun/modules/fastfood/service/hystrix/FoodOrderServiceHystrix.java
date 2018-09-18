@@ -151,5 +151,12 @@ public class FoodOrderServiceHystrix implements IFoodOrderService {
 			String orderNo, BigDecimal dis) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
+	@Override
+	public ResponseMessage addInvoice(Long userId, String orderNo,
+			Integer invoiceFlag, String invoiceIRD, String invoiceEamil,
+			String invoiceTitle) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 
