@@ -26,7 +26,9 @@
     <!--扫码查询订单信息-->
     <select  id="getSweeptCodeOrderChildsInfo" resultType="java.util.Map">
          SELECT
+            childs.product_cat_id as catId,
             cat.name as catName,
+            childs.product_id as productId,
             childs.product_name as productName,
             childs.product_pic as productPic,
             childs.price,
