@@ -78,6 +78,13 @@ public class FoodMachineController {
     @RequestMapping("/fastfood/foodmachine/save")
     @RedisLock(value="fastfood:foodmachine:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineEntity foodMachine){
+        //查询机器编码是否存在
+        EntityWrapper<FoodMachineEntity> macWrapper=new EntityWrapper<FoodMachineEntity>();
+        macWrapper.eq("IMEI",foodMachine.getImei());
+        List<FoodMachineEntity> foodMachineEntities=foodMachineService.selectList(macWrapper);
+        if (foodMachineEntities!=null&&foodMachineEntities.size()>0){
+            return ResponseMessage.error("60001","机器编码["+foodMachine.getImei()+"]已存在，请修正！");
+        }
         foodMachineService.save(adminId,foodMachine);
         return ResponseMessage.ok();
     }
@@ -88,6 +95,13 @@ public class FoodMachineController {
     @RequestMapping("/fastfood/foodmachine/update")
     @RedisLock(value="fastfood:foodmachine:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineEntity foodMachine){
+        //查询机器编码是否存在
+        EntityWrapper<FoodMachineEntity> macWrapper=new EntityWrapper<FoodMachineEntity>();
+        macWrapper.eq("IMEI",foodMachine.getImei());
+        List<FoodMachineEntity> foodMachineEntities=foodMachineService.selectList(macWrapper);
+        if (foodMachineEntities!=null&&foodMachineEntities.size()>0){
+            return ResponseMessage.error("60001","机器编码["+foodMachine.getImei()+"]已存在，请修正！");
+        }
 		if (foodMachineService.updateById(foodMachine)){
             return ResponseMessage.ok();
         }else{
