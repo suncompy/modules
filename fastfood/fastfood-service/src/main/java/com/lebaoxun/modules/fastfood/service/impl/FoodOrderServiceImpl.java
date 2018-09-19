@@ -967,7 +967,13 @@ public class FoodOrderServiceImpl extends
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public ResponseMessage takeFoodCallback(String orderId) {
+	public ResponseMessage takeFoodCallback(String orderNo) {
+		
+		FoodOrderEntity order = this.selectOne(new EntityWrapper<FoodOrderEntity>().eq("order_no", orderNo));
+		if(order == null){
+			throw new I18nMessageException("60009", "订单不存在或已支付");
+		}
+		String orderId = order.getId()+"";
 		// 更新订单状
 		FoodOrderEntity foodOrder = new FoodOrderEntity();
 		foodOrder.setId(Long.parseLong(orderId));
@@ -984,22 +990,27 @@ public class FoodOrderServiceImpl extends
 			long ret = operations.delete(ORDER_QUEUE_KEY, orderId);
 			if (ret == 1) {
 				foodOrder = selectById(orderId);
+				
+				if(foodOrder.getUserId() != null){
+					Date now = new Date();
+					String logType = "PAY_FOOD_ORDER_COMPLETE";
+					Map<String,String> message = new HashMap<String,String>();
+					String timestamp = now.getTime()+"";
+					message.put("userId", foodOrder.getUserId()+"");
+					message.put("timestamp", timestamp);
+					message.put("logType", logType);
+					message.put("descr", "取餐成功");
+					message.put("adjunctInfo", orderNo);
+					message.put("token", MD5.md5(logType+"_"+orderNo));
+					
+					rabbitmqSender.sendContractDirect("account.log.queue",
+							new Gson().toJson(message));
+				}
+				
+				
 				Map<String, Object> resultData = Maps.newHashMap();
 				resultData.put("orderId", orderId);
 				resultData.put("orderNo", foodOrder.getOrderNo());
-				//取餐成功发送MQ日志
-				Date now = new Date();
-				Map<String,String> message = new HashMap<String,String>();
-				String timestamp = now.getTime()+"";
-				message.put("mehtod", "takeFoodCallback");
-				message.put("orderId", orderId+"");
-				message.put("userId", foodOrder.getUserId()+"");
-				message.put("timestamp", timestamp);
-				message.put("rows", ret+"");//影响行数
-				message.put("descr", "取餐成功，更新订单为已取餐状态");
-				message.put("token", MD5.md5(orderId+"_"+timestamp));
-				rabbitmqSender.sendContractDirect("account.log.queue",
-						new Gson().toJson(message));
 				return ResponseMessage.ok(resultData);
 			}
 		}

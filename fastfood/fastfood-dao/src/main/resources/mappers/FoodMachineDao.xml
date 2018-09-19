@@ -146,7 +146,7 @@
 	<select id="findByMacRefProductById" resultType="java.util.HashMap">
 		SELECT
 			product.id AS productId,
-			product. NAME AS productName,
+			product.NAME AS productName,
 			product.show_price AS showPrice,
 			product.give_score AS giveScore,
 			product.period AS period,
@@ -160,7 +160,7 @@
 			product.warm_time AS warmTime,
 			product.hot_num AS hotNum,
 			product.label AS label,
-			product. STATUS,
+			product.STATUS,
 			product.up_time AS upTime,
 			product.down_time AS downTime,
 			product.descr,

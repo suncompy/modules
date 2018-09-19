@@ -85,6 +85,7 @@
     </resultMap>
     
     <resultMap type="java.util.Map" id="foodMacOrderChildsMap">
+    	<result property="productId" column="productId"/>
         <result property="buyNumber" column="childBuyNumber"/>
         <result property="price" column="price"/>
         <result property="costPrice" column="costPrice"/>
@@ -110,6 +111,7 @@
 			order_t.create_time AS orderTime,
 			order_t.take_food_time as takeFoodTime,
 			order_t.order_status as orderStatus,
+			child.product_id as productId,
 	      	child.buy_number as childBuyNumber,
 	      	child.price as price,
 		  	child.cost_price as costPrice,
