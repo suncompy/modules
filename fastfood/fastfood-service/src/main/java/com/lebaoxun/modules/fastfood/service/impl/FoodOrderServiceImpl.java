@@ -1075,6 +1075,9 @@ public class FoodOrderServiceImpl extends
 		if (takeFoodCodeEntity == null
 				|| takeFoodCodeEntity.getOrderNo() == null)
 			return ResponseMessage.error("600004", "数据异常");
+		//校验订单，加时间判断是否有效(只能取当天的)
+		//只要接收到扫码请求，就将该订单状态改为(扫码中)
+
 		Map<String,Object> result=Maps.newHashMap();
 		result.put("orderNo",takeFoodCodeEntity.getOrderNo());
 		result.put("orderId",takeFoodCodeEntity.getOrderId());
