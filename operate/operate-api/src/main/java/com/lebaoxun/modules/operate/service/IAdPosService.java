@@ -60,7 +60,8 @@ public interface IAdPosService {
      * @return
      */
     @RequestMapping("/operate/adpos/get_advert_info")
-    ResponseMessage getAdvertInfo(@RequestParam(value = "advertId",required=false) String advertId,
+    ResponseMessage getAdvertInfo(@RequestParam(value = "macCode",required=false) String macCode,
+                                  @RequestParam(value = "advertId",required=false) String advertId,
                                   @RequestParam(value = "advertCode",required=false) String advertCode,
                                   @RequestParam(value = "advertType",required=false) String advertType);
 

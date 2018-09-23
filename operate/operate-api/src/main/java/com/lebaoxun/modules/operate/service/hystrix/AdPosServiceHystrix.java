@@ -45,7 +45,7 @@ public class AdPosServiceHystrix implements IAdPosService {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 	@Override
-	public ResponseMessage getAdvertInfo(String advertId,String advertCode,String advertType){
+	public ResponseMessage getAdvertInfo(String macCode,String advertId,String advertCode,String advertType){
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 }
