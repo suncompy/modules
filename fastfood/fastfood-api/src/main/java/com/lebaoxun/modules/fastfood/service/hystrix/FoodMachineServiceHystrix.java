@@ -98,5 +98,10 @@ public class FoodMachineServiceHystrix implements IFoodMachineService {
 	public ResponseMessage refProActByMacId(@RequestParam("adminId") Long adminId, @RequestBody List<FoodMachineProActivityRefEntity> activityRefEntityList) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+
+	@Override
+	public ResponseMessage updateMacNetStatus(@RequestParam("macCode") String macCode) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 

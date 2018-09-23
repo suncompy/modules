@@ -127,5 +127,11 @@ public interface IFoodMachineService {
     ResponseMessage refProActByMacId(
             @RequestParam("adminId")Long adminId,
             @RequestBody List<FoodMachineProActivityRefEntity> activityRefEntityList);
+
+    /**
+     * 更新机器网络状态
+     */
+    @RequestMapping("/fastfood/foodmachine/updateMacNetStatus")
+    ResponseMessage updateMacNetStatus(@RequestParam("macCode")String macCode);
 }
 
