@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lebaoxun.modules.fastfood.dao.FoodMachineErrorLogDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lebaoxun.modules.fastfood.entity.FoodMachineErrorLogEntity" id="foodMachineErrorLogMap">
+        <result property="id" column="id"/>
+        <result property="macId" column="mac_id"/>
+        <result property="logLever" column="log_lever"/>
+        <result property="logType" column="log_type"/>
+        <result property="logContex" column="log_contex"/>
+        <result property="logParams" column="log_params"/>
+    </resultMap>
+
+
+</mapper>
