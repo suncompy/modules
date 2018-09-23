@@ -48,5 +48,10 @@
     	<artifactId>operate-dao</artifactId>
     	<version>1.0.0-RELEASE</version>
     </dependency>
+      <dependency>
+          <groupId>com.lebaoxun</groupId>
+          <artifactId>fastfood-api</artifactId>
+          <version>1.0.0-RELEASE</version>
+      </dependency>
   </dependencies>
 </project>
