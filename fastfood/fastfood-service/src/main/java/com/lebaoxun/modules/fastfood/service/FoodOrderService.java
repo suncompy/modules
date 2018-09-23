@@ -1,6 +1,7 @@
 package com.lebaoxun.modules.fastfood.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -156,5 +157,15 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	Integer createTakeFoodCode(Integer macId, String orderNo);
 
 	ResponseMessage getOrderStatus(Long orderId,String orderNo);
+
+	/**
+	 * 扫码、取餐码取餐，校验订单
+	 * 校验订单，加时间判断是否有效(只能取当天的)
+	 * 只要接收到扫码请求，就将该订单状态改为(扫码中)
+	 * @param orderId
+	 * @param orderTime
+	 * @return
+	 */
+	public ResponseMessage takeFoodCheckOrder(Long orderId, Date orderTime, String orderTimeStr);
 
 }

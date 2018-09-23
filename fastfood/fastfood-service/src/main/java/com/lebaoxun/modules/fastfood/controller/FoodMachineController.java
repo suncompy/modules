@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.fastfood.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -167,6 +168,20 @@ public class FoodMachineController {
     @RequestMapping("/fastfood/foodmachine/search")
     ResponseMessage search(@RequestParam("keyword") String keyword){
     	return ResponseMessage.ok(foodMachineService.search(keyword));
+    }
+    /**
+     * 更新机器网络状态
+     */
+    @RequestMapping("/fastfood/foodmachine/updateMacNetStatus")
+    ResponseMessage updateMacNetStatus(@RequestParam("macCode")String macCode){
+        FoodMachineEntity machineEntity=new FoodMachineEntity();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        machineEntity.setNetStatus(sdf.format(date));
+        EntityWrapper<FoodMachineEntity> macWrapper=new EntityWrapper<FoodMachineEntity>();
+        macWrapper.eq("IMEI",macCode);
+        foodMachineService.update(machineEntity,macWrapper);
+        return ResponseMessage.ok();
     }
 
 }

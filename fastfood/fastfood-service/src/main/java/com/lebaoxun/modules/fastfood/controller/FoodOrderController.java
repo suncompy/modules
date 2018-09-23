@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.lebaoxun.commons.utils.DateUtil;
 import com.lebaoxun.commons.utils.StringUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity;
 
@@ -264,7 +265,14 @@ public class FoodOrderController {
     ResponseMessage getSweeptCodeOrderInfo(@RequestParam("orderId") String orderId) {
         Map<String,Object> orderMap=foodOrderService.getSweeptCodeOrderInfo(orderId);
         if (orderMap==null||orderMap.size()==0)
-            return ResponseMessage.error("00002","订单不存！");
+            return ResponseMessage.error("600002","订单不存！");
+        //校验订单，加时间判断是否有效(只能取当天的)
+        //只要接收到扫码请求，就将该订单状态改为(扫码中)
+        String orderTime=(String) orderMap.get("orderTime");
+        ResponseMessage ret=foodOrderService.takeFoodCheckOrder(Long.parseLong(orderId),
+                null,orderTime.substring(0,10));
+        if (ret!=null)
+            return ret;
         List<Map<String,Object>> orderChildList=foodOrderChildsService.getSweeptCodeOrderChildsInfo(orderId);
         orderMap.put("orderLines",orderChildList);
         return ResponseMessage.ok(orderMap);
