@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.lebaoxun.modules.fastfood.service.IFoodMachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,8 @@ import com.lebaoxun.modules.operate.entity.AdPosEntity;
 import com.lebaoxun.modules.operate.service.AdPosService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
+import javax.annotation.Resource;
+
 
 /**
  * 广告位
@@ -32,6 +35,8 @@ import com.lebaoxun.soa.core.redis.lock.RedisLock;
  */
 @RestController
 public class AdPosController {
+    @Resource
+    private IFoodMachineService foodMachineService;
     @Autowired
     private AdPosService adPosService;
 
@@ -88,7 +93,8 @@ public class AdPosController {
     }
 
     @RequestMapping("/operate/adpos/get_advert_info")
-    public ResponseMessage getAdvertInfo(@RequestParam(value = "advertId",required=false) String advertId,
+    public ResponseMessage getAdvertInfo(@RequestParam(value = "macCode",required=false) String macCode,
+            @RequestParam(value = "advertId",required=false) String advertId,
                                          @RequestParam(value = "advertCode",required=false) String advertCode,
                                          @RequestParam(value = "advertType",required=false) String advertType){
         EntityWrapper<AdPosEntity> entityWrapper=new EntityWrapper();
@@ -102,6 +108,12 @@ public class AdPosController {
         List<AdPosEntity> adPosEntityList=adPosService.selectList(entityWrapper);
         if (adPosEntityList==null||adPosEntityList.size()==0)
             return ResponseMessage.error("0000","广告数据还在生产中!");
+        //如果macCode不为空，就确认该请求是机器心跳，需要同步机器网络状态
+        if (StringUtils.isNotEmpty(macCode)){
+            new Thread(()->{
+                foodMachineService.updateMacNetStatus(macCode);
+            }).start();
+        }
         adPosEntityList.forEach(e->{
             Map<String,Object> adPosMap= Maps.newHashMap();
             adPosMap.put("advertId",e.getId());
