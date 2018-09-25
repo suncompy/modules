@@ -54,7 +54,7 @@ public class OrderSuccessListener {
     }
 
     @Bean
-    Binding bindingDirectExchangeAccountLog(Queue queuePaySuccess, DirectExchange directExchange) {
+    Binding bindingDirectExchangePaySuccess(Queue queuePaySuccess, DirectExchange directExchange) {
         return BindingBuilder.bind(queuePaySuccess).to(directExchange).with("order.pay.success.queue");
     }
 	

@@ -1,11 +1,11 @@
 package com.lebaoxun.modules.fastfood.entity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
-
-import java.math.BigDecimal;
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 订单退款表
@@ -75,6 +75,10 @@ public class FoodOrderBackEntity implements Serializable {
 	 * 状态0=未处理，1=已处理
 	 */
 	private Integer status;
+	/**
+	 * 支付方式 1=在线支付，2=余额支付
+	 */
+	private Integer payType;
 
 	/**
 	 * 设置：ID
@@ -237,5 +241,11 @@ public class FoodOrderBackEntity implements Serializable {
 	}
 	public void setCreateBy(Long createBy) {
 		this.createBy = createBy;
+	}
+	public Integer getPayType() {
+		return payType;
+	}
+	public void setPayType(Integer payType) {
+		this.payType = payType;
 	}
 }

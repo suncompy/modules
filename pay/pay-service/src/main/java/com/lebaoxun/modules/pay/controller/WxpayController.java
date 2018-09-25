@@ -15,7 +15,6 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
-import com.lebaoxun.commons.utils.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,16 +34,19 @@ import com.google.zxing.common.BitMatrix;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.GenerateCode;
+import com.lebaoxun.commons.utils.StringUtils;
 import com.lebaoxun.modules.pay.entity.PayOrderEntity;
 import com.lebaoxun.modules.pay.pojo.WxpayConfig;
 import com.lebaoxun.modules.pay.service.IPayOrderService;
 import com.lebaoxun.modules.pay.service.IWxpayConfigService;
+import com.lebaoxun.modules.pay.service.IWxpayGatewayService;
 import com.lebaoxun.modules.pay.wxpay.util.HttpXmlUtils;
 import com.lebaoxun.modules.pay.wxpay.util.JdomParseXmlUtils;
 import com.lebaoxun.modules.pay.wxpay.util.ParseXMLUtils;
 import com.lebaoxun.modules.pay.wxpay.util.RandCharsUtils;
 import com.lebaoxun.modules.pay.wxpay.util.WXSignUtils;
 import com.lebaoxun.modules.pay.wxpay.vo.Unifiedorder;
+import com.lebaoxun.modules.pay.wxpay.vo.Unifierefund;
 
 /**
  * 
@@ -61,6 +63,9 @@ public class WxpayController {
 	
 	@Resource
 	private IPayOrderService payOrderService;
+	
+	@Resource
+	private IWxpayGatewayService wxpayGatewayService;
 	
 	@RequestMapping(value = "/wxpay/config/list", method = RequestMethod.GET)
 	List<WxpayConfig> configList(){
@@ -642,6 +647,63 @@ public class WxpayController {
 		ret.put("iossign", ios_resign);
 		ret.put("andsign", and_resign);
 		return new ResponseMessage(ret);
+	}
+	
+	/**
+	 * 小程序支付退款
+	 * 
+	 * @return JsonObject
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/wxpay/pay/wxAppRefund", method = RequestMethod.POST)
+	ResponseMessage wxAppRefund(@RequestParam("orderNo")String orderNo,
+			@RequestParam("refundDesc")String refundDesc,
+			@RequestParam(value="refundFee",required=false)Integer refundFee) {
+		PayOrderEntity order = payOrderService.selectOne(new EntityWrapper<PayOrderEntity>().eq("order_no", orderNo));
+		if(order == null){
+			logger.error("订单不存在 {}",orderNo);
+			throw new I18nMessageException("-1","订单不存在");
+		}
+		if(order.getStatus() == 2){
+			logger.error("订单已退款 {}",orderNo);
+			throw new I18nMessageException("-1","订单已退款");
+		}
+		if(order.getStatus() != 1){
+			logger.error("订单尚未支付 {}",orderNo);
+			throw new I18nMessageException("-1","订单尚未支付");
+		}
+		return ResponseMessage.ok(wxpayGatewayService.refund(order, refundFee, refundDesc));
+	}
+	
+	ResponseMessage wxAppRefund(Unifierefund unifiedorder) {
+		// 构造xml参数
+		String xmlInfo = HttpXmlUtils.refundXmlInfo(unifiedorder);
+		String wxUrl = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+		String method = "POST";
+
+		String weixinPost = HttpXmlUtils.httpsRequest(wxUrl, method, xmlInfo).toString();
+
+		Map<String, Object> retMap = ParseXMLUtils.jdomParseXml(weixinPost);
+		String return_code=retMap.get("return_code").toString();
+		
+		logger.debug("retMap={}",retMap);
+		logger.debug("请求申请退款接口返回结果 ==return_code={}",return_code);
+		if("FAIL".equals(return_code)){
+			throw new I18nMessageException("-1","支付失败,"+retMap.get("return_msg"));
+		}
+		//支付结果
+		String result_code=retMap.get("result_code").toString();
+		logger.debug("请求申请退款接口返回支付结果 ==return_code={}",result_code);
+		if("FAIL".equals(result_code)){
+			String err_code=retMap.get("err_code").toString();//返回错误码
+			String err_code_des=retMap.get("err_code_des").toString();//错误描述信息
+			if("BIZERR_NEED_RETRY".equals(err_code)){//退款业务流程错误，需要商户触发重试来解决
+				return wxAppRefund(unifiedorder);
+			}
+			throw new I18nMessageException("-1",err_code_des);
+		}
+		
+		return new ResponseMessage();
 	}
 	
 	@RequestMapping(value="/wxpay/notify")

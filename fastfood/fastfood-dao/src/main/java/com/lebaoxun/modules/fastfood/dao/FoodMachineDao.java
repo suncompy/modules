@@ -27,7 +27,8 @@ public interface FoodMachineDao extends BaseMapper<FoodMachineEntity> {
     * @param areaCode
     * @return
     */
-   List<FoodMachineEntity> findByAreaCode(@Param("areaCode")String areaCode);
+   List<FoodMachineEntity> findByAreaCode(@Param("areaCode")String areaCode,
+		   @Param("lat") Double lat,@Param("lng") Double lng);
    
    List<FoodMachineEntity> findByRandom(@Param("size")Integer size);
    
@@ -46,7 +47,9 @@ public interface FoodMachineDao extends BaseMapper<FoodMachineEntity> {
                                                      @Param("macId")Integer macId,
                                                      @Param("catId")Integer catId);
    
-   List<Map<String, Object>> searchMacByKeyword(@Param("keyword")String keyword);
+   List<Map<String, Object>> searchMacByKeyword(@Param("keyword")String keyword,
+		   @Param("lat") Double lat,@Param("lng") Double lng);
    
-   List<Map<String, Object>> searchMacProductByKeyword(@Param("keyword")String keyword);
+   List<Map<String, Object>> searchMacProductByKeyword(@Param("keyword")String keyword,
+		   @Param("lat") Double lat,@Param("lng") Double lng);
 }

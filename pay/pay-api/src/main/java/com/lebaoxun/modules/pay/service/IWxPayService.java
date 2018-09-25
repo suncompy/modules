@@ -100,4 +100,15 @@ public interface IWxPayService {
 	@RequestMapping(value="/wxpay/query", method = RequestMethod.GET)
 	ResponseMessage query(@RequestParam("out_trade_no")String out_trade_no, @RequestParam("account")String account,
 			@RequestParam(value="send",required=false)String send);
+	
+	/**
+	 * 小程序支付退款
+	 * 
+	 * @return JsonObject
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/wxpay/pay/wxAppRefund", method = RequestMethod.POST)
+	ResponseMessage wxAppRefund(@RequestParam("orderNo")String orderNo,
+			@RequestParam("refundDesc")String refundDesc,
+			@RequestParam(value="refundFee",required=false)Integer refundFee);
 }

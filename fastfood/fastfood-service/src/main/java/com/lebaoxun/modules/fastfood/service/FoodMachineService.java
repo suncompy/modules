@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -30,7 +31,7 @@ public interface FoodMachineService extends IService<FoodMachineEntity> {
      * @param areaCode
      * @return
      */
-    List<FoodMachineEntity> findByAreaCode(String areaCode);
+    List<FoodMachineEntity> findByAreaCode(String areaCode,Double lat,Double lng);
     
     /**
      * 查询机器详情
@@ -47,6 +48,6 @@ public interface FoodMachineService extends IService<FoodMachineEntity> {
      */
     List<Map<String, Object>> findByMacRefProductById(Integer pageSize,Integer pageNo,Integer macId,Integer catId);
     
-    List<Map<String, Object>> search(String keyword);
+    List<Map<String, Object>> search(String keyword,Double lat,Double lng);
 }
 

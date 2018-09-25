@@ -113,6 +113,17 @@ public class FoodMachineEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	/**
+	 * 经度
+	 */
+	private Double lat;
+	/**
+	 * 纬度
+	 */
+	private Double lng;
+	
+	@TableField(exist=false)
+	private String juli;
 	
 	@TableField(exist=false)
 	private List<String> activitys;
@@ -388,5 +399,23 @@ public class FoodMachineEntity implements Serializable {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public Double getLat() {
+		return lat;
+	}
+	public void setLat(Double lat) {
+		this.lat = lat;
+	}
+	public Double getLng() {
+		return lng;
+	}
+	public void setLng(Double lng) {
+		this.lng = lng;
+	}
+	public String getJuli() {
+		return juli;
+	}
+	public void setJuli(String juli) {
+		this.juli = juli;
 	}
 }

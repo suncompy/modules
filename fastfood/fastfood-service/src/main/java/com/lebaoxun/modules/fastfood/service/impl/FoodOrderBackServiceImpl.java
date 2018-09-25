@@ -79,9 +79,10 @@ public class FoodOrderBackServiceImpl extends ServiceImpl<FoodOrderBackDao, Food
     	if(order == null){
     		throw new I18nMessageException("60007","订单不存在");
     	}
-    	if(order.getUserId() == null){
-    		throw new I18nMessageException("60012","非用户发起订单无法退款");
+    	if(order.getPayType() == 0){
+    		throw new I18nMessageException("60012","此订单无法退款");
     	}
+    	entity.setPayType(order.getPayType());
     	entity.setPayAmount(order.getPayAmount());
     	entity.setStatus(0);
     	entity.setUserId(order.getUserId());
@@ -116,21 +117,31 @@ public class FoodOrderBackServiceImpl extends ServiceImpl<FoodOrderBackDao, Food
     	
     	if(status == 1){
     		for(FoodOrderBackEntity orderBack: orders){
-    			String logType = "ORDER_REFUND";
-    			Map<String,String> pmessage = new HashMap<String,String>();
-    			
-    			pmessage.put("out_trade_no", orderBack.getOrderNo());
-    			pmessage.put("recharge_fee", orderBack.getPayAmount().toString());
-    			pmessage.put("log_type", logType);
-    			pmessage.put("descr", "订单退款");
-    			pmessage.put("adjunctInfo", orderBack.getOrderNo());
-    			pmessage.put("user_id", orderBack.getUserId()+"");
-    			pmessage.put("buy_time", new Date().getTime()+"");
-    			pmessage.put("token", MD5.md5(logType.toString()+"_"+orderBack.getOrderNo()));
-    			
-    			logger.debug("订单退款|pmessage={}",new Gson().toJson(pmessage));
-    			rabbitmqSender.sendContractDirect("account.balance.queue.award",
-    					new Gson().toJson(pmessage));
+    			if(orderBack.getPayType() == 1){//在线支付
+    				Map<String,String> pmessage = new HashMap<String,String>();
+    				
+    				pmessage.put("orderNo", orderBack.getOrderNo());
+    				pmessage.put("refundDesc", orderBack.getRemark());
+    				logger.debug("订单退款|pmessage={}",new Gson().toJson(pmessage));
+    				rabbitmqSender.sendContractDirect("pay.order.refund.queue",
+    						new Gson().toJson(pmessage));
+    			}else if(orderBack.getPayType() == 2){//余额支付
+    				String logType = "ORDER_REFUND";
+    				Map<String,String> pmessage = new HashMap<String,String>();
+    				
+    				pmessage.put("out_trade_no", orderBack.getOrderNo());
+    				pmessage.put("recharge_fee", orderBack.getPayAmount().toString());
+    				pmessage.put("log_type", logType);
+    				pmessage.put("descr", "订单退款");
+    				pmessage.put("adjunctInfo", orderBack.getOrderNo());
+    				pmessage.put("user_id", orderBack.getUserId()+"");
+    				pmessage.put("buy_time", new Date().getTime()+"");
+    				pmessage.put("token", MD5.md5(logType.toString()+"_"+orderBack.getOrderNo()));
+    				
+    				logger.debug("订单退款|pmessage={}",new Gson().toJson(pmessage));
+    				rabbitmqSender.sendContractDirect("account.balance.queue.award",
+    						new Gson().toJson(pmessage));
+    			}
     		}
     	}
     	return orders;

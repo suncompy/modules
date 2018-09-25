@@ -5,12 +5,14 @@ import java.util.Map;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCouponRefEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineProActivityRefEntity;
+
 import org.springframework.stereotype.Component;
 
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.service.IFoodMachineService;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -51,7 +53,8 @@ public class FoodMachineServiceHystrix implements IFoodMachineService {
 	}
 
 	@Override
-	public ResponseMessage findByAreaCode(String areaCode) {
+	public ResponseMessage findByAreaCode(String areaCode,
+			Double lat, Double lng) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 	
@@ -65,7 +68,8 @@ public class FoodMachineServiceHystrix implements IFoodMachineService {
 	}
     
 	@Override
-	public ResponseMessage search(String keyword) {
+	public ResponseMessage search(String keyword,
+			Double lat, Double lng) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
