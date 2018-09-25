@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineAddStockHeadEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineRefAisleEntity;
+import com.lebaoxun.modules.fastfood.service.FoodMachineAddStockHeadService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +35,8 @@ import com.lebaoxun.soa.core.redis.lock.RedisLock;
 public class FoodMachineAddStockOrderController {
     @Autowired
     private FoodMachineAddStockOrderService foodMachineAddStockOrderService;
+    @Autowired
+    private FoodMachineAddStockHeadService foodMachineAddStockHeadService;
 
     /**
      * 列表
@@ -59,24 +63,35 @@ public class FoodMachineAddStockOrderController {
     @RequestMapping("/fastfood/foodmachineaddstockorder/save")
     @RedisLock(value="fastfood:foodmachineaddstockorder:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody List<FoodMachineAddStockOrderEntity> addStockOrderList){
+        int i=0;
         if (addStockOrderList!=null&&addStockOrderList.size()>0){
+            FoodMachineAddStockHeadEntity headEntity = new FoodMachineAddStockHeadEntity();
             for (FoodMachineAddStockOrderEntity e:addStockOrderList){
-                //首先判断补货、配货单是否在进行中
-                EntityWrapper<FoodMachineAddStockOrderEntity> entityWrapper=new EntityWrapper<FoodMachineAddStockOrderEntity>();
-                entityWrapper.eq("mac_id",e.getMacId());
-                entityWrapper.eq("x",e.getX());
-                entityWrapper.eq("y",e.getY());
-                entityWrapper.eq("type",e.getType());
-                entityWrapper.eq("status",0);
-                List<FoodMachineAddStockOrderEntity> cList=foodMachineAddStockOrderService.selectList(entityWrapper);
-                if (cList!=null&&cList.size()>0){
-                    return ResponseMessage.error("600002","机器["+e.getMacId()
-                            +"],货道["+e.getX()+"-"+e.getY()+"已有补货单在进行中！]!");
+                if (i==0) {
+                    //首先判断补货、配货单是否在进行中
+                    EntityWrapper<FoodMachineAddStockHeadEntity> entityWrapper=new EntityWrapper<FoodMachineAddStockHeadEntity>();
+                    entityWrapper.eq("mac_id",e.getMacId());
+                    entityWrapper.eq("status",0);
+                    List<FoodMachineAddStockHeadEntity> cList=foodMachineAddStockHeadService.selectList(entityWrapper);
+                    if (cList!=null&&cList.size()>0){
+                        return ResponseMessage.error("600002","机器["+e.getMacId()
+                                +"],货道["+e.getX()+"-"+e.getY()+"已有补货单在进行中！]!");
+                    }
+
+                    //插入主表
+                    headEntity.setMacId(e.getMacId());
+                    headEntity.setStatus(0);
+                    headEntity.setPerformer(e.getPerformer());
+                    headEntity.setSendOrderTime(new Date());
+                    foodMachineAddStockHeadService.insert(headEntity);
+                    i++;
                 }
+                //插入子表
                 e.setStatus(0);
                 e.setCreateBy(adminId);
                 e.setCreateTime(new Date());
                 e.setUpdateTime(new Date());
+                e.setHeadId(headEntity.getId());
                 foodMachineAddStockOrderService.insert(e);
             }
         }else {
@@ -137,11 +152,27 @@ public class FoodMachineAddStockOrderController {
                                           @RequestParam(value = "mobile",required = false)String mobile,
                                           @RequestParam(value = "createTime",required = false)String createTime){
 
-        List<Map<String,Object>> ReplenishManList = foodMachineAddStockOrderService.queryReplenishManList(userName,mobile,createTime);
+        List<Map<String,Object>> ReplenishManList = foodMachineAddStockOrderService.queryPickingManList(userName,mobile,createTime);
         int totalCount=ReplenishManList.size();
         int pageSize=100;
         int currPage=0;
         PageUtils page=new PageUtils(ReplenishManList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
+    }
+    /**
+     * 配货订单列表
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaddstockorder/queryPickingOrderList")
+    ResponseMessage queryPickingOrderList(@RequestParam(value = "status",required = false)String status,
+            @RequestParam(value = "macInfo",required = false)String macInfo,
+                                        @RequestParam(value = "id",required = false)String id,
+                                        @RequestParam(value = "sendOrderTime",required = false)String sendOrderTime){
+        List<Map<String,Object>> ReplenishOrderList = foodMachineAddStockOrderService.queryPickingOrderList(status,macInfo,id,sendOrderTime);
+        int totalCount=ReplenishOrderList.size();
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(ReplenishOrderList,totalCount,pageSize,0);
         return ResponseMessage.ok(page);
     }
 

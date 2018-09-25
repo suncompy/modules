@@ -98,4 +98,9 @@ public class FoodMachineAddStockOrderServiceImpl extends ServiceImpl<FoodMachine
 	public List<Map<String, Object>> queryPickingManList(String userName, String mobile, String createTime) {
 		return this.baseMapper.queryPickingManList(userName,mobile,createTime);
 	}
+
+	@Override
+	public List<Map<String, Object>> queryPickingOrderList(String status, String macInfo, String id, String sendOrderTime) {
+		return this.baseMapper.queryPickingOrderList(status,macInfo,id,sendOrderTime);
+	}
 }

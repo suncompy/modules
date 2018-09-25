@@ -3,6 +3,7 @@ package com.lebaoxun.modules.fastfood.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAddStockOrderEntity;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -20,5 +21,6 @@ public interface FoodMachineAddStockOrderService extends IService<FoodMachineAdd
     PageUtils queryPage(Map<String, Object> params);
     List<Map<String,Object>> queryReplenishManList(String userName,String mobile,String createTime);
     List<Map<String,Object>> queryPickingManList(String userName,String mobile,String createTime);
+    List<Map<String,Object>> queryPickingOrderList(String status,String macInfo,String id,String sendOrderTime);
 }
 

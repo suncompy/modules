@@ -33,6 +33,11 @@ public interface FoodMachineAisleService extends IService<FoodMachineAisleEntity
     List<Map<String, Object>> findProductByMacIdAndProductCatId(Integer macId, Integer productCatId);
     
     List<Map<String, Object>> findProductByMacIdAndWeek(Integer macId, Integer week);
+
+    /**
+     *派单晚上12点跑定时任务,如果机器存在状态为派单中配货单，则将该机器的货道库存清零
+     */
+    void clearMachineAisleStock();
     
 }
 
