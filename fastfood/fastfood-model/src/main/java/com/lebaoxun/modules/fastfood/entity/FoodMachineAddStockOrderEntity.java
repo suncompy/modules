@@ -56,6 +56,12 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	 * 类别0=补货，1=配货
 	 */
 	private Integer type;
+
+	private Double price;
+
+	private Integer lineCatId;
+
+	private Integer headId;
 	/**
 	 * 创建时间
 	 */
@@ -114,6 +120,31 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	public void setProductId(Integer productId) {
 		this.productId = productId;
 	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public Integer getLineCatId() {
+		return lineCatId;
+	}
+
+	public void setLineCatId(Integer lineCatId) {
+		this.lineCatId = lineCatId;
+	}
+
+	public Integer getHeadId() {
+		return headId;
+	}
+
+	public void setHeadId(Integer headId) {
+		this.headId = headId;
+	}
+
 	/**
 	 * 获取：产品ID
 	 */
