@@ -57,5 +57,10 @@ public class FoodMachineAddStockOrderServiceHystrix implements IFoodMachineAddSt
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
+	@Override
+	public ResponseMessage queryPickingOrderList(@RequestParam(value = "status", required = false) String status, @RequestParam(value = "macInfo", required = false) String macInfo, @RequestParam(value = "id", required = false) String id, @RequestParam(value = "sendOrderTime", required = false) String sendOrderTime) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
 }
 

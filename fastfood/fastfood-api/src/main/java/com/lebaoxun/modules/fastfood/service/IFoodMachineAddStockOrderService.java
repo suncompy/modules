@@ -74,5 +74,11 @@ public interface IFoodMachineAddStockOrderService {
     ResponseMessage queryPickingManList(@RequestParam(value = "userName",required = false)String userName,
                                         @RequestParam(value = "mobile",required = false)String mobile,
                                         @RequestParam(value = "createTime",required = false)String createTime);
+
+    @RequestMapping("/fastfood/foodmachineaddstockorder/queryPickingOrderList")
+    ResponseMessage queryPickingOrderList(@RequestParam(value = "status",required = false)String status,
+                                          @RequestParam(value = "macInfo",required = false)String macInfo,
+                                          @RequestParam(value = "id",required = false)String id,
+                                          @RequestParam(value = "sendOrderTime",required = false)String sendOrderTime);
 }
 
