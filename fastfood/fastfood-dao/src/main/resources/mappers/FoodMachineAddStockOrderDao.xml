@@ -94,4 +94,37 @@
             and date_format(u.create_time, '%Y-%m-%d') = #{createTime}
         </if>
     </select>
+
+    <select id="queryPickingOrderList" resultType="java.util.HashMap">
+        SELECT
+            h.id,
+            h.performer,
+            u.username as userName,
+            f.IMEI as macCode,
+            f.`name` as macName,
+            f.address,
+            f.`status` as macStatus,
+            h.send_order_time as sendOrderTime,
+            h.`status`,
+            h.note
+            FROM
+            food_machine_add_stock_head h,
+            food_machine f,
+            sys_user u
+        WHERE
+            h.mac_id = f.id
+            AND h.performer = u.user_id
+        <if test="status != null and status!=''">
+            and h.status=#{status}
+        </if>
+        <if test="macInfo != null and macInfo!=''">
+            and (f.IMEI LIKE '%${macInfo}%' or f.name LIKE '%${macInfo}%')
+        </if>
+        <if test="id != null and id!=''">
+            and h.id =#{id}
+        </if>
+        <if test="sendOrderTime != null and sendOrderTime!=''">
+            and date_format(h.send_order_time, '%Y-%m-%d') = #{sendOrderTime}
+        </if>
+    </select>
 </mapper>
