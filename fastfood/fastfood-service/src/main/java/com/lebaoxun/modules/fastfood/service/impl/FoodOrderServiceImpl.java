@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
-import com.lebaoxun.commons.utils.StringUtils;
+import com.lebaoxun.commons.utils.*;
 
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -32,9 +32,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
-import com.lebaoxun.commons.utils.MD5;
-import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.commons.utils.Query;
 import com.lebaoxun.modules.account.service.IUserService;
 import com.lebaoxun.modules.fastfood.dao.FoodMachineAisleDao;
 import com.lebaoxun.modules.fastfood.dao.FoodMachineDao;
@@ -952,7 +949,6 @@ public class FoodOrderServiceImpl extends
 			operations.put(ORDER_QUEUE_KEY, orderId, foodOrderEntity);
 			List<Object> list = redisTemplate.exec();
 			redisTemplate.setEnableTransactionSupport(false);
-			list.forEach(e -> System.out.print(e));
 
 			Map<String, Object> result = Maps.newHashMap();
 			result.put("orderId", orderId);
@@ -1075,6 +1071,12 @@ public class FoodOrderServiceImpl extends
 		if (takeFoodCodeEntity == null
 				|| takeFoodCodeEntity.getOrderNo() == null)
 			return ResponseMessage.error("600004", "数据异常");
+		//校验订单，加时间判断是否有效(只能取当天的)
+		//只要接收到扫码请求，就将该订单状态改为(扫码中)
+		ResponseMessage ret=takeFoodCheckOrder(takeFoodCodeEntity.getOrderId(),
+				new Date(takeFoodCodeEntity.getTimeStamp()),null);
+		if (ret!=null)
+			return ret;
 		Map<String,Object> result=Maps.newHashMap();
 		result.put("orderNo",takeFoodCodeEntity.getOrderNo());
 		result.put("orderId",takeFoodCodeEntity.getOrderId());
@@ -1138,6 +1140,28 @@ public class FoodOrderServiceImpl extends
 		}
 	}
 
+	/**
+	 * 扫码、取餐码取餐，校验订单
+	 * 校验订单，加时间判断是否有效(只能取当天的)
+	 * 只要接收到扫码请求，就将该订单状态改为(扫码中)
+	 * @param orderId
+	 * @param orderTime
+	 * @return
+     */
+	public ResponseMessage takeFoodCheckOrder(Long orderId,Date orderTime,String orderTimeStr){
+		//校验订单，加时间判断是否有效(只能取当天的)
+		orderTimeStr=orderTimeStr==null?DateUtil.formatDatetime(orderTime,"yyyy-MM-dd"):orderTimeStr;
+		String currentDate= DateUtil.formatDatetime(new Date(),"yyyy-MM-dd");
+		if(!currentDate.equals(orderTimeStr)){
+			return ResponseMessage.error("60005","该订单已失效");
+		}
+		//只要接收到扫码请求，就将该订单状态改为(扫码中)
+		FoodOrderEntity foodOrder=new FoodOrderEntity();
+		foodOrder.setId(orderId);
+		foodOrder.setOrderStatus(4);//扫码中
+		this.baseMapper.updateById(foodOrder);
+		return null;
+	}
 	public ResponseMessage getOrderStatus(Long orderId,String orderNo){
 		EntityWrapper<FoodOrderEntity> foodOrderWrapper=new EntityWrapper<FoodOrderEntity>();
 		if (orderId!=null&&orderId>0)

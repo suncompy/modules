@@ -16,6 +16,7 @@
         <result property="id" column="id"/>
         <result property="macId" column="mac_id"/>
         <result property="activityType" column="activity_type"/>
+		<result property="isUseble" column="is_useble"/>
         <result property="isRef" column="is_ref"/>
         <result property="activityName" column="activity_name"/>
         <result property="createBy" column="create_by"/>
@@ -28,12 +29,18 @@
 		r.mac_id,
 		t.activity_type,
 		t.`NAME` as activity_name ,
-	CASE
-		WHEN r.id IS NULL THEN
-		2
-		ELSE
-		1
-	END AS is_ref
+		CASE
+			WHEN r.id IS NULL THEN
+			2
+			ELSE
+			1
+		END AS is_ref,
+		CASE
+			WHEN t.`use`=1 THEN
+			1
+			ELSE
+			2
+		END AS is_useble
 FROM
 	(
 		SELECT
@@ -49,13 +56,13 @@ FROM
 			`use`
 		FROM
 			operate_activity_keep_discount where `use` = 1
-		UNION ALL
+		<!--UNION ALL
 		SELECT
 			3 activity_type,
 			NAME,
 			`use`
 		FROM
-			operate_activity_pay_cash_back where `use` = 1
+			operate_activity_pay_cash_back where `use` = 1 -->
 	) t
 	LEFT JOIN (
                 SELECT
@@ -65,6 +72,6 @@ FROM
                 WHERE
                     mac_id = #{macId}
             ) r ON t.activity_type = r.activity_type
-             AND t.`use` = 1
+           <!--  AND t.`use` = 1 -->
     </select>
 </mapper>

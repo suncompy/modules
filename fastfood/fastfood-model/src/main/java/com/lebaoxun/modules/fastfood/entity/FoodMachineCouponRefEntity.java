@@ -50,6 +50,9 @@ public class FoodMachineCouponRefEntity implements Serializable {
 	private Integer isRef;
 
 	@TableField(exist = false)
+	private Integer isUseble;
+
+	@TableField(exist = false)
 	private String couponName;
 
 	public Integer getTotal() {
@@ -58,6 +61,14 @@ public class FoodMachineCouponRefEntity implements Serializable {
 
 	public void setTotal(Integer total) {
 		this.total = total;
+	}
+
+	public Integer getIsUseble() {
+		return isUseble;
+	}
+
+	public void setIsUseble(Integer isUseble) {
+		this.isUseble = isUseble;
 	}
 
 	/**

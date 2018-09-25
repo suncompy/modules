@@ -1,16 +1,21 @@
 package com.lebaoxun.modules.fastfood.controller;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.ValidatorUtils;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCatEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatService;
+import com.lebaoxun.modules.fastfood.service.FoodMachineService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -23,6 +28,8 @@ import java.util.Map;
  */
 @RestController
 public class FoodMachineCatController {
+    @Autowired
+    private FoodMachineService foodMachineService;
     @Autowired
     private FoodMachineCatService foodMachineCatService;
 
@@ -66,6 +73,13 @@ public class FoodMachineCatController {
     @RequestMapping("/fastfood/foodmachinecat/update")
     @RedisLock(value="fastfood:foodmachinecat:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineCatEntity foodMachineCat){
+        //如果机器分类有使用，如其它机器有用到，则不能进行此操作
+        EntityWrapper<FoodMachineEntity> entityWrapper=new EntityWrapper<FoodMachineEntity>();
+        entityWrapper.eq("cat_id",foodMachineCat.getId());
+        List<FoodMachineEntity> foodMachineEntitis=foodMachineService.selectList(entityWrapper);
+        if (foodMachineEntitis!=null&&foodMachineEntitis.size()>0){
+            return ResponseMessage.error("60002","该机器分类已经有机器关联，不能进行删除！");
+        }
 		foodMachineCatService.updateById(foodMachineCat);
         return ResponseMessage.ok();
     }
@@ -76,6 +90,15 @@ public class FoodMachineCatController {
     @RequestMapping("/fastfood/foodmachinecat/delete")
     @RedisLock(value="fastfood:foodmachinecat:delete:lock:#arg0")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids){
+        //如果机器分类有使用，如其它机器有用到，则不能进行此操作
+        for (int catId:ids){
+            EntityWrapper<FoodMachineEntity> entityWrapper=new EntityWrapper<FoodMachineEntity>();
+            entityWrapper.eq("cat_id",catId);
+            List<FoodMachineEntity> foodMachineEntitis=foodMachineService.selectList(entityWrapper);
+            if (foodMachineEntitis!=null&&foodMachineEntitis.size()>0){
+                return ResponseMessage.error("60002","该机器分类已经有机器关联，不能进行删除！");
+            }
+        }
 		foodMachineCatService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
     }

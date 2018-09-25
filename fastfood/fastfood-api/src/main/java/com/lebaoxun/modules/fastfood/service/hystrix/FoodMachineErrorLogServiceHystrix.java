@@ -1,24 +1,23 @@
-package com.lebaoxun.modules.operate.service.hystrix;
+package com.lebaoxun.modules.fastfood.service.hystrix;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.lebaoxun.modules.operate.entity.AdPosEntity;
-import com.lebaoxun.modules.operate.service.IAdPosService;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineErrorLogEntity;
+import com.lebaoxun.modules.fastfood.service.IFoodMachineErrorLogService;
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * 广告位
+ * 终端机器错误日志表
  *
- * @author caiqianyi
+ * @author F.Bin
  * @email 270852221@qq.com
- * @date 2018-08-22 23:06:49
+ * @date 2018-09-23 19:35:01
  */
 
 @Component
-public class AdPosServiceHystrix implements IAdPosService {
+public class FoodMachineErrorLogServiceHystrix implements IFoodMachineErrorLogService {
 
 	@Override
 	public ResponseMessage list(Map<String, Object> params) {
@@ -31,12 +30,12 @@ public class AdPosServiceHystrix implements IAdPosService {
 	}
 
 	@Override
-	public ResponseMessage save(Long adminId,AdPosEntity adPos) {
+	public ResponseMessage save(Long adminId,FoodMachineErrorLogEntity foodMachineErrorLog) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage update(Long adminId,AdPosEntity adPos) {
+	public ResponseMessage update(Long adminId,FoodMachineErrorLogEntity foodMachineErrorLog) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
@@ -44,9 +43,6 @@ public class AdPosServiceHystrix implements IAdPosService {
 	public ResponseMessage delete(Long adminId,Integer[] ids) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
-	@Override
-	public ResponseMessage getAdvertInfo(String macCode,String advertId,String advertCode,String advertType){
-		throw new I18nMessageException("502","服务器异常，请稍后重试");
-	}
+    
 }
 

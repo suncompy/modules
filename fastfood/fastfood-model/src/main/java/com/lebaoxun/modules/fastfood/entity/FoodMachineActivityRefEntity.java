@@ -41,6 +41,12 @@ public class FoodMachineActivityRefEntity implements Serializable {
 	private Date createTime;
 
 	/**
+	 * 活动是否有效 1.是 2.否
+	 */
+	@TableField(exist = false)
+	private Integer isUseble;
+
+	/**
 	 * 1.关联 2.否
 	 */
 	@TableField(exist = false)
@@ -58,6 +64,14 @@ public class FoodMachineActivityRefEntity implements Serializable {
 
 	public void setRowId(Integer rowId) {
 		this.rowId = rowId;
+	}
+
+	public Integer getIsUseble() {
+		return isUseble;
+	}
+
+	public void setIsUseble(Integer isUseble) {
+		this.isUseble = isUseble;
 	}
 
 	/**

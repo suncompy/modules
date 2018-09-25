@@ -90,6 +90,10 @@ public class FoodMachineEntity implements Serializable {
 	 */
 	private Long maintenanceMan;
 	/**
+	 * 机器网络状态
+	 */
+	private String netStatus;
+	/**
 	 * 描述
 	 */
 	private String remark;
@@ -217,6 +221,15 @@ public class FoodMachineEntity implements Serializable {
 	public Integer getCatId() {
 		return catId;
 	}
+
+	public String getNetStatus() {
+		return netStatus;
+	}
+
+	public void setNetStatus(String netStatus) {
+		this.netStatus = netStatus;
+	}
+
 	/**
 	 * 设置：合作公司ID
 	 */

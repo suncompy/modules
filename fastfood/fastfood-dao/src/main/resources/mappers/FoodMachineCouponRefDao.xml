@@ -19,6 +19,7 @@
         <result property="total" column="total"/>
         <result property="couponName" column="coupon_name"/>
         <result property="isRef" column="is_ref"/>
+        <result property="isUseble" column="is_useble"/>
     </resultMap>
 
     <select id="findMacCouponListByMacId" resultMap="findfoodMachineCouponRefMap">
@@ -33,7 +34,12 @@
             2
             ELSE
             1
-            END AS is_ref
+            END AS is_ref,
+            CASE
+            WHEN date_add(c.start_time, interval c.period day)>=now()
+             THEN 1
+            ELSE 2
+            END AS is_useble
             FROM
             `operate_coupon` c
             LEFT JOIN (
@@ -44,12 +50,5 @@
             WHERE
             mac_id=#{macId}
             ) r ON c.id = r.coupon_id
-            AND (
-            c.period > 0
-            OR (
-            SYSDATE() > c.start_get_time
-            AND SYSDATE() &lt; c.end_get_time
-            )
-        )
     </select>
 </mapper>

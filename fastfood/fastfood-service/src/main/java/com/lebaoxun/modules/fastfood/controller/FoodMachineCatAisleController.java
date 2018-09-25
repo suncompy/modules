@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
+import com.lebaoxun.modules.fastfood.service.FoodMachineAisleService;
+import com.lebaoxun.modules.fastfood.service.FoodMachineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +32,8 @@ import com.lebaoxun.soa.core.redis.lock.RedisLock;
  */
 @RestController
 public class FoodMachineCatAisleController {
+    @Autowired
+    private FoodMachineService foodMachineService;
     @Autowired
     private FoodMachineCatAisleService foodMachineCatAisleService;
 
@@ -59,6 +64,19 @@ public class FoodMachineCatAisleController {
                                      @RequestBody List<FoodMachineCatAisleEntity> catAisleEntityList){
         if (catAisleEntityList==null||catAisleEntityList.size()==0)
             return ResponseMessage.error("60001","货道数据不能为空！");
+        //如果机器分类有使用，如其它机器有用到，则不能进行此操作
+        for (int i=0;i<catAisleEntityList.size();i++){
+            FoodMachineCatAisleEntity e=catAisleEntityList.get(i);
+            if (e.getId() != null && e.getId() > 0) {
+                EntityWrapper<FoodMachineEntity> entityWrapper=new EntityWrapper<FoodMachineEntity>();
+                entityWrapper.eq("cat_id",e.getCatId());
+                List<FoodMachineEntity> foodMachineEntitis=foodMachineService.selectList(entityWrapper);
+                if (foodMachineEntitis!=null&&foodMachineEntitis.size()>0){
+                   return ResponseMessage.error("60002","该机器分类已经有机器关联，不能进行货道修改！");
+                }
+                break;
+            }
+        }
         catAisleEntityList.forEach(e->{
             if (e.getId()!=null&&e.getId()>0){//修改
                 foodMachineCatAisleService.updateById(e);

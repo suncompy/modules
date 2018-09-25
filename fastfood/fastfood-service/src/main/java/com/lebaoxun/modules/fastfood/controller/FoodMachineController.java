@@ -1,10 +1,6 @@
 package com.lebaoxun.modules.fastfood.controller;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -167,6 +163,20 @@ public class FoodMachineController {
     		@RequestParam(value="lat",required=false) Double lat,
     		@RequestParam(value="lng",required=false) Double lng){
     	return ResponseMessage.ok(foodMachineService.search(keyword,lat,lng));
+    }
+    /**
+     * 更新机器网络状态
+     */
+    @RequestMapping("/fastfood/foodmachine/updateMacNetStatus")
+    ResponseMessage updateMacNetStatus(@RequestParam("macCode")String macCode){
+        FoodMachineEntity machineEntity=new FoodMachineEntity();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        machineEntity.setNetStatus(sdf.format(date));
+        EntityWrapper<FoodMachineEntity> macWrapper=new EntityWrapper<FoodMachineEntity>();
+        macWrapper.eq("IMEI",macCode);
+        foodMachineService.update(machineEntity,macWrapper);
+        return ResponseMessage.ok();
     }
 
 }
