@@ -33,6 +33,9 @@
 		<result property="createBy" column="create_by" />
 		<result property="updateBy" column="update_by" />
 		<result property="updateTime" column="update_time" />
+		<result property="lng" column="lng" />
+		<result property="lat" column="lat" />
+		<result property="juli" column="juli" />
 		<collection property="activitys" ofType="String" column="activity">
     	</collection>
 
@@ -52,7 +55,8 @@
 		manager_id,
 		replenish_man, picking_man, maintenance_man,remark,
 		create_time,create_by,
-		update_time, update_by)
+		update_time, update_by,
+		lng,lat)
 		VALUES
 		(
 		#{id}, #{imei},#{name},
@@ -63,7 +67,8 @@
 		#{managerId},
 		#{replenishMan},#{pickingMan},#{maintenanceMan},#{remark},
 		#{createTime}, #{createBy},
-		#{updateTime}, #{updateBy});
+		#{updateTime}, #{updateBy},
+		#{lng},#{lat});
 	</insert>
 	
 	<select id="findByRandom" resultMap="foodMachineMap">
@@ -72,7 +77,8 @@
 			mac.name,
 			mac.area_code,mac.IMEI,mac.pos,
 			mac.`status`,mac.id,
-			mac.address
+			mac.address,mac.lng,
+			mac.lat
 		FROM
 		   food_machine as mac
 			left join food_machine_activity_ref as
@@ -92,8 +98,31 @@
 		mac.name,
 		mac.area_code,mac.IMEI,mac.pos,
 		mac.`status`,mac.id,
-		mac.address
-		
+		mac.address,mac.lng,
+		mac.lat
+		<if test="lat != null and lng != null">
+		    ,ROUND(
+		        6378.138 * 2 * ASIN(
+		            SQRT(
+		                POW(
+		                    SIN(
+		                        (
+		                            40.0497810000 * PI() / 180 - lat * PI() / 180
+		                        ) / 2
+		                    ),
+		                    2
+		                ) + COS(40.0497810000 * PI() / 180) * COS(lat * PI() / 180) * POW(
+		                    SIN(
+		                        (
+		                            116.3424590000 * PI() / 180 - lng * PI() / 180
+		                        ) / 2
+		                    ),
+		                    2
+		                )
+		            )
+		        ) * 1000
+	    	) AS juli
+		</if>
 		from food_machine as mac
 		left join food_machine_activity_ref as
 		mac_activity on
@@ -101,6 +130,9 @@
 		= mac.id
 		where mac.area_code =
 		#{areaCode}
+		<if test="lat != null and lng != null">
+		    ORDER BY juli ASC
+		</if>
 	</select>
 
 	<select id="findByMacId" resultMap="foodMachineMap">
@@ -112,7 +144,8 @@
 		mac.pos,
 		mac.`status`,
 		mac.id,
-		mac.address
+		mac.address,mac.lng,
+		mac.lat
 		
 		<!-- ,product_cat.icon,
 		product_cat.id as cat_id,
@@ -135,7 +168,8 @@
 			mac.notice,
 			mac.cat_id,
 			cat.`name` AS cat_name,
-			mac.address
+			mac.address,mac.lng,
+			mac.lat
 		FROM
 			food_machine AS mac
 		LEFT JOIN food_machine_product_cat AS cat ON mac.id = cat.mac_id
@@ -195,11 +229,42 @@
 			mac.notice,
 			mac.cat_id AS catId,
 			cat.`name` AS catName,
-			mac.address 
+			mac.address ,mac.lng,
+			mac.lat
+			<if test="lat != null and lng != null">
+		    ,ROUND(
+		        6378.138 * 2 * ASIN(
+		            SQRT(
+		                POW(
+		                    SIN(
+		                        (
+		                            40.0497810000 * PI() / 180 - lat * PI() / 180
+		                        ) / 2
+		                    ),
+		                    2
+		                ) + COS(40.0497810000 * PI() / 180) * COS(lat * PI() / 180) * POW(
+		                    SIN(
+		                        (
+		                            116.3424590000 * PI() / 180 - lng * PI() / 180
+		                        ) / 2
+		                    ),
+		                    2
+		                )
+		            )
+		        ) * 1000
+	    	) AS juli
+		</if>
 		from food_machine_aisle as aisle
 		left join food_product_cat as cat on cat.id = aisle.product_cat_id
 		left join food_machine as mac on mac.id = aisle.mac_id
-		where cat.keyword like CONCAT(CONCAT('%',#{keyword},'%')) or mac.`name` like CONCAT(CONCAT('%',#{keyword},'%'));
+		where 
+			cat.keyword like CONCAT(CONCAT('%',#{keyword},'%')) 
+			or 
+			mac.`name` like CONCAT(CONCAT('%',#{keyword},'%'))
+			<if test="lat != null and lng != null">
+			    ORDER BY juli ASC
+			</if>
+		;
 	</select>
 	
 	<select id="searchMacProductByKeyword" resultMap="searchMap">
@@ -210,8 +275,31 @@
 		mac.IMEI AS macCode,
 		mac.area_code as areaCode,
 		mac.notice,
-		mac.cat_id AS catId,
-	
+		mac.cat_id AS catId,mac.lng,
+		mac.lat,
+		<if test="lat != null and lng != null">
+		    ROUND(
+		        6378.138 * 2 * ASIN(
+		            SQRT(
+		                POW(
+		                    SIN(
+		                        (
+		                            40.0497810000 * PI() / 180 - lat * PI() / 180
+		                        ) / 2
+		                    ),
+		                    2
+		                ) + COS(40.0497810000 * PI() / 180) * COS(lat * PI() / 180) * POW(
+		                    SIN(
+		                        (
+		                            116.3424590000 * PI() / 180 - lng * PI() / 180
+		                        ) / 2
+		                    ),
+		                    2
+		                )
+		            )
+		        ) * 1000
+	    	) AS juli,
+		</if>
 		aisle.id as aisleId, aisle.stock as stock, aisle.price, aisle.product_cat_id as productCatId,
 		
 		product.id as productId,product.name as productName,product.materials as materials,
@@ -226,7 +314,11 @@
 		from food_machine_aisle as aisle
 		left join food_product as product on product.id = aisle.product_id
 		left join food_machine as mac on mac.id = aisle.mac_id
-		where product.keyword like CONCAT(CONCAT('%',#{keyword},'%'));
+		where product.keyword like CONCAT(CONCAT('%',#{keyword},'%'))
+		<if test="lat != null and lng != null">
+		    ORDER BY juli ASC
+		</if>
+		;
 	</select>
 	
 	<resultMap
@@ -238,6 +330,9 @@
 		<result property="address" column="address" />
 		<result property="catId" column="catId" />
 		<result property="catName" column="catName" />
+		<result property="lng" column="lng" />
+		<result property="lat" column="lat" />
+		<result property="juli" column="juli" />
 		<collection property="products" ofType="java.util.Map" javaType="java.util.ArrayList">
 			<result property="aisleId" column="aisleId"/>
 			<result property="stock" column="stock"/>

@@ -1,5 +1,6 @@
 package com.lebaoxun.modules.account.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
@@ -62,6 +63,18 @@ public class UserAddressEntity implements Serializable {
 	 * 创建时间
 	 */
 	private Date createTime;
+	
+	/**
+	 * 经度
+	 */
+	private Double lat;
+	/**
+	 * 纬度
+	 */
+	private Double lng;
+	
+	@TableField(exist=false)
+	private String fulladdress;
 
 	/**
 	 * 设置：
@@ -183,5 +196,22 @@ public class UserAddressEntity implements Serializable {
 	public void setSex(Integer sex) {
 		this.sex = sex;
 	}
-	
+	public String getFulladdress() {
+		return fulladdress;
+	}
+	public void setFulladdress(String fulladdress) {
+		this.fulladdress = fulladdress;
+	}
+	public Double getLat() {
+		return lat;
+	}
+	public void setLat(Double lat) {
+		this.lat = lat;
+	}
+	public Double getLng() {
+		return lng;
+	}
+	public void setLng(Double lng) {
+		this.lng = lng;
+	}
 }

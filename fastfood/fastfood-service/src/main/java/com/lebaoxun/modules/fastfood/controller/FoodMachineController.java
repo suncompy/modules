@@ -1,19 +1,11 @@
 package com.lebaoxun.modules.fastfood.controller;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.lebaoxun.commons.exception.I18nMessageException;
-import com.lebaoxun.commons.utils.AddressParse;
-import com.lebaoxun.modules.fastfood.entity.FoodMachineAisleEntity;
-import com.lebaoxun.modules.fastfood.entity.FoodMachineCatAisleEntity;
-import com.lebaoxun.modules.fastfood.entity.FoodMachineCatEntity;
-import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
-import com.lebaoxun.modules.fastfood.service.FoodMachineCatService;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.map.HashedMap;
-import com.lebaoxun.commons.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,10 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
-import com.lebaoxun.modules.fastfood.service.FoodMachineService;
-import com.lebaoxun.commons.utils.PageUtils;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineCatEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
+import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
+import com.lebaoxun.modules.fastfood.service.FoodMachineCatService;
+import com.lebaoxun.modules.fastfood.service.FoodMachineService;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
@@ -125,8 +121,10 @@ public class FoodMachineController {
      * @return
      */
     @RequestMapping("/fastfood/foodmachine/findByAreaCode")
-    ResponseMessage findByAreaCode(@RequestParam("areaCode")String areaCode){
-    	return ResponseMessage.ok(foodMachineService.findByAreaCode(areaCode));
+    ResponseMessage findByAreaCode(@RequestParam("areaCode")String areaCode,
+    		@RequestParam(value="lat",required=false) Double lat,
+    		@RequestParam(value="lng",required=false) Double lng){
+    	return ResponseMessage.ok(foodMachineService.findByAreaCode(areaCode,lat,lng));
     }
     
     /**
@@ -165,8 +163,10 @@ public class FoodMachineController {
      * @return
      */
     @RequestMapping("/fastfood/foodmachine/search")
-    ResponseMessage search(@RequestParam("keyword") String keyword){
-    	return ResponseMessage.ok(foodMachineService.search(keyword));
+    ResponseMessage search(@RequestParam("keyword") String keyword,
+    		@RequestParam(value="lat",required=false) Double lat,
+    		@RequestParam(value="lng",required=false) Double lng){
+    	return ResponseMessage.ok(foodMachineService.search(keyword,lat,lng));
     }
 
 }

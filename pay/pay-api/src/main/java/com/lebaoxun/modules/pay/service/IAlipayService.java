@@ -41,4 +41,7 @@ public interface IAlipayService {
 
 	@RequestMapping(value = "/alipay/notify")
 	String notify(@RequestParam Map<String, String> params);
+	
+	@RequestMapping(value="/alipay/refund")
+	ResponseMessage refund(@RequestParam("orderNo")String orderNo);
 }

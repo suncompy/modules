@@ -3,6 +3,7 @@ package com.lebaoxun.modules.fastfood.service;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineActivityRefEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineCouponRefEntity;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineProActivityRefEntity;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,7 +64,9 @@ public interface IFoodMachineService {
      * @return
      */
     @RequestMapping("/fastfood/foodmachine/findByAreaCode")
-    ResponseMessage findByAreaCode(@RequestParam("areaCode")String areaCode);
+    ResponseMessage findByAreaCode(@RequestParam("areaCode")String areaCode,
+    		@RequestParam(value="lat",required=false) Double lat,
+    		@RequestParam(value="lng",required=false) Double lng);
     
     /**
      * 查询机器详情
@@ -85,7 +88,9 @@ public interface IFoodMachineService {
      * @return
      */
     @RequestMapping("/fastfood/foodmachine/search")
-    ResponseMessage search(@RequestParam("keyword") String keyword);
+    ResponseMessage search(@RequestParam("keyword") String keyword,
+    		@RequestParam(value="lat",required=false) Double lat,
+    		@RequestParam(value="lng",required=false) Double lng);
 
     /**
      * 关联机器优惠券

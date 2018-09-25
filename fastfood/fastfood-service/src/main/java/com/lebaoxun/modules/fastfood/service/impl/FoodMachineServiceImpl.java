@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 import com.lebaoxun.commons.utils.StringUtils;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,6 +28,7 @@ import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineAisleService;
 import com.lebaoxun.modules.fastfood.service.FoodMachineCatAisleService;
 import com.lebaoxun.modules.fastfood.service.FoodMachineService;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -95,7 +98,10 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
         if(StringUtils.isEmpty(xy)){
             throw new I18nMessageException("100005", "获取经纬度失败!");
         }
+        String pos[] = xy.split(" ");
         foodMachine.setPos(xy);
+        foodMachine.setLat(Double.parseDouble(pos[1]));
+        foodMachine.setLng(Double.parseDouble(pos[0]));
     }
     public void batchSycMachineCatAisle(Long adminId,FoodMachineEntity foodMachine){
         EntityWrapper<FoodMachineCatAisleEntity> macCatWrapper=new EntityWrapper<FoodMachineCatAisleEntity>();
@@ -122,18 +128,18 @@ public class FoodMachineServiceImpl extends ServiceImpl<FoodMachineDao, FoodMach
     }
     
     @Override
-    public List<Map<String, Object>> search(String keyword) {
+    public List<Map<String, Object>> search(String keyword,
+ 		   Double lat,Double lng) {
     	// TODO Auto-generated method stub
     	List<Map<String, Object>> search = new ArrayList<Map<String, Object>>();
-    	search.addAll(this.baseMapper.searchMacByKeyword(keyword));
-    	search.addAll(this.baseMapper.searchMacProductByKeyword(keyword));
+    	search.addAll(this.baseMapper.searchMacByKeyword(keyword,lat,lng));
     	return search;
     }
     
     @Override
-    public List<FoodMachineEntity> findByAreaCode(String areaCode) {
+    public List<FoodMachineEntity> findByAreaCode(String areaCode,Double lat,Double lng) {
     	// TODO Auto-generated method stub
-    	List<FoodMachineEntity> list = this.baseMapper.findByAreaCode(areaCode);
+    	List<FoodMachineEntity> list = this.baseMapper.findByAreaCode(areaCode,lat,lng);
     	if(list == null){
     		list = new ArrayList<FoodMachineEntity>();
     	}
