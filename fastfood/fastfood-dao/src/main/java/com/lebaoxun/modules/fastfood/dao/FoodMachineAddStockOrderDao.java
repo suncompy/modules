@@ -25,4 +25,9 @@ public interface FoodMachineAddStockOrderDao extends BaseMapper<FoodMachineAddSt
     List<Map<String,Object>> queryPickingManList(@Param("userName")String userName,
                                                    @Param("mobile")String mobile,
                                                    @Param("createTime")String createTime);
+
+    List<Map<String,Object>> queryPickingOrderList(@Param("status")String status,
+                                                   @Param("macInfo")String macInfo,
+                                                   @Param("id")String id,
+                                                   @Param("sendOrderTime")String sendOrderTime);
 }
