@@ -1,4 +1,4 @@
-package com.lebaoxun.pay.service.hystrix;
+package com.lebaoxun.modules.manager.service.hystrix;
 
 import java.util.Map;
 
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
-import com.lebaoxun.pay.service.ISysLogService;
+import com.lebaoxun.modules.manager.service.ISysLogService;
 
 @Component
 public class SysLogServiceHystrix implements ISysLogService {

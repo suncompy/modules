@@ -72,7 +72,7 @@ public class PayListener {
 			
 			Long user_id = message.getLong("user_id");
 			Long buy_time = message.getLong("buy_time");
-			logger.info(
+			logger.debug(
 					"out_trade_no={},buy_time={},platform={},total_fee={},recharge_fee={},trade_no={},mercno={},group={},scene={}",
 					out_trade_no, buy_time, platform, trade_type, total_fee,
 					recharge_fee, trade_no, mercno, group,scene);

@@ -113,6 +113,7 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
     }
     
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public boolean deleteBatchIds(Collection<? extends Serializable> idList) {
     	// TODO Auto-generated method stub
     	List<FoodProductEntity> list = this.baseMapper.selectBatchIds(idList);
@@ -120,5 +121,24 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
     		foodProductMaterialRcrtDao.delete(new EntityWrapper<FoodProductMaterialRcrtEntity>().eq("product_id", fp.getId()));
     	}
     	return super.deleteBatchIds(idList);
+    }
+    
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void addStock(Integer id, Integer stock) {
+    	// TODO Auto-generated method stub
+    	FoodProductEntity product = this.baseMapper.selectById(id);
+    	
+    	product.setTotalStock(product.getTotalStock() + stock);
+    	this.baseMapper.updateById(product);
+    }
+    
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void deductionStock(Integer id, Integer stock) {
+    	// TODO Auto-generated method stub
+    	FoodProductEntity product = this.baseMapper.selectById(id);
+    	product.setTotalStock(product.getTotalStock() - stock);
+    	this.baseMapper.updateById(product);
     }
 }

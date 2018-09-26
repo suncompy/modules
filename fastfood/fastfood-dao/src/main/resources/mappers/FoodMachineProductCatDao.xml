@@ -13,7 +13,13 @@
         <result property="createBy" column="create_by"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
+        <result property="orderBy" column="order_by"/>
     </resultMap>
 
+    <select id="findCatByMacId" resultMap="foodMachineProductCatMap">
+        select cat.`name`,cat.icon,cat.id from food_machine_aisle as aisle
+		left join food_machine_product_cat as cat on cat.id = aisle.product_cat_id
+		where aisle.mac_id = #{macId} and cat.id is not null by order_by;
+    </select>
 
 </mapper>

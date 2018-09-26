@@ -21,5 +21,9 @@ public interface FoodProductService extends IService<FoodProductEntity> {
     List<FoodProductEntity> findProductInfoByParams(Map<String, Object> params);
     
     List<FoodProductEntity> findAllProductByCat(Integer catId);
+    
+    void addStock(Integer id,Integer stock);
+    
+    void deductionStock(Integer id,Integer stock);
 }
 

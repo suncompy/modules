@@ -50,6 +50,11 @@ public class FoodMachineProductCatEntity implements Serializable {
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
+	
+	/**
+	 * 排序值
+	 */
+	private Integer orderBy;
 
 	@TableField(exist = false)
 	private String createTimeStr;
@@ -167,5 +172,11 @@ public class FoodMachineProductCatEntity implements Serializable {
 	}
 	public void setMacId(Integer macId) {
 		this.macId = macId;
+	}
+	public Integer getOrderBy() {
+		return orderBy;
+	}
+	public void setOrderBy(Integer orderBy) {
+		this.orderBy = orderBy;
 	}
 }

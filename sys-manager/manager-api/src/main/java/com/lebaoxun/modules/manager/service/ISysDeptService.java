@@ -1,4 +1,4 @@
-package com.lebaoxun.pay.service;
+package com.lebaoxun.modules.manager.service;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.manager.sys.entity.SysDeptEntity;
-import com.lebaoxun.pay.service.hystrix.SysDeptServiceHystrix;
+import com.lebaoxun.modules.manager.service.hystrix.SysDeptServiceHystrix;
 
 @FeignClient(value="manager-service",fallback=SysDeptServiceHystrix.class)
 public interface ISysDeptService {

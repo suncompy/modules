@@ -55,6 +55,16 @@ public class FoodProductServiceHystrix implements IFoodProductService {
 	public ResponseMessage findAllProductByCat(Integer catId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+
+	@Override
+	public ResponseMessage addStock(Integer id, Integer stock) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
+	@Override
+	public ResponseMessage deductionStock(Integer id, Integer stock) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
     
 }
 

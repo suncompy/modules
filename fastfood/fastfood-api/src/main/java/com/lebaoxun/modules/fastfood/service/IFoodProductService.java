@@ -1,16 +1,16 @@
 package com.lebaoxun.modules.fastfood.service;
 
+import java.util.Map;
+
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.modules.fastfood.entity.FoodProductEntity;
 import com.lebaoxun.modules.fastfood.service.hystrix.FoodProductServiceHystrix;
-import com.lebaoxun.commons.exception.ResponseMessage;
-
-import java.util.Map;
 
 /**
  * 餐品表
@@ -58,5 +58,12 @@ public interface IFoodProductService {
     @RequestMapping("/fastfood/foodproduct/delete")
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids);
     
+    @RequestMapping("/fastfood/foodproduct/addStock")
+    ResponseMessage addStock(@RequestParam("id")Integer id,
+    		@RequestParam("stock") Integer stock);
+    
+    @RequestMapping("/fastfood/foodproduct/deductionStock")
+    ResponseMessage deductionStock(@RequestParam("id")Integer id,
+    		@RequestParam("stock") Integer stock);
 }
 

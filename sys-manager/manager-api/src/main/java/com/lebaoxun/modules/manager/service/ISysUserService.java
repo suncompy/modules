@@ -1,4 +1,4 @@
-package com.lebaoxun.pay.service;
+package com.lebaoxun.modules.manager.service;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.manager.sys.entity.SysUserEntity;
-import com.lebaoxun.pay.service.hystrix.SysUserServiceHystrix;
+import com.lebaoxun.modules.manager.service.hystrix.SysUserServiceHystrix;
 
 @FeignClient(value="manager-service",fallback=SysUserServiceHystrix.class)
 public interface ISysUserService {
@@ -61,4 +61,12 @@ public interface ISysUserService {
 	@RequestMapping("/sys/user/delete")
 	public ResponseMessage delete(@RequestParam("userIds") Long[] userIds,
 			@RequestParam("userId")Long userId);
+	
+	/**
+     * 修改最后登录时间
+     * @param userId
+     */
+	@RequestMapping("/sys/user/modifyLastLogin")
+    ResponseMessage modifyLastLogin(@RequestParam("adminId") Long adminId,
+    		@RequestParam("lastLoginTime") Long lastLoginTime);	
 }

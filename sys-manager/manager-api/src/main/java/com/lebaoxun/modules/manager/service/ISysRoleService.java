@@ -1,4 +1,4 @@
-package com.lebaoxun.pay.service;
+package com.lebaoxun.modules.manager.service;
 
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.manager.sys.entity.SysRoleEntity;
-import com.lebaoxun.pay.service.hystrix.SysRoleServiceHystrix;
+import com.lebaoxun.modules.manager.service.hystrix.SysRoleServiceHystrix;
 
 @FeignClient(value="manager-service",fallback=SysRoleServiceHystrix.class)
 public interface ISysRoleService {

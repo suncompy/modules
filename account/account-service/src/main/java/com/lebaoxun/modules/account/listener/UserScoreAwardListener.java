@@ -48,7 +48,7 @@ public class UserScoreAwardListener {
 		String text = body.replace("\\\"", "\"");
 		JSONObject message = JSONObject.parseObject(text);
 		
-		logger.info("rabbit|sendContractDirect|message={}",message);
+		logger.debug("rabbit|sendContractDirect|message={}",message);
 		
 		
 		try {

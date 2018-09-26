@@ -1,4 +1,4 @@
-package com.lebaoxun.pay.service.hystrix;
+package com.lebaoxun.modules.manager.service.hystrix;
 
 import java.util.List;
 
@@ -6,51 +6,46 @@ import org.springframework.stereotype.Component;
 
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
-import com.lebaoxun.manager.sys.entity.SysMenuEntity;
-import com.lebaoxun.manager.sys.entity.SysUserButton;
-import com.lebaoxun.pay.service.ISysMenuService;
+import com.lebaoxun.manager.sys.entity.SysDeptEntity;
+import com.lebaoxun.modules.manager.service.ISysDeptService;
 
 @Component
-public class SysMenuServiceHystrix implements ISysMenuService {
+public class SysDeptServiceHystrix implements ISysDeptService {
 
 	@Override
-	public ResponseMessage nav(Long userId) {
+	public List<SysDeptEntity> list() {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public List<SysMenuEntity> list() {
+	public ResponseMessage select(Long userId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage select() {
+	public ResponseMessage info(Long userId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage info(Long menuId) {
+	public ResponseMessage infoByDeptId(Long deptId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage save(SysMenuEntity menu) {
+	public ResponseMessage save(SysDeptEntity dept) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage update(SysMenuEntity menu) {
+	public ResponseMessage update(SysDeptEntity dept) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage delete(long menuId) {
+	public ResponseMessage delete(long deptId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
-	@Override
-	public List<SysUserButton> findButtonByUserId(Long userId, String menuUrl) {
-		throw new I18nMessageException("502","服务器异常，请稍后重试");
-	}
 
 }

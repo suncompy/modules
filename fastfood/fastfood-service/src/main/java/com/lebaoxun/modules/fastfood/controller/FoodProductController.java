@@ -2,7 +2,6 @@ package com.lebaoxun.modules.fastfood.controller;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lebaoxun.commons.exception.ResponseMessage;
+import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodProductEntity;
 import com.lebaoxun.modules.fastfood.service.FoodProductService;
-import com.lebaoxun.commons.utils.PageUtils;
-import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 
@@ -98,6 +97,22 @@ public class FoodProductController {
     ResponseMessage delete(@RequestParam("adminId")Long adminId,@RequestBody Integer[] ids){
 		foodProductService.deleteBatchIds(Arrays.asList(ids));
         return ResponseMessage.ok();
+    }
+    
+    @RequestMapping("/fastfood/foodproduct/addStock")
+    @RedisLock(value="fastfood:foodproduct:addStock:lock:#arg0")
+    ResponseMessage addStock(@RequestParam("id")Integer id,
+    		@RequestParam("stock") Integer stock){
+    	foodProductService.addStock(id, stock);
+    	return ResponseMessage.ok();
+    }
+    
+    @RequestMapping("/fastfood/foodproduct/deductionStock")
+    @RedisLock(value="fastfood:foodproduct:deductionStock:lock:#arg0")
+    ResponseMessage deductionStock(@RequestParam("id")Integer id,
+    		@RequestParam("stock") Integer stock){
+    	foodProductService.deductionStock(id, stock);
+    	return ResponseMessage.ok();
     }
 
 }

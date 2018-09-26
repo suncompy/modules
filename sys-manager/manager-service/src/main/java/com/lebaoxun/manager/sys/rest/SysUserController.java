@@ -18,6 +18,7 @@ package com.lebaoxun.manager.sys.rest;
 
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ import com.lebaoxun.commons.utils.ValidatorUtils;
 import com.lebaoxun.manager.sys.entity.SysUserEntity;
 import com.lebaoxun.manager.sys.service.SysUserRoleService;
 import com.lebaoxun.manager.sys.service.SysUserService;
+import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
 /**
  * 系统用户
@@ -157,4 +159,19 @@ public class SysUserController extends AbstractController {
 		
 		return ResponseMessage.ok();
 	}
+	
+	/**
+     * 修改最后登录时间
+     * @param userId
+     */
+	@RequestMapping("/sys/user/modifyLastLogin")
+	@RedisLock(value="sys:user:modifyLastLogin:lock:#arg0")
+    ResponseMessage modifyLastLogin(@RequestParam("adminId") Long adminId,
+    		@RequestParam("lastLoginTime") Long lastLoginTime){
+		SysUserEntity entity = new SysUserEntity();
+		entity.setUserId(adminId);
+		entity.setLastLoginTime(new Date(lastLoginTime));
+		sysUserService.updateById(entity);
+        return ResponseMessage.ok();
+    }
 }

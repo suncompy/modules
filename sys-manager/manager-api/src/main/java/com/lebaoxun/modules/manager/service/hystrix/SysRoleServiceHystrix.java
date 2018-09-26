@@ -1,51 +1,45 @@
-package com.lebaoxun.pay.service.hystrix;
+package com.lebaoxun.modules.manager.service.hystrix;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
 import com.lebaoxun.commons.exception.I18nMessageException;
 import com.lebaoxun.commons.exception.ResponseMessage;
-import com.lebaoxun.manager.sys.entity.SysDeptEntity;
-import com.lebaoxun.pay.service.ISysDeptService;
+import com.lebaoxun.manager.sys.entity.SysRoleEntity;
+import com.lebaoxun.modules.manager.service.ISysRoleService;
 
 @Component
-public class SysDeptServiceHystrix implements ISysDeptService {
+public class SysRoleServiceHystrix implements ISysRoleService {
 
 	@Override
-	public List<SysDeptEntity> list() {
+	public ResponseMessage list(Map<String, Object> params) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage select(Long userId) {
+	public ResponseMessage select() {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage info(Long userId) {
+	public ResponseMessage info(Long roleId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage infoByDeptId(Long deptId) {
+	public ResponseMessage save(SysRoleEntity role) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage save(SysDeptEntity dept) {
+	public ResponseMessage update(SysRoleEntity role) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
 	@Override
-	public ResponseMessage update(SysDeptEntity dept) {
+	public ResponseMessage delete(Long[] roleIds) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
-
-	@Override
-	public ResponseMessage delete(long deptId) {
-		throw new I18nMessageException("502","服务器异常，请稍后重试");
-	}
-
 
 }

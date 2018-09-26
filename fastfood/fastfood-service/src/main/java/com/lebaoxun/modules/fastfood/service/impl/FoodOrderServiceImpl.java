@@ -358,8 +358,8 @@ public class FoodOrderServiceImpl extends
 				.findUnderwayActivity();
 		OperateActivityKeepDiscountEntity keepDiscountActivity = operateActivityKeepDiscountDao
 				.findUnderwayActivity();
-		OperateActivityPayCashBackEntity payCashBackEntity = operateActivityPayCashBackDao
-				.findUnderwayActivity();
+		/*OperateActivityPayCashBackEntity payCashBackEntity = operateActivityPayCashBackDao
+				.findUnderwayActivity();*/
 
 		BigDecimal totalFee = new BigDecimal("0.00"), payAmount = new BigDecimal(
 				"0.00");
@@ -458,24 +458,6 @@ public class FoodOrderServiceImpl extends
 							}
 						}
 					}
-					
-					if(orderChild.getActivityId() == null){
-						if ("3".equals(aisle.get("activity"))
-								&& payCashBackEntity != null) {
-							Integer count = getActivityFor("3", payCashBackEntity.getId(), macId, productId, null, null);
-							logger.debug("activity 3 count={},personTime={}",count,payCashBackEntity.getPersonTime());
-							if(count < payCashBackEntity.getPersonTime()){//人数
-								BigDecimal amount = payCashBackEntity.getAmount();
-								BigDecimal activityFee = amount.subtract(amount.multiply(new BigDecimal(count)));
-								logger.debug("activity cal after fee={}",fee);
-								orderChild.setActivity("3");
-								orderChild.setActivityFee(activityFee);
-								orderChild.setActivityId(payCashBackEntity.getId());
-								isCalProductActivity = true;
-								isCanUseCoupon = false;
-							}
-						}
-					}
 				}
 			}
 			
@@ -536,22 +518,6 @@ public class FoodOrderServiceImpl extends
 								order.setActivityType("2");
 								isCanUseCoupon = false;
 							}
-						}
-					}
-				}
-				
-				if(order.getActivityId() == null){
-					if(mac.getActivitys().contains("3") && payCashBackEntity != null){
-						Integer count = getActivityFor("3", payCashBackEntity.getId(), order.getMacId(), null, null, null);
-						logger.debug("mac|activity 3 count={},personTime={}",count,payCashBackEntity.getPersonTime());
-						if(count < payCashBackEntity.getPersonTime()){//人数
-							BigDecimal amount = payCashBackEntity.getAmount();
-							BigDecimal activityFee = amount.subtract(amount.multiply(new BigDecimal(count)));
-							logger.debug("mac|activity cal after payAmount={}",payAmount);
-							order.setActivityFee(activityFee);
-							order.setActivityId(payCashBackEntity.getId());
-							order.setActivityType("3");
-							isCanUseCoupon = false;
 						}
 					}
 				}
@@ -833,14 +799,6 @@ public class FoodOrderServiceImpl extends
 				return null;
 			}
 		}
-		if("3".equals(activity)){
-			OperateActivityPayCashBackEntity payCashBackEntity = operateActivityPayCashBackDao
-					.selectById(activityId);
-			if(payCashBackEntity == null){
-				logger.info("payCashBackEntity is NULL");
-				return null;
-			}
-		}
 		HashOperations<String, String, String> operations = redisTemplate
 				.opsForHash();
 		String hashKey = "u_"+Long.toString(userId);
@@ -861,25 +819,6 @@ public class FoodOrderServiceImpl extends
 		Integer total = 0;
 		for(String item : values){
 			total += Integer.parseInt(item);
-		}
-		
-		if("3".equals(activity)){//通知返现队列
-			String logType = "ACTIVITY_ORDER_BACK_MONEY";
-			Map<String,String> pmessage = new HashMap<String,String>();
-			String unq = orderNo+"_"+activity+"_mac_"+macId;
-			if(productId != null){
-				unq += "product_" + productId;
-			}
-			pmessage.put("out_trade_no", orderNo);
-			pmessage.put("recharge_fee", backFee.toString());
-			pmessage.put("log_type", logType);
-			pmessage.put("descr", "活动返现");
-			pmessage.put("adjunctInfo", unq);
-			pmessage.put("user_id", userId+"");
-			pmessage.put("buy_time", buyTime);
-			pmessage.put("token", MD5.md5(logType.toString()+"_"+unq));
-			rabbitmqSender.sendContractDirect("account.balance.queue.award",
-					new Gson().toJson(pmessage));
 		}
 		
 		return total;

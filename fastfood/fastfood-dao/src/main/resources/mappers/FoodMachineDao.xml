@@ -107,14 +107,14 @@
 		                POW(
 		                    SIN(
 		                        (
-		                            40.0497810000 * PI() / 180 - lat * PI() / 180
+		                            #{lat} * PI() / 180 - lat * PI() / 180
 		                        ) / 2
 		                    ),
 		                    2
-		                ) + COS(40.0497810000 * PI() / 180) * COS(lat * PI() / 180) * POW(
+		                ) + COS(#{lat} * PI() / 180) * COS(lat * PI() / 180) * POW(
 		                    SIN(
 		                        (
-		                            116.3424590000 * PI() / 180 - lng * PI() / 180
+		                            #{lng} * PI() / 180 - lng * PI() / 180
 		                        ) / 2
 		                    ),
 		                    2
@@ -128,8 +128,9 @@
 		mac_activity on
 		mac_activity.mac_id
 		= mac.id
-		where mac.area_code =
-		#{areaCode}
+		<if test="areaCode != null">
+		where mac.area_code = #{areaCode}
+		</if>
 		<if test="lat != null and lng != null">
 		    ORDER BY juli ASC
 		</if>
@@ -284,14 +285,14 @@
 		                POW(
 		                    SIN(
 		                        (
-		                            40.0497810000 * PI() / 180 - lat * PI() / 180
+		                            #{lat} * PI() / 180 - lat * PI() / 180
 		                        ) / 2
 		                    ),
 		                    2
-		                ) + COS(40.0497810000 * PI() / 180) * COS(lat * PI() / 180) * POW(
+		                ) + COS(#{lat} * PI() / 180) * COS(lat * PI() / 180) * POW(
 		                    SIN(
 		                        (
-		                            116.3424590000 * PI() / 180 - lng * PI() / 180
+		                            #{lng} * PI() / 180 - lng * PI() / 180
 		                        ) / 2
 		                    ),
 		                    2

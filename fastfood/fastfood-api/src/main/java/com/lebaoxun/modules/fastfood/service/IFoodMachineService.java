@@ -64,7 +64,7 @@ public interface IFoodMachineService {
      * @return
      */
     @RequestMapping("/fastfood/foodmachine/findByAreaCode")
-    ResponseMessage findByAreaCode(@RequestParam("areaCode")String areaCode,
+    ResponseMessage findByAreaCode(@RequestParam(value="areaCode",required=false)String areaCode,
     		@RequestParam(value="lat",required=false) Double lat,
     		@RequestParam(value="lng",required=false) Double lng);
     

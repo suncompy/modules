@@ -25,7 +25,6 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 系统用户
@@ -93,6 +92,11 @@ public class SysUserEntity implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;
 
+	/**
+	 * 最后登录时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date lastLoginTime;
 	/**
 	 * 部门ID
 	 */
@@ -254,5 +258,13 @@ public class SysUserEntity implements Serializable {
 
 	public void setUserType(Integer userType) {
 		this.userType = userType;
+	}
+
+	public Date getLastLoginTime() {
+		return lastLoginTime;
+	}
+
+	public void setLastLoginTime(Date lastLoginTime) {
+		this.lastLoginTime = lastLoginTime;
 	}
 }

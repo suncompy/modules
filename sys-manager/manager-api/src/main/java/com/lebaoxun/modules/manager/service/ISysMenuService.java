@@ -1,4 +1,4 @@
-package com.lebaoxun.pay.service;
+package com.lebaoxun.modules.manager.service;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.manager.sys.entity.SysMenuEntity;
 import com.lebaoxun.manager.sys.entity.SysUserButton;
-import com.lebaoxun.pay.service.hystrix.SysMenuServiceHystrix;
+import com.lebaoxun.modules.manager.service.hystrix.SysMenuServiceHystrix;
 
 @FeignClient(value="manager-service",fallback=SysMenuServiceHystrix.class)
 public interface ISysMenuService {

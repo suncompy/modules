@@ -1,17 +1,16 @@
 package com.lebaoxun.modules.fastfood.service.impl;
 
-import com.lebaoxun.commons.utils.DateUtil;
-import com.lebaoxun.modules.fastfood.entity.FoodProductCatEntity;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.lebaoxun.commons.utils.DateUtil;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.utils.Query;
-
 import com.lebaoxun.modules.fastfood.dao.FoodMachineProductCatDao;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineProductCatEntity;
 import com.lebaoxun.modules.fastfood.service.FoodMachineProductCatService;
@@ -25,6 +24,7 @@ public class FoodMachineProductCatServiceImpl extends ServiceImpl<FoodMachinePro
         Page<FoodMachineProductCatEntity> page = this.selectPage(
                 new Query<FoodMachineProductCatEntity>(params).getPage(),
                 new EntityWrapper<FoodMachineProductCatEntity>()
+                .orderBy("create_time", false)
         );
         List<FoodMachineProductCatEntity> records = page.getRecords();
         if (records != null) {
@@ -35,4 +35,10 @@ public class FoodMachineProductCatServiceImpl extends ServiceImpl<FoodMachinePro
         }
         return new PageUtils(page);
     }
+
+	@Override
+	public List<FoodMachineProductCatEntity> findCatByMacId(Integer macId) {
+		// TODO Auto-generated method stub
+		return this.baseMapper.findCatByMacId(macId);
+	}
 }
