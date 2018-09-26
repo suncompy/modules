@@ -57,7 +57,7 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 	 */
 	private Integer type;
 
-	private Double price;
+	private Float price;
 
 	private Integer lineCatId;
 
@@ -121,11 +121,11 @@ public class FoodMachineAddStockOrderEntity implements Serializable {
 		this.productId = productId;
 	}
 
-	public Double getPrice() {
+	public Float getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(Float price) {
 		this.price = price;
 	}
 

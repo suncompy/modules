@@ -46,6 +46,8 @@ public class FoodMachineAddStockHeadEntity implements Serializable {
 	 * 备注
 	 */
 	private String note;
+	private Long createBy;
+	private Long updateBy;
 
 	/**
 	 * 设置：
@@ -130,5 +132,21 @@ public class FoodMachineAddStockHeadEntity implements Serializable {
 	 */
 	public String getNote() {
 		return note;
+	}
+
+	public Long getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(Long createBy) {
+		this.createBy = createBy;
+	}
+
+	public Long getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(Long updateBy) {
+		this.updateBy = updateBy;
 	}
 }
