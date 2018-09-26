@@ -30,4 +30,7 @@ public interface FoodMachineAddStockOrderDao extends BaseMapper<FoodMachineAddSt
                                                    @Param("macInfo")String macInfo,
                                                    @Param("id")String id,
                                                    @Param("sendOrderTime")String sendOrderTime);
+
+    List<Map<String,Object>> queryPickingLineByHeadId(@Param("status")String status,
+                                                   @Param("headId")String headId);
 }
