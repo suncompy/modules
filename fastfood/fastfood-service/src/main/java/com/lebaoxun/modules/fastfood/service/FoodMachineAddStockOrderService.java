@@ -22,5 +22,6 @@ public interface FoodMachineAddStockOrderService extends IService<FoodMachineAdd
     List<Map<String,Object>> queryReplenishManList(String userName,String mobile,String createTime);
     List<Map<String,Object>> queryPickingManList(String userName,String mobile,String createTime);
     List<Map<String,Object>> queryPickingOrderList(String status,String macInfo,String id,String sendOrderTime);
+    List<Map<String,Object>> queryPickingLineByHeadId(String status,String headId);
 }
 

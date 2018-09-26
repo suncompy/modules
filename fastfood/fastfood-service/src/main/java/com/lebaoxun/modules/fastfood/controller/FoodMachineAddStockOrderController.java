@@ -83,6 +83,8 @@ public class FoodMachineAddStockOrderController {
                     headEntity.setStatus(0);
                     headEntity.setPerformer(e.getPerformer());
                     headEntity.setSendOrderTime(new Date());
+                    headEntity.setCreateBy(adminId);
+                    headEntity.setUpdateBy(adminId);
                     foodMachineAddStockHeadService.insert(headEntity);
                     i++;
                 }
@@ -173,6 +175,21 @@ public class FoodMachineAddStockOrderController {
         int pageSize=100;
         int currPage=0;
         PageUtils page=new PageUtils(ReplenishOrderList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
+    }
+
+    /**
+     * 配货货道明细列表
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaddstockorder/queryPickingLineByHeadId")
+    ResponseMessage queryPickingLineByHeadId(@RequestParam(value = "status",required = false)String status,
+                                          @RequestParam(value = "headId",required = false)String headId){
+        List<Map<String,Object>> pickingLinList = foodMachineAddStockOrderService.queryPickingLineByHeadId(status,headId);
+        int totalCount=pickingLinList.size();
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(pickingLinList,totalCount,pageSize,0);
         return ResponseMessage.ok(page);
     }
 

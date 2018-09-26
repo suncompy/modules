@@ -64,8 +64,16 @@ public class FoodMachineAddStockHeadController {
     @RequestMapping("/fastfood/foodmachineaddstockhead/update")
     @RedisLock(value="fastfood:foodmachineaddstockhead:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineAddStockHeadEntity foodMachineAddStockHead){
-		foodMachineAddStockHeadService.updateById(foodMachineAddStockHead);
-        return ResponseMessage.ok();
+        try {
+            boolean ret=foodMachineAddStockHeadService.acceptPickingOrder(adminId,foodMachineAddStockHead);
+            if(ret)
+                return ResponseMessage.ok();
+            else
+                return ResponseMessage.error("60001","接受派单失败!");
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseMessage.error("60002",e.getMessage());
+        }
     }
 
     /**

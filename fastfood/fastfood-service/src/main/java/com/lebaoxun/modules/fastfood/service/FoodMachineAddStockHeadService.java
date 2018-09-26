@@ -3,6 +3,7 @@ package com.lebaoxun.modules.fastfood.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineAddStockHeadEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Map;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface FoodMachineAddStockHeadService extends IService<FoodMachineAddStockHeadEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    boolean acceptPickingOrder(Long userId,FoodMachineAddStockHeadEntity foodMachineAddStockHead);
 }
 
