@@ -80,5 +80,9 @@ public interface IFoodMachineAddStockOrderService {
                                           @RequestParam(value = "macInfo",required = false)String macInfo,
                                           @RequestParam(value = "id",required = false)String id,
                                           @RequestParam(value = "sendOrderTime",required = false)String sendOrderTime);
+
+    @RequestMapping("/fastfood/foodmachineaddstockorder/queryPickingLineByHeadId")
+    ResponseMessage queryPickingLineByHeadId(@RequestParam(value = "status",required = false)String status,
+                                             @RequestParam(value = "headId",required = false)String headId);
 }
 
