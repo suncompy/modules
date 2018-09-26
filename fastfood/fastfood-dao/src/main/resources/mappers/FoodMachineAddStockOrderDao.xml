@@ -104,7 +104,8 @@
             f.`name` as macName,
             f.address,
             f.`status` as macStatus,
-            h.send_order_time as sendOrderTime,
+            DATE_FORMAT(h.send_order_time,'%Y-%m-%d %H:%i:%s') as sendOrderTime,
+            NOW() as completeTime,
             h.`status`,
             h.note
             FROM
@@ -125,6 +126,34 @@
         </if>
         <if test="sendOrderTime != null and sendOrderTime!=''">
             and date_format(h.send_order_time, '%Y-%m-%d') = #{sendOrderTime}
+        </if>
+    </select>
+
+    <select id="queryPickingLineByHeadId" resultType="java.util.HashMap">
+        SELECT
+            l.id,
+            l.head_id,
+            l.aisle_id,
+            CONCAT(l.x,'-', l.y) AS xy,
+            l.price,
+            l.line_cat_id AS lineCatId,
+            l.product_id AS productId,
+            p.`name` AS productName,
+            l.stock,
+            l.size,
+            l.`add`
+        FROM
+            food_machine_add_stock_head h,
+            food_machine_add_stock_order l,
+            food_product p
+        WHERE
+             h.id = l.head_id
+        AND l.product_id = p.id
+        <if test="status != null and status!=''">
+            and h.status=#{status}
+        </if>
+        <if test="headId != null and headId!=''">
+            and l.head_id =#{headId}
         </if>
     </select>
 </mapper>
