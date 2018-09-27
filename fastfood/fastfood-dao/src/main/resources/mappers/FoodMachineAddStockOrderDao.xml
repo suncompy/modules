@@ -105,7 +105,7 @@
             f.address,
             f.`status` as macStatus,
             DATE_FORMAT(h.send_order_time,'%Y-%m-%d %H:%i:%s') as sendOrderTime,
-            NOW() as completeTime,
+            DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') as completeTime,
             h.`status`,
             h.note
             FROM
@@ -116,7 +116,14 @@
             h.mac_id = f.id
             AND h.performer = u.user_id
         <if test="status != null and status!=''">
-            and h.status=#{status}
+            <choose>
+                <when test='status == "-1"'>
+                    and h.status != 0
+                </when>
+                <otherwise>
+                    and h.status=#{status}
+                </otherwise>
+            </choose>
         </if>
         <if test="macInfo != null and macInfo!=''">
             and (f.IMEI LIKE '%${macInfo}%' or f.name LIKE '%${macInfo}%')

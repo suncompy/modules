@@ -17,8 +17,8 @@
     <insert id="insert" parameterType="com.lebaoxun.modules.fastfood.entity.FoodMachineAddStockHeadEntity"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO food_machine_add_stock_head (
-        performer, send_order_time,mac_id) VALUES
-        ( #{performer}, #{sendOrderTime}, #{macId});
+        performer, send_order_time,mac_id,create_by,update_by) VALUES
+        ( #{performer}, #{sendOrderTime}, #{macId},#{createBy},#{updateBy});
     </insert>
 
 </mapper>

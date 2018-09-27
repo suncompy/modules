@@ -50,4 +50,65 @@
             and date_format(u.create_time, '%Y-%m-%d') = #{createTime}
         </if>
     </select>
+
+    <select id="queryRepairOrderList" resultType="java.util.HashMap">
+        SELECT
+            h.id,
+            h.performer,
+            u.username AS userName,
+            f.IMEI AS macCode,
+            f.`name` AS macName,
+            f.address,
+            f.`status` AS macStatus,
+            DATE_FORMAT(
+            h.create_time,
+            '%Y-%m-%d %H:%i:%s'
+            ) AS createTime,
+            CASE
+            WHEN h.repair_start_time IS NOT NULL THEN
+            DATE_FORMAT(
+            h.repair_start_time,
+            '%Y-%m-%d %H:%i:%s'
+            )
+            ELSE
+            DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+            END AS repairStartTime,
+            CASE
+            WHEN h.repair_finish_time IS NOT NULL THEN
+            DATE_FORMAT(
+            h.repair_finish_time,
+            '%Y-%m-%d %H:%i:%s'
+            )
+            ELSE
+            DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+            END AS repairFinishTime,
+            h.`status`,
+            h.remark
+        FROM
+        food_machine_repair_order h,
+        food_machine f,
+        sys_user u
+        WHERE
+        h.mac_id = f.id
+        AND h.performer = u.user_id
+        <if test="status != null and status!=''">
+            <choose>
+                <when test='status == "-1"'>
+                    and h.status != 0
+                </when>
+                <otherwise>
+                    and h.status=#{status}
+                </otherwise>
+            </choose>
+        </if>
+        <if test="macInfo != null and macInfo!=''">
+            and (f.IMEI LIKE '%${macInfo}%' or f.name LIKE '%${macInfo}%')
+        </if>
+        <if test="id != null and id!=''">
+            and h.id =#{id}
+        </if>
+        <if test="sendOrderTime != null and sendOrderTime!=''">
+            and date_format(h.create_time, '%Y-%m-%d') = #{sendOrderTime}
+        </if>
+    </select>
 </mapper>

@@ -20,4 +20,8 @@ public interface FoodMachineRepairOrderDao extends BaseMapper<FoodMachineRepairO
     List<Map<String,Object>> queryMaintenanceManList(@Param("userName")String userName,
                                                  @Param("mobile")String mobile,
                                                  @Param("createTime")String createTime);
+    List<Map<String,Object>> queryRepairOrderList(@Param("status")String status,
+                                                   @Param("macInfo")String macInfo,
+                                                   @Param("id")String id,
+                                                   @Param("sendOrderTime")String sendOrderTime);
 }
