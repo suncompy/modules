@@ -127,9 +127,10 @@ public class FoodOrderServiceImpl extends
 			.eq(StringUtils.isNotBlank(userId) && StringUtils.isInteger(userId), "user_id", userId)
 			.eq(StringUtils.isNotBlank(orderNo), "order_no", orderNo)
 			.eq(StringUtils.isNotBlank(macId) && StringUtils.isInteger(macId), "mac_id", macId)
-			.in(StringUtils.isNotBlank(orderStatus) && StringUtils.isInteger(orderStatus) && "1".equals(orderStatus), "order_status", new Integer[]{1,2,3})
-			.eq(StringUtils.isNotBlank(orderStatus) && StringUtils.isInteger(orderStatus) && !"1".equals(orderStatus), "order_status", orderStatus)
+			.eq(StringUtils.isNotBlank(orderStatus) && StringUtils.isInteger(orderStatus), "order_status", orderStatus)
 			.eq(StringUtils.isNotBlank(createTime), "date_format(create_time,'%Y-%m-%d')", createTime)
+			.orderBy("create_time",false)
+			.orderBy("order_status",false)
 		);
 
 		return new PageUtils(page);

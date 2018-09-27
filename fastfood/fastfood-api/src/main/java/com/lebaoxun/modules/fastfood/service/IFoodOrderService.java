@@ -178,6 +178,17 @@ public interface IFoodOrderService {
     		@RequestParam(value="dis",required=false)BigDecimal dis,
     		@RequestBody FoodOrderEntity order);
     
+    /**
+     * 设置订单是否加热
+     * @param orderId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/modifyWarmFlag")
+    ResponseMessage modifyWarmFlag(@RequestParam("userId") Long userId,
+            @RequestParam("orderNo") String orderNo,
+            @RequestParam("warmFlag") Integer warmFlag);
+    
     @RequestMapping("/fastfood/foodorder/findOrderByUser")
     ResponseMessage findOrderByUser(
     		@RequestParam("userId")Long userId,

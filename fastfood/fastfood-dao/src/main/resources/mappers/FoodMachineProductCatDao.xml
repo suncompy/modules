@@ -19,7 +19,7 @@
     <select id="findCatByMacId" resultMap="foodMachineProductCatMap">
         select cat.`name`,cat.icon,cat.id from food_machine_aisle as aisle
 		left join food_machine_product_cat as cat on cat.id = aisle.product_cat_id
-		where aisle.mac_id = #{macId} and cat.id is not null by order_by;
+		where aisle.mac_id = #{macId} and cat.id is not null group by cat.id order by cat.order_by;
     </select>
 
 </mapper>

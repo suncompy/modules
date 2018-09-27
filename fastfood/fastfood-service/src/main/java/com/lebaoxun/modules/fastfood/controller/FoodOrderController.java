@@ -236,6 +236,29 @@ public class FoodOrderController {
     	return ResponseMessage.ok(foodOrderService.calCheckTotalFee(userId,dis,order,true,true));
     }
     
+    /**
+     * 设置订单是否加热
+     * @param orderId
+     * @param productId
+     * @return
+     */
+    @RequestMapping("/fastfood/foodorder/modifyWarmFlag")
+    ResponseMessage modifyWarmFlag(@RequestParam("userId") Long userId,
+            @RequestParam("orderNo") String orderNo,
+            @RequestParam("warmFlag") Integer warmFlag){
+    	FoodOrderEntity order = foodOrderService.selectOne(new EntityWrapper<FoodOrderEntity>().eq("user_id", userId).eq("order_no", orderNo));
+    	if(order == null){
+    		throw new I18nMessageException("60007","订单不存在");
+    	}
+    	if(order.getOrderStatus() != 1){
+    		throw new I18nMessageException("60020","此订单不能设置是否加热");
+    	}
+		order.setWarmFlag(warmFlag);
+        foodOrderService.updateById(order);
+        return ResponseMessage.ok();
+
+    }
+    
     @RequestMapping("/fastfood/foodorder/addInvoice")
     @RedisLock(value="fastfood:foodorder:addInvoice:lock:#arg0")
     ResponseMessage addInvoice(@RequestParam("userId") Long userId,

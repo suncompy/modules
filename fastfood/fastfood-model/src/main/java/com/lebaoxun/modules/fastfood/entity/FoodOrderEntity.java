@@ -140,6 +140,11 @@ public class FoodOrderEntity implements Serializable {
 	 */
 	private String qrCode;
 	
+	/**
+	 * 是否加热
+	 */
+	private Integer warmFlag;
+	
 	@TableField(exist=false)
 	private List<FoodOrderChildsEntity> childs;
 	
@@ -148,6 +153,7 @@ public class FoodOrderEntity implements Serializable {
 	 */
 	@TableField(exist=false)
 	private Integer takeFoodCode;
+	
 
 	/**
 	 * 设置：订单ID
@@ -448,5 +454,11 @@ public class FoodOrderEntity implements Serializable {
 	}
 	public void setInvoiceTitle(String invoiceTitle) {
 		this.invoiceTitle = invoiceTitle;
+	}
+	public Integer getWarmFlag() {
+		return warmFlag;
+	}
+	public void setWarmFlag(Integer warmFlag) {
+		this.warmFlag = warmFlag;
 	}
 }

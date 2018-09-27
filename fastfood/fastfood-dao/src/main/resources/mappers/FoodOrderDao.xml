@@ -34,6 +34,7 @@
         <result property="invoiceIRD" column="invoice_ird"/>
         <result property="invoiceEamil" column="invoice_eamil"/>
         <result property="invoiceTitle" column="invoice_title"/>
+        <result property="warmFlag" column="warm_flag"/>
         
         <collection property="childs" resultMap="foodOrderChildsMap" ofType="com.lebaoxun.modules.fastfood.entity.FoodOrderChildsEntity"></collection>
     </resultMap>
@@ -64,11 +65,11 @@
         order_no, user_id,pay_type,order_status,
         order_amount, red_packed_amount, order_score, pay_amount, buy_number,
         mac_id, activity_id, activity_type, coupon_id, red_packed_id,
-        source, create_time, update_time, take_food_time, coupon_type, coupon_fee) VALUES
+        source, create_time, update_time, take_food_time, coupon_type, coupon_fee, warm_flag) VALUES
         ( #{orderNo}, #{userId}, #{payType}, #{orderStatus},
         #{orderAmount}, #{redPackedAmount}, #{orderScore}, #{payAmount}, #{buyNumber},
         #{macId}, #{activityId}, #{activityType}, #{couponId}, #{redPackedId},
-        #{source}, #{createTime}, #{updateTime}, #{takeFoodTime} ,#{couponType}, #{couponFee});
+        #{source}, #{createTime}, #{updateTime}, #{takeFoodTime} ,#{couponType}, #{couponFee}, #{warmFlag}]);
     </insert>
     
     <resultMap type="java.util.Map" id="foodMacOrderMap">
@@ -81,6 +82,7 @@
         <result property="orderTime" column="orderTime"/>
         <result property="takeFoodTime" column="takeFoodTime"/>
         <result property="orderStatus" column="orderStatus"/>
+        <result property="warmFlag" column="warmFlag"/>
         <collection property="childs" resultMap="foodMacOrderChildsMap" ofType="java.util.Map" javaType="java.util.ArrayList"></collection>
     </resultMap>
     
@@ -111,6 +113,7 @@
 			order_t.create_time AS orderTime,
 			order_t.take_food_time as takeFoodTime,
 			order_t.order_status as orderStatus,
+			order_t.warm_flag as warmFlag,
 			child.product_id as productId,
 	      	child.buy_number as childBuyNumber,
 	      	child.price as price,
@@ -141,6 +144,7 @@
 			order_t.buy_number AS buyNumber,
 			order_t.create_time AS orderTime,
 			order_t.take_food_time as takeFoodTime,
+			order_t.warm_flag as warmFlag,
 	      	child.buy_number as childBuyNumber,
 	      	child.price as price,
 		  	child.cost_price as costPrice,
