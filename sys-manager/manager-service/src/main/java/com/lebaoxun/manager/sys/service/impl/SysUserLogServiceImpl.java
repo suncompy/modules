@@ -23,12 +23,14 @@ public class SysUserLogServiceImpl extends ServiceImpl<SysUserLogDao, SysUserLog
     public PageUtils queryPage(Map<String, Object> params) {
     	String logType = (String)params.get("logType"),
     			adminId = (String)params.get("adminId"),
-    			mobile = (String)params.get("mobile");
+    			mobile = (String)params.get("mobile"),
+    			refId = (String)params.get("refId");
         Page<SysUserLogEntity> page = this.selectPage(
                 new Query<SysUserLogEntity>(params).getPage(),
                 new EntityWrapper<SysUserLogEntity>()
                 .eq(StringUtils.isNotBlank(logType),"log_type", logType)
                 .eq(StringUtils.isNotBlank(mobile),"mobile", mobile)
+                .eq(StringUtils.isNotBlank(refId),"ref_id", refId)
                 .eq(StringUtils.isNotBlank(adminId) && StringUtils.isInteger(adminId), "admin_id", adminId)
                 .orderBy("log_time", false)
         );
