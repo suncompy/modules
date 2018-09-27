@@ -33,4 +33,9 @@ public class FoodMachineRepairOrderServiceImpl extends ServiceImpl<FoodMachineRe
         return this.baseMapper.queryMaintenanceManList(userName,mobile,createTime);
     }
 
+    @Override
+    public List<Map<String, Object>> queryRepairOrderList(String status, String macInfo, String id, String sendOrderTime) {
+        return this.baseMapper.queryRepairOrderList(status,macInfo,id,sendOrderTime);
+    }
+
 }

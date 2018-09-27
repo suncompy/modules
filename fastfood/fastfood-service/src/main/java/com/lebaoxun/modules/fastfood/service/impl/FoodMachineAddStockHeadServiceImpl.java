@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("foodMachineAddStockHeadService")
 public class FoodMachineAddStockHeadServiceImpl extends ServiceImpl<FoodMachineAddStockHeadDao, FoodMachineAddStockHeadEntity> implements FoodMachineAddStockHeadService {
+    @Autowired
     private FoodMachineAddStockOrderService foodMachineAddStockOrderService;
     @Autowired
     private FoodMachineAisleService foodMachineAisleService;

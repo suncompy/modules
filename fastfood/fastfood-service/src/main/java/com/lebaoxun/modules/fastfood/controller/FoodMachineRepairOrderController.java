@@ -70,6 +70,8 @@ public class FoodMachineRepairOrderController {
     @RequestMapping("/fastfood/foodmachinerepairorder/update")
     @RedisLock(value="fastfood:foodmachinerepairorder:update:lock:#arg0")
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineRepairOrderEntity foodMachineRepairOrder){
+        foodMachineRepairOrder.setUpdateTime(new Date());
+        foodMachineRepairOrder.setRepairFinishTime(new Date());
 		foodMachineRepairOrderService.updateById(foodMachineRepairOrder);
         return ResponseMessage.ok();
     }
@@ -101,6 +103,23 @@ public class FoodMachineRepairOrderController {
         int pageSize=100;
         int currPage=0;
         PageUtils page=new PageUtils(ReplenishManList,totalCount,pageSize,0);
+        return ResponseMessage.ok(page);
+    }
+
+    /**
+     * 维修派单列表
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachinerepairorder/queryRepairOrderList")
+    ResponseMessage queryRepairOrderList(@RequestParam(value = "status",required = false)String status,
+                                          @RequestParam(value = "macInfo",required = false)String macInfo,
+                                          @RequestParam(value = "id",required = false)String id,
+                                          @RequestParam(value = "sendOrderTime",required = false)String sendOrderTime){
+        List<Map<String,Object>> RepairOrderList = foodMachineRepairOrderService.queryRepairOrderList(status,macInfo,id,sendOrderTime);
+        int totalCount=RepairOrderList.size();
+        int pageSize=100;
+        int currPage=0;
+        PageUtils page=new PageUtils(RepairOrderList,totalCount,pageSize,0);
         return ResponseMessage.ok(page);
     }
 

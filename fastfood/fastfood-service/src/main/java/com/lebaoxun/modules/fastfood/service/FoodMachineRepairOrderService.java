@@ -3,6 +3,7 @@ package com.lebaoxun.modules.fastfood.service;
 import com.baomidou.mybatisplus.service.IService;
 import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.modules.fastfood.entity.FoodMachineRepairOrderEntity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -19,5 +20,7 @@ public interface FoodMachineRepairOrderService extends IService<FoodMachineRepai
     PageUtils queryPage(Map<String, Object> params);
 
     List<Map<String,Object>> queryMaintenanceManList(String userName, String mobile, String createTime);
+
+    List<Map<String,Object>> queryRepairOrderList(String status,String macInfo,String id,String sendOrderTime);
 }
 
