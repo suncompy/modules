@@ -62,5 +62,11 @@ public interface IFoodMachineRepairOrderService {
     ResponseMessage queryMaintenanceManList(@RequestParam(value = "userName",required = false)String userName,
                                             @RequestParam(value = "mobile",required = false)String mobile,
                                             @RequestParam(value = "createTime",required = false)String createTime);
+
+    @RequestMapping("/fastfood/foodmachinerepairorder/queryRepairOrderList")
+    ResponseMessage queryRepairOrderList(@RequestParam(value = "status",required = false)String status,
+                                         @RequestParam(value = "macInfo",required = false)String macInfo,
+                                         @RequestParam(value = "id",required = false)String id,
+                                         @RequestParam(value = "sendOrderTime",required = false)String sendOrderTime);
 }
 
