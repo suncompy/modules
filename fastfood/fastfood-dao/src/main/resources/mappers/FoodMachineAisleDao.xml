@@ -81,7 +81,7 @@
             food_machine_aisle f
         LEFT JOIN food_product p ON f.product_id = p.id
         LEFT JOIN food_machine_product_cat c ON f.product_cat_id = c.id
-        where f.mac_id=#{macId}
+        where f.mac_id=#{macId} order by aisl_xy
     </select>
     
     <resultMap type="java.util.Map" id="foodMacAisleMap">

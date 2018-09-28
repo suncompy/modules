@@ -15,8 +15,10 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.lebaoxun.commons.utils.Assert;
 import com.lebaoxun.commons.utils.MD5;
 import com.lebaoxun.sms.core.AbstractSMSGatewayClient;
+import com.lebaoxun.sms.core.SMSGateway;
 /**
  * 容联 云通信 短信发送
  * @author caiqianyi 2017.9.25
@@ -89,6 +91,11 @@ public class RlyunSMSGatewayClient extends AbstractSMSGatewayClient {
         if(result.contains("{\"statusCode\":\"000000\"")){
         	return true;
         }
+		return false;
+	}
+	
+	@Override
+	public boolean doSend(String mobile, String content) {
 		return false;
 	}
 

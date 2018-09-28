@@ -69,4 +69,6 @@ public class RedisKeyConstant {
 	
 	public final static String SMS_SEND_VFCODE_MOBILE = "sms:send:vfcode:%s";
 	
+	public final static String HASH_SMS_EARLY_WARNING = "sms:early:warning:%s";
+	
 }

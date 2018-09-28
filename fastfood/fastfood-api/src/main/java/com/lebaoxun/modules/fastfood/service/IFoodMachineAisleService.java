@@ -94,5 +94,13 @@ public interface IFoodMachineAisleService {
     ResponseMessage findProductByMacIdAndAdTime(@RequestParam("macId") Integer macId, 
     		@RequestParam("time") String time, 
     		@RequestParam(value="productCatId",required=false) Integer productCatId);
+    
+	/**
+     * 修改库存与价格
+     */
+    @RequestMapping("/fastfood/foodmachineaisle/modifyStockAndPrice")
+    ResponseMessage modifyStockAndPrice(@RequestParam("id")Integer id,
+    		@RequestParam("stock")Integer stock,
+    		@RequestParam("price")Float price);
 }
 

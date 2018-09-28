@@ -50,6 +50,8 @@ public class FoodMachineRepairOrderEntity implements Serializable {
 	 * 修改时间
 	 */
 	private Date updateTime;
+	
+	private Date repairFinishTime;
 
 	/**
 	 * 设置：
@@ -146,5 +148,11 @@ public class FoodMachineRepairOrderEntity implements Serializable {
 	 */
 	public Date getUpdateTime() {
 		return updateTime;
+	}
+	public Date getRepairFinishTime() {
+		return repairFinishTime;
+	}
+	public void setRepairFinishTime(Date repairFinishTime) {
+		this.repairFinishTime = repairFinishTime;
 	}
 }

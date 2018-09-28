@@ -73,6 +73,26 @@ public class FoodMachineAisleController {
 		foodMachineAisleService.updateById(foodMachineAisle);
         return ResponseMessage.ok();
     }
+    /**
+     * 修改库存与价格
+     */
+    @RequestMapping("/fastfood/foodmachineaisle/modifyStockAndPrice")
+    @RedisLock(value="fastfood:foodmachineaisle:modifyStockAndPrice:lock:#arg0")
+    ResponseMessage modifyStockAndPrice(@RequestParam("id")Integer id,
+    		@RequestParam("stock")Integer stock,
+    		@RequestParam("price")Float price){
+    	FoodMachineAisleEntity foodMachineAisle = foodMachineAisleService.selectById(id);
+    	if(foodMachineAisle == null){
+    		throw new I18nMessageException("500");
+    	}
+    	if(stock> foodMachineAisle.getSize()){
+    		throw new I18nMessageException("500");
+    	}
+    	foodMachineAisle.setPrice(price);
+    	foodMachineAisle.setStock(stock);
+    	foodMachineAisleService.updateById(foodMachineAisle);
+    	return ResponseMessage.ok();
+    }
 
     /**
      * 删除

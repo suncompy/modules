@@ -72,5 +72,11 @@ public class FoodMachineAisleServiceHystrix implements IFoodMachineAisleService 
 			String time, Integer productCatId) {
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
+	
+	@Override
+	public ResponseMessage modifyStockAndPrice(Integer id, Integer stock,
+			Float price) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
 }
 

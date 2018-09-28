@@ -108,6 +108,26 @@ public class SMSGatewayClient extends AbstractSMSGatewayClient implements Applic
 		return send(config, mobile, content);
 	}
 	
+	@Override
+	public boolean doSend(String mobile, String content) {
+		// TODO Auto-generated method stub
+		SMSGateway config = this.getCurrentGateway();
+		Assert.notNull(config, "500");
+		
+		if(config.getClientClass() != null){
+			return context.getBean(config.getClientClass()).doSend(mobile, content);
+		}
+		
+		content = content.replace("#signature#", "【"+config.getSignature()+"】");
+		if(content.indexOf("#vfcode#") > -1){
+			String vfCode = refreshVfCode(mobile);
+			content =  content.replace("#vfcode#", vfCode);
+		}
+		
+		logger.debug("sms send content={}",content);
+		return send(config, mobile, content);
+	}
+	
 	public boolean send(SMSGateway config,String mobile,String content){
 		String smsGateWayUrl = config.getUrl();
 		String result = null;

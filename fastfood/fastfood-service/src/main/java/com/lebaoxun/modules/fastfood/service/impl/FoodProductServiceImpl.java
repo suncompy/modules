@@ -45,7 +45,9 @@ public class FoodProductServiceImpl extends ServiceImpl<FoodProductDao, FoodProd
     
 	@Override
 	public List<FoodProductEntity> findProductInfoByParams(Map<String, Object> params){
-		return this.selectByMap(params);
+		String name = (String)params.get("name");
+		return this.selectList(new EntityWrapper<FoodProductEntity>()
+                .like(StringUtils.isNotBlank(name), "name", name));
 	}
 
 	@Override

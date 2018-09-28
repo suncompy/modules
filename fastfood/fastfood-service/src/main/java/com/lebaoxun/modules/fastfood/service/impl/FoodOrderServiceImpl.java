@@ -350,6 +350,11 @@ public class FoodOrderServiceImpl extends
 				|| order.getChilds().isEmpty()) {
 			return order;
 		}
+		
+		FoodMachineEntity mac = foodMachineDao.selectById(order.getMacId());
+		if(mac == null || mac.getStatus() != 0){
+			throw new I18nMessageException("60021","机器故障，无法购买");
+		}
 
 		int paycount = this.selectCount(new EntityWrapper<FoodOrderEntity>().eq(
 				"user_id", userId).gt("order_status", 0));
@@ -471,8 +476,6 @@ public class FoodOrderServiceImpl extends
 		order.setActivityId(null);
 		order.setActivityType(null);
 
-		FoodMachineEntity mac = foodMachineDao.findByMacId(order.getMacId());
-		
 		logger.debug("mac.getActivitys={}",new Gson().toJson(mac.getActivitys()));
 		logger.debug("isCheckActivity={},isCalProductActivity={},isFirstOrder={}",isCheckActivity,isCalProductActivity,isFirstOrder);
 		if (isCheckActivity && isCalProductActivity == false && mac.getActivitys() != null) {
@@ -699,11 +702,13 @@ public class FoodOrderServiceImpl extends
 		List<FoodOrderChildsEntity> childs = order.getChilds();
 		for (FoodOrderChildsEntity child : childs) {
 			child.setOrderId(order.getId());
-			FoodMachineAisleEntity aisle = new FoodMachineAisleEntity();
-			aisle.setId(child.getAisleId());
-			aisle = foodMachineAisleDao.selectOne(aisle);
-			aisle.setStock(aisle.getStock() - child.getBuyNumber());
-			foodMachineAisleDao.updateById(aisle);
+			if(order.getTakeFoodTime().after(now)){//预定不减少库存
+				FoodMachineAisleEntity aisle = new FoodMachineAisleEntity();
+				aisle.setId(child.getAisleId());
+				aisle = foodMachineAisleDao.selectOne(aisle);
+				aisle.setStock(aisle.getStock() - child.getBuyNumber());
+				foodMachineAisleDao.updateById(aisle);
+			}
 			foodOrderChildsDao.insert(child);
 
 			/*
@@ -1124,6 +1129,18 @@ public class FoodOrderServiceImpl extends
 		Integer timeOut = (Integer) redisTemplate.opsForValue().get("order:config:timeout");
 		if(timeOut != null){
 			this.baseMapper.closeOrderByNopayAndTimeout(timeOut);
+			List<FoodOrderEntity> orders = this.baseMapper.findByNopayAndTimeout(timeOut);
+			for(FoodOrderEntity order : orders){
+				List<FoodOrderChildsEntity> childs = foodOrderChildsDao
+						.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", order.getId()));
+				for(FoodOrderChildsEntity child : childs){
+					FoodMachineAisleEntity aisle = new FoodMachineAisleEntity();
+					aisle.setId(child.getAisleId());
+					aisle = foodMachineAisleDao.selectOne(aisle);
+					aisle.setStock(aisle.getStock() + child.getBuyNumber());
+					foodMachineAisleDao.updateById(aisle);
+				}
+			}
 		}
 	}
 }
