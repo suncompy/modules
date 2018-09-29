@@ -67,6 +67,13 @@ public class FoodMachineRepairOrderController {
     @RequestMapping("/fastfood/foodmachinerepairorder/save")
     @RedisLock(value="fastfood:foodmachinerepairorder:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineRepairOrderEntity foodMachineRepairOrder){
+        //首先判断是否有维修单在进行中
+        EntityWrapper<FoodMachineRepairOrderEntity> entityWrapper=new EntityWrapper<FoodMachineRepairOrderEntity>();
+        entityWrapper.eq("mac_id",foodMachineRepairOrder.getMacId());
+        entityWrapper.eq("status",0);
+        List<FoodMachineRepairOrderEntity> repairOrderEntities=foodMachineRepairOrderService.selectList(entityWrapper);
+        if (repairOrderEntities.size()>0)
+            return ResponseMessage.error("60001","该机器已有维修单在进行中，不能再派单！");
         foodMachineRepairOrder.setCreateBy(adminId);
         foodMachineRepairOrder.setCreateTime(new Date());
         foodMachineRepairOrder.setStatus(0);
