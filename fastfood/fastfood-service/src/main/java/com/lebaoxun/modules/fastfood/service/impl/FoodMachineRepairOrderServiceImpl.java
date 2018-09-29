@@ -92,7 +92,7 @@ public class FoodMachineRepairOrderServiceImpl extends ServiceImpl<FoodMachineRe
                     new Gson().toJson(message));
             return ResponseMessage.ok();
         }
-        return ResponseMessage.error("60002","短信发送失败！");
+        return ResponseMessage.error("60002","没有处于进行中的维修派单，短信发送失败！");
     }
 
 }
