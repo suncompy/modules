@@ -84,5 +84,11 @@ public interface IFoodMachineAddStockOrderService {
     @RequestMapping("/fastfood/foodmachineaddstockorder/queryPickingLineByHeadId")
     ResponseMessage queryPickingLineByHeadId(@RequestParam(value = "status",required = false)String status,
                                              @RequestParam(value = "headId",required = false)String headId);
+    /**
+     * 配货派单短信提醒
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaddstockorder/sendMsg")
+    ResponseMessage sendMsg(@RequestParam(value = "macId")Integer macId);
 }
 

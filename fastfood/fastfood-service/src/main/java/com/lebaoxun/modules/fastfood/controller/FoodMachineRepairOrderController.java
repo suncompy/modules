@@ -5,6 +5,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineAddStockHeadEntity;
+import com.lebaoxun.modules.fastfood.entity.FoodMachineEntity;
+import com.lebaoxun.modules.fastfood.service.FoodMachineService;
+import com.lebaoxun.soa.amqp.core.sender.IRabbitmqSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +25,8 @@ import com.lebaoxun.commons.utils.PageUtils;
 import com.lebaoxun.commons.exception.ResponseMessage;
 import com.lebaoxun.soa.core.redis.lock.RedisLock;
 
+import javax.annotation.Resource;
+
 
 /**
  * 维修派单表
@@ -28,6 +37,8 @@ import com.lebaoxun.soa.core.redis.lock.RedisLock;
  */
 @RestController
 public class FoodMachineRepairOrderController {
+    @Resource
+    private FoodMachineService foodMachineService;
     @Autowired
     private FoodMachineRepairOrderService foodMachineRepairOrderService;
 
@@ -56,11 +67,20 @@ public class FoodMachineRepairOrderController {
     @RequestMapping("/fastfood/foodmachinerepairorder/save")
     @RedisLock(value="fastfood:foodmachinerepairorder:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineRepairOrderEntity foodMachineRepairOrder){
+        //首先判断是否有维修单在进行中
+        EntityWrapper<FoodMachineRepairOrderEntity> entityWrapper=new EntityWrapper<FoodMachineRepairOrderEntity>();
+        entityWrapper.eq("mac_id",foodMachineRepairOrder.getMacId());
+        entityWrapper.eq("status",0);
+        List<FoodMachineRepairOrderEntity> repairOrderEntities=foodMachineRepairOrderService.selectList(entityWrapper);
+        if (repairOrderEntities.size()>0)
+            return ResponseMessage.error("60001","该机器已有维修单在进行中，不能再派单！");
         foodMachineRepairOrder.setCreateBy(adminId);
         foodMachineRepairOrder.setCreateTime(new Date());
         foodMachineRepairOrder.setStatus(0);
         foodMachineRepairOrder.setUpdateTime(new Date());
 		foodMachineRepairOrderService.insert(foodMachineRepairOrder);
+        //生成派单，同时发送提醒短信
+        foodMachineRepairOrderService.sendMsg(foodMachineRepairOrder.getMacId());
         return ResponseMessage.ok();
     }
 
@@ -72,7 +92,14 @@ public class FoodMachineRepairOrderController {
     ResponseMessage update(@RequestParam("adminId")Long adminId,@RequestBody FoodMachineRepairOrderEntity foodMachineRepairOrder){
         foodMachineRepairOrder.setUpdateTime(new Date());
         foodMachineRepairOrder.setRepairFinishTime(new Date());
-		foodMachineRepairOrderService.updateById(foodMachineRepairOrder);
+		boolean ret=foodMachineRepairOrderService.updateById(foodMachineRepairOrder);
+        if(ret&&foodMachineRepairOrder.getStatus()==1){//如果维修人员将状态改为已维修，同时更新机器表中的状态
+            FoodMachineRepairOrderEntity repairOrder=foodMachineRepairOrderService.selectById(foodMachineRepairOrder.getId());
+            FoodMachineEntity foodMachineEntity=new FoodMachineEntity();
+            foodMachineEntity.setId(repairOrder.getMacId());
+            foodMachineEntity.setStatus(0);
+            foodMachineService.updateById(foodMachineEntity);
+        }
         return ResponseMessage.ok();
     }
 
@@ -121,6 +148,15 @@ public class FoodMachineRepairOrderController {
         int currPage=0;
         PageUtils page=new PageUtils(RepairOrderList,totalCount,pageSize,0);
         return ResponseMessage.ok(page);
+    }
+
+    /**
+     * 维修派单短信提醒
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachinerepairorder/sendMsg")
+    ResponseMessage sendMsg(@RequestParam(value = "macId")Integer macId){
+        return foodMachineRepairOrderService.sendMsg(macId);
     }
 
 }

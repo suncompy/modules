@@ -68,5 +68,12 @@ public interface IFoodMachineRepairOrderService {
                                          @RequestParam(value = "macInfo",required = false)String macInfo,
                                          @RequestParam(value = "id",required = false)String id,
                                          @RequestParam(value = "sendOrderTime",required = false)String sendOrderTime);
+
+    /**
+     * 维修派单短信提醒
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachinerepairorder/sendMsg")
+    ResponseMessage sendMsg(@RequestParam(value = "macId")Integer macId);
 }
 
