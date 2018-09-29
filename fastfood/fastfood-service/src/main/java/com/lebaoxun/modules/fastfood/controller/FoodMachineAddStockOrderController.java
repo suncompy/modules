@@ -63,43 +63,7 @@ public class FoodMachineAddStockOrderController {
     @RequestMapping("/fastfood/foodmachineaddstockorder/save")
     @RedisLock(value="fastfood:foodmachineaddstockorder:save:lock:#arg0")
     ResponseMessage save(@RequestParam("adminId")Long adminId,@RequestBody List<FoodMachineAddStockOrderEntity> addStockOrderList){
-        int i=0;
-        if (addStockOrderList!=null&&addStockOrderList.size()>0){
-            FoodMachineAddStockHeadEntity headEntity = new FoodMachineAddStockHeadEntity();
-            for (FoodMachineAddStockOrderEntity e:addStockOrderList){
-                if (i==0) {
-                    //首先判断补货、配货单是否在进行中
-                    EntityWrapper<FoodMachineAddStockHeadEntity> entityWrapper=new EntityWrapper<FoodMachineAddStockHeadEntity>();
-                    entityWrapper.eq("mac_id",e.getMacId());
-                    entityWrapper.eq("status",0);
-                    List<FoodMachineAddStockHeadEntity> cList=foodMachineAddStockHeadService.selectList(entityWrapper);
-                    if (cList!=null&&cList.size()>0){
-                        return ResponseMessage.error("600002","机器["+e.getMacId()
-                                +"],货道["+e.getX()+"-"+e.getY()+"已有补货单在进行中！]!");
-                    }
-
-                    //插入主表
-                    headEntity.setMacId(e.getMacId());
-                    headEntity.setStatus(0);
-                    headEntity.setPerformer(e.getPerformer());
-                    headEntity.setSendOrderTime(new Date());
-                    headEntity.setCreateBy(adminId);
-                    headEntity.setUpdateBy(adminId);
-                    foodMachineAddStockHeadService.insert(headEntity);
-                    i++;
-                }
-                //插入子表
-                e.setStatus(0);
-                e.setCreateBy(adminId);
-                e.setCreateTime(new Date());
-                e.setUpdateTime(new Date());
-                e.setHeadId(headEntity.getId());
-                foodMachineAddStockOrderService.insert(e);
-            }
-        }else {
-            return ResponseMessage.error("600001","未收到补货数据!");
-        }
-        return ResponseMessage.ok();
+        return foodMachineAddStockHeadService.createPickingOreder(adminId,addStockOrderList);
     }
 
     /**
@@ -191,6 +155,15 @@ public class FoodMachineAddStockOrderController {
         int currPage=0;
         PageUtils page=new PageUtils(pickingLinList,totalCount,pageSize,0);
         return ResponseMessage.ok(page);
+    }
+
+    /**
+     * 配货派单短信提醒
+     * @return
+     */
+    @RequestMapping("/fastfood/foodmachineaddstockorder/sendMsg")
+    ResponseMessage sendMsg(@RequestParam(value = "macId")Integer macId){
+        return foodMachineAddStockHeadService.sendMsg(macId);
     }
 
 }
