@@ -96,6 +96,7 @@ public class FoodMachineController {
         //查询机器编码是否存在
         EntityWrapper<FoodMachineEntity> macWrapper=new EntityWrapper<FoodMachineEntity>();
         macWrapper.eq("IMEI",foodMachine.getImei());
+        macWrapper.ne("id",foodMachine.getId());
         List<FoodMachineEntity> foodMachineEntities=foodMachineService.selectList(macWrapper);
         if (foodMachineEntities!=null&&foodMachineEntities.size()>0){
             return ResponseMessage.error("60001","机器编码["+foodMachine.getImei()+"]已存在，请修正！");
