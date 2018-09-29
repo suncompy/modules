@@ -169,8 +169,7 @@ public class FoodMachineAddStockHeadServiceImpl extends ServiceImpl<FoodMachineA
             Map<String,String> message = Maps.newHashMap();
             message.put("mobile", userEntity.getMobile());
             String content="您好，"+userEntity.getUsername()
-                    +",你有新的配货单，请注意查收" +
-                    "机器编号["+foodMachineEntity.getImei()+"]";
+                    +",您有新的派单任务，请及时查看！";
             message.put("content", content);
             message.put("m_id", macId+"");
             message.put("m_type", "STOCK_ORDER");

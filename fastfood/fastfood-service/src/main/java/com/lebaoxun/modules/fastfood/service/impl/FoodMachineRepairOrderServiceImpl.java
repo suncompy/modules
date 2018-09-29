@@ -69,7 +69,22 @@ public class FoodMachineRepairOrderServiceImpl extends ServiceImpl<FoodMachineRe
                 return ResponseMessage.error("60003","用户不存在，短信发送失败！");
             Map<String,String> message = Maps.newHashMap();
             message.put("mobile", userEntity.getMobile());
-            String content="系统预警，编号["+foodMachineEntity.getImei()+"]机器出现故障，请立即查看！";
+            String content="您所管辖的机器编号为"+foodMachineEntity.getImei()+"的机器已发生故障，请及时查看派单任务进行维修";
+//            String content="系统预警，编号["+foodMachineEntity.getImei()+"]机器出现故障，请立即查看！";
+            message.put("content", content);
+            message.put("m_id", macId+"");
+            message.put("m_type", "MAC_ERROR");
+            rabbitmqSender.sendContractDirect("sms.early.warn.queue",
+                    new Gson().toJson(message));
+
+            //发送给管理员
+            userEntity=sysUserService.findByUserId(foodMachineEntity.getMaintenanceMan());
+            if (userEntity==null||userEntity.getUserId()==0)
+                return ResponseMessage.error("60003","用户不存在，短信发送失败！");
+           message = Maps.newHashMap();
+            message.put("mobile", userEntity.getMobile());
+            content="您所管辖的机器编号为"+foodMachineEntity.getImei()+"的机器已发生故障，请及时查看并派单给维修员";
+//            String content="系统预警，编号["+foodMachineEntity.getImei()+"]机器出现故障，请立即查看！";
             message.put("content", content);
             message.put("m_id", macId+"");
             message.put("m_type", "MAC_ERROR");
