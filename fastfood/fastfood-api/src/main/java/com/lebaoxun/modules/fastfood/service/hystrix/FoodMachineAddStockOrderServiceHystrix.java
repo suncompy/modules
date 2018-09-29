@@ -67,5 +67,10 @@ public class FoodMachineAddStockOrderServiceHystrix implements IFoodMachineAddSt
 		throw new I18nMessageException("502","服务器异常，请稍后重试");
 	}
 
+	@Override
+	public ResponseMessage sendMsg(@RequestParam(value = "macId") Integer macId) {
+		throw new I18nMessageException("502","服务器异常，请稍后重试");
+	}
+
 }
 
