@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -79,6 +80,17 @@ public class OperatePrizeGetLogServiceImpl extends
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public ResponseMessage draw(Long userId, String group) {
 		// TODO Auto-generated method stub
+		int count = this.baseMapper
+				.selectCount(new EntityWrapper<OperatePrizeGetLogEntity>().eq(
+						"user_id", userId).eq(
+						"DATE_FORMAT(create_time,'%Y-%m-%d')",
+						DateFormatUtils.format(new Date(),
+								"yyyy-MM-dd")));
+		
+		if(count > 0){
+			throw new I18nMessageException("60022","积分抽奖，每日仅限一次");
+		}
+		
 		List<OperatePrizeEntity> prizes = operatePrizeDao
 				.findPrizeByGroup(group);
 		Integer ide = getPrizeIndex(prizes);

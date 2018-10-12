@@ -249,7 +249,14 @@ public class AlipayController {
 
 		/*
 		 * //获取支付宝POST过来反馈信息 Map<String,String> params = new
-		 * HashMap<String,String>(); Map<?, ?> requestParams =
+		 * HashMap<String,String>(); Map<?,
+		 * 
+		 *  
+		 *  
+		 *  
+		 *  
+		 *  
+		 *  ?> requestParams =
 		 * request.getParameterMap(); for (Iterator<?> iter =
 		 * requestParams.keySet().iterator(); iter.hasNext();) { String name =
 		 * (String) iter.next(); String[] values = (String[])

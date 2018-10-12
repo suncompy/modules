@@ -71,6 +71,15 @@ public class FoodOrderEntity implements Serializable {
 	
 	@TableField(exist=false)
 	private String macAddress;
+	
+	@TableField(exist=false)
+	private String macName;
+	
+	@TableField(exist=false)
+	private String mobile;
+	
+	@TableField(exist=false)
+	private String macIemi;
 	/**
 	 * 活动ID
 	 */
@@ -154,7 +163,6 @@ public class FoodOrderEntity implements Serializable {
 	@TableField(exist=false)
 	private Integer takeFoodCode;
 	
-
 	/**
 	 * 设置：订单ID
 	 */
@@ -460,5 +468,23 @@ public class FoodOrderEntity implements Serializable {
 	}
 	public void setWarmFlag(Integer warmFlag) {
 		this.warmFlag = warmFlag;
+	}
+	public String getMacName() {
+		return macName;
+	}
+	public void setMacName(String macName) {
+		this.macName = macName;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	public String getMacIemi() {
+		return macIemi;
+	}
+	public void setMacIemi(String macIemi) {
+		this.macIemi = macIemi;
 	}
 }

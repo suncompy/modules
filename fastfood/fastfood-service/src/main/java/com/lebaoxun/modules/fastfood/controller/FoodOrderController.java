@@ -186,6 +186,12 @@ public class FoodOrderController {
     	return ResponseMessage.ok(foodOrderService.createOrder(userId,dis, order));
     }
     
+    @RequestMapping("/fastfood/foodorder/cancelOrder")
+    @RedisLock(value="fastfood:foodorder:cancelOrder:lock:#arg0")
+    ResponseMessage cancelOrder(@RequestParam("userId") Long userId,@RequestParam("orderNo") String orderNo){
+    	return ResponseMessage.ok(foodOrderService.cancelOrder(userId, orderNo));
+    }
+    
     /**
 	 * 抽奖兑换
 	 * @param userId

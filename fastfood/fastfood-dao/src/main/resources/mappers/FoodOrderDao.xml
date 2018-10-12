@@ -28,7 +28,10 @@
         <result property="couponFee" column="coupon_fee"/>
         <result property="qrCode" column="qr_code"/>
         <result property="macAddress" column="mac_address"/>
+        <result property="macName" column="mac_name"/>
+        <result property="mobile" column="mobile"/>
         <result property="macAreaCode" column="mac_area_code"/>
+        <result property="macIemi" column="mac_iemi"/>
         
         <result property="invoiceFlag" column="invoice_flag"/>
         <result property="invoiceIrd" column="invoice_ird"/> 
@@ -221,5 +224,49 @@
     
     <select id="findByNopayAndTimeout" resultMap="foodOrderMap">
         select * from food_order where order_status = 0 and NOW() > DATE_ADD(create_time,INTERVAL #{timeOut} DAY_MINUTE);
+    </select>
+    
+    <select id="findPager" parameterType="java.util.Map" resultMap="foodOrderMap">
+		select o.*,u.mobile,mac.IMEI as mac_iemi ,mac.address as mac_address, mac.`name` as mac_name from food_order as o
+		left join `user` as u on u.user_id = o.user_id
+		left join food_machine as mac on mac.id = o.mac_id        
+		where 1=1
+		<if test="user != null">
+		    and o.user_id = #{userId}
+		</if>
+		<if test="orderNo != null">
+		    and o.order_no = #{orderNo}
+		</if>
+		<if test="macId != null">
+		    and o.mac_id = #{macId}
+		</if>
+		<if test="orderStatus != null">
+		    and o.order_status = #{orderStatus}
+		</if>
+		<if test="createTime != null">
+		    and date_format(o.create_time,'%Y-%m-%d') = #{createTime}
+		</if>
+		order by create_time desc,order_status desc
+		limit #{offset,jdbcType=INTEGER}, #{size,jdbcType=INTEGER}
+    </select>
+    
+    <select id="countPager" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(o.order_no) from food_order as o
+		where 1=1
+		<if test="user != null">
+		    and o.user_id = #{userId}
+		</if>
+		<if test="orderNo != null">
+		    and o.order_no = #{orderNo}
+		</if>
+		<if test="macId != null">
+		    and o.mac_id = #{macId}
+		</if>
+		<if test="orderStatus != null">
+		    and o.order_status = #{orderStatus}
+		</if>
+		<if test="createTime != null">
+		    and date_format(o.create_time,'%Y-%m-%d') = #{createTime}
+		</if>
     </select>
 </mapper>

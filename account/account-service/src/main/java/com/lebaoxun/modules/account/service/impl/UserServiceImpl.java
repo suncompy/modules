@@ -82,7 +82,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		}
 		logger.debug("passwdSecret={},account={},password={}",passwdSecret,user.getAccount(), user.getPassword());
 		String passwd = PwdUtil.getMd5Password(passwdSecret,user.getAccount(), user.getPassword());
-		
+		user.setNickname(user.getUserId()+"");
     	user.setCreateTime(new Date());
     	user.setBalance(new BigDecimal(0.00));
     	user.setLevel(0);
@@ -322,7 +322,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		if(q.getInviter() != null){
 			int countInviter = this.selectCount(new EntityWrapper<UserEntity>().eq("user_id", q.getInviter()));
 			if(countInviter == 0){
-				throw new I18nMessageException("50001");
+				throw new I18nMessageException("50001","邀请人不能存在");
 			}
 		}
 		UserEntity entity = new UserEntity();
@@ -331,7 +331,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setGroupid(q.getGroupid());
 		entity.setHeadimgurl(q.getHeadimgurl());
 		entity.setLanguage(q.getLanguage());
-		entity.setNickname(q.getNickname());
+		entity.setNickname(q.getUserId()+"");
 		entity.setProvince(q.getProvince());
 		entity.setRemark(q.getRemark());
 		entity.setSex(q.getSex());
@@ -356,16 +356,16 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		// TODO Auto-generated method stub
 		UserEntity user = this.selectOne( new EntityWrapper<UserEntity>().eq("user_id", userId));
 		if(user != null){
-			throw new I18nMessageException("50001");
+			throw new I18nMessageException("50001","请重新尝试一次！");
 		}
 		user = this.selectOne( new EntityWrapper<UserEntity>().eq("account", q.getAccount()));
 		if(user != null){
-			throw new I18nMessageException("50001");
+			throw new I18nMessageException("50002","注册失败，‘"+q.getAccount()+"’用户已存在！");
 		}
 		if(q.getInviter() != null){
 			int countInviter = this.selectCount(new EntityWrapper<UserEntity>().eq("user_id", q.getInviter()));
 			if(countInviter == 0){
-				throw new I18nMessageException("50001");
+				throw new I18nMessageException("50001","邀请人不存在");
 			}
 		}
 		
@@ -382,6 +382,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 		entity.setAccount(q.getAccount());
 		entity.setMobile(q.getMobile());
 		entity.setPassword(password);
+		entity.setNickname(userId+"");
 		entity.setInviter(q.getInviter());
 		entity.setBalance(new BigDecimal(0.00));
 		entity.setScore(0);

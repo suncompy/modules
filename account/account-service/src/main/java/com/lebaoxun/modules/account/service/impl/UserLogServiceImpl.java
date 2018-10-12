@@ -39,12 +39,14 @@ public class UserLogServiceImpl extends ServiceImpl<UserLogDao, UserLogEntity> i
     	String account = (String)params.get("account");
     	String type = (String)params.get("type");
     	String flag = (String)params.get("flag");
+    	String createTime = (String)params.get("createTime");
         Page<UserLogEntity> page = this.selectPage(
                 new Query<UserLogEntity>(params).getPage(),
                 new EntityWrapper<UserLogEntity>()
                 .eq(StringUtils.isNotBlank(userId) && StringUtils.isNumeric(userId), "user_id", userId)
                 .eq(StringUtils.isNotBlank(account), "account", account)
                 .eq(StringUtils.isNotBlank(type), "log_type", type)
+                .eq(StringUtils.isNotBlank(createTime), "DATE_FORMAT(create_time,'%Y-%m-%d')", createTime)
                 .isNotNull("1".equals(flag), "score")
                 .isNotNull("1".equals(flag), "trade_score")
                 .isNotNull("0".equals(flag), "money")

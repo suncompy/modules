@@ -63,6 +63,10 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 */
 	FoodOrderEntity createOrder(Long userId, BigDecimal dis, FoodOrderEntity order);
 	
+	
+	FoodOrderEntity cancelOrder(Long userId, String orderNo);
+	
+	
 	/**
 	 * 订单设置
 	 * @param timeOut
@@ -166,6 +170,6 @@ public interface FoodOrderService extends IService<FoodOrderEntity> {
 	 * @param orderTime
 	 * @return
 	 */
-	public ResponseMessage takeFoodCheckOrder(Long orderId, Date orderTime, String orderTimeStr);
+	ResponseMessage takeFoodCheckOrder(Long orderId, Date orderTime, String orderTimeStr);
 
 }

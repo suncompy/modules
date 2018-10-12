@@ -35,4 +35,8 @@ public interface FoodOrderDao extends BaseMapper<FoodOrderEntity> {
 	
 	FoodOrderEntity findOrderInfoByUser(@Param("userId") Long userId, 
 			@Param("orderNo") String orderNo);
+	
+	List<FoodOrderEntity> findPager(Map<String,Object> map);
+	
+	int countPager(Map<String,Object> map);
 }

@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.plugins.pagination.PageHelper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -116,23 +117,13 @@ public class FoodOrderServiceImpl extends
 	
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
-		String userId = (String)params.get("userId"),
-				orderNo = (String)params.get("orderNo"),
-					macId = (String)params.get("macId"),
-						orderStatus = (String)params.get("orderStatus"),
-    						createTime = (String)params.get("createTime");
-		Page<FoodOrderEntity> page = this.selectPage(
-			new Query<FoodOrderEntity>(params).getPage(),
-			new EntityWrapper<FoodOrderEntity>()
-			.eq(StringUtils.isNotBlank(userId) && StringUtils.isInteger(userId), "user_id", userId)
-			.eq(StringUtils.isNotBlank(orderNo), "order_no", orderNo)
-			.eq(StringUtils.isNotBlank(macId) && StringUtils.isInteger(macId), "mac_id", macId)
-			.eq(StringUtils.isNotBlank(orderStatus) && StringUtils.isInteger(orderStatus), "order_status", orderStatus)
-			.eq(StringUtils.isNotBlank(createTime), "date_format(create_time,'%Y-%m-%d')", createTime)
-			.orderBy("create_time",false)
-			.orderBy("order_status",false)
-		);
-
+		Page<FoodOrderEntity> page = new Query<FoodOrderEntity>(params).getPage();
+		PageHelper.setPagination(page);
+		Integer offset = PageHelper.offsetCurrent(page);
+		params.put("offset", offset);
+		params.put("size", page.getLimit());
+		page.setRecords(this.baseMapper.findPager(params));
+		page.setTotal(this.baseMapper.countPager(params));
 		return new PageUtils(page);
 	}
 
@@ -729,6 +720,31 @@ public class FoodOrderServiceImpl extends
 			coupon.setOrderNo(orderNo);
 			coupon.setUseTime(new Date());
 			operateCouponRecordDao.updateById(coupon);
+		}
+		return order;
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public FoodOrderEntity cancelOrder(Long userId, String orderNo) {
+		// TODO Auto-generated method stub
+		FoodOrderEntity order = this
+				.selectOne(new EntityWrapper<FoodOrderEntity>().eq("user_id",
+						userId).eq("order_no",
+						orderNo));
+		if (order == null || order.getOrderStatus() > 0) {
+			throw new I18nMessageException("60007", "订单不存在");
+		}
+		order.setOrderStatus(-1);
+		this.baseMapper.updateById(order);
+		List<FoodOrderChildsEntity> childs = foodOrderChildsDao
+				.selectList(new EntityWrapper<FoodOrderChildsEntity>().eq("order_id", order.getId()));
+		for(FoodOrderChildsEntity child : childs){
+			FoodMachineAisleEntity aisle = new FoodMachineAisleEntity();
+			aisle.setId(child.getAisleId());
+			aisle = foodMachineAisleDao.selectOne(aisle);
+			aisle.setStock(aisle.getStock() + child.getBuyNumber());
+			foodMachineAisleDao.updateById(aisle);
 		}
 		return order;
 	}

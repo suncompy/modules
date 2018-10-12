@@ -95,7 +95,7 @@ public class SysUserEntity implements Serializable {
 	/**
 	 * 最后登录时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date lastLoginTime;
 	/**
 	 * 部门ID

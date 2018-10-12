@@ -156,6 +156,9 @@ public interface IFoodOrderService {
     		@RequestParam(value="dis",required=false)BigDecimal dis,
     		@RequestBody FoodOrderEntity order);
     
+    @RequestMapping("/fastfood/foodorder/cancelOrder")
+    ResponseMessage cancelOrder(@RequestParam("userId") Long userId,@RequestParam("orderNo") String orderNo);
+    
     /**
 	 * 抽奖兑换
 	 * @param userId
