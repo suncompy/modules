@@ -58,6 +58,8 @@ public class UserMessageEntity implements Serializable {
 	 * 是否删除  -1：已删除  0：正常
 	 */
 	private Integer delFlag;
+	
+	private String mobile;
 
 	/**
 	 * 设置：
@@ -178,5 +180,11 @@ public class UserMessageEntity implements Serializable {
 	 */
 	public Integer getDelFlag() {
 		return delFlag;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 }
