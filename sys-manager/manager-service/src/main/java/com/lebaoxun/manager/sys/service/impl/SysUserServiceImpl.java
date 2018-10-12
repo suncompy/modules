@@ -74,11 +74,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 	@Override
 	public PageUtils queryPage(Map<String, Object> params) {
 		String username = (String)params.get("username");
-
+		String mobile = (String)params.get("mobile");
 		Page<SysUserEntity> page = this.selectPage(
 			new Query<SysUserEntity>(params).getPage(),
 			new EntityWrapper<SysUserEntity>()
 				.like(StringUtils.isNotBlank(username),"username", username)
+				.like(StringUtils.isNotBlank(mobile),"mobile", mobile)
 		);
 
 		for(SysUserEntity sysUserEntity : page.getRecords()){
